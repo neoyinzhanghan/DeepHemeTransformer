@@ -5,12 +5,12 @@ import numpy as np
 import pandas as pd
 from cell_dataloader import ImagePathDataset, custom_collate_fn
 from deepheme import Myresnext50, model_predict_batch, extract_features_batch, model_create
-from BMAassumptions import region_clf_ckpt_path 
+from BMAassumptions import HemeLabel_ckpt_path 
 
 metadata_path = "/media/hdd3/neo/test_diff_results.csv"
 results_dir = "/media/greg/534773e3-83ea-468f-a40d-46c913378014/neo/results_dir"
 save_dir = "/media/hdd3/neo/DeepHemeTransformerData"
-model = model_create(region_clf_ckpt_path)
+model = model_create(HemeLabel_ckpt_path)
 
 def extract_h5_data(result_folder, save_path, model, note=""):
 
