@@ -10,6 +10,7 @@ from BMAassumptions import HemeLabel_ckpt_path
 metadata_path = "/media/hdd3/neo/test_diff_results.csv"
 results_dir = "/media/greg/534773e3-83ea-468f-a40d-46c913378014/neo/results_dir"
 save_dir = "/media/hdd3/neo/DeepHemeTransformerData"
+os.makedirs(save_dir, exist_ok=True)
 model = model_create(HemeLabel_ckpt_path)
 
 def extract_h5_data(result_folder, save_path, model, note=""):
@@ -46,7 +47,7 @@ def extract_h5_data(result_folder, save_path, model, note=""):
             all_features[idx] = features_batch[j]
             all_class_probs[idx] = probabilities[j]
             all_paths[idx] = paths[j]
-        
+    
 
     with h5py.File(save_path, 'w') as f:
         f.create_dataset('features', data=all_features)
@@ -77,7 +78,7 @@ if __name__ == "__main__":
         result_dir_name = os.path.basename(result_dir_path)
         actual_result_dir = os.path.join(results_dir, result_dir_name)
 
-        features_path = os.path.join(save_dir, f"{wsi_name}.h5")
+        features_path = os.path.join(save_dir, wsi_name.replace(".ndpi", ".h5"))
 
         # if the features file already exists, delete it
         if os.path.exists(features_path):
@@ -85,4 +86,9 @@ if __name__ == "__main__":
 
         extract_h5_data(actual_result_dir, features_path, model, note=f"Extracted features from {result_dir_name}. Model: {model}. Using LLBMA pipeline before region classification update. 2024-10-27")
 
+        metadata_dict["wsi_name"].append(wsi_name)
+        metadata_dict["result_dir_name"].append(result_dir_name)
+        metadata_dict["features_path"].append(features_path)
 
+    metadata_df = pd.DataFrame(metadata_dict)
+    metadata_df.to_csv(os.path.join(save_dir, "features_metadata.csv"), index=False)
