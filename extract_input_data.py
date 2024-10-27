@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
     for i, row in tqdm(metadata.iterrows(), total=len(metadata)):
         wsi_name = row['wsi_name']
-        result_dir_path = row['result_dir']
+        result_dir_path = row['result_dir_path']
         result_dir_name = os.path.basename(result_dir_path)
         actual_result_dir = os.path.join(results_dir, result_dir_name)
 
