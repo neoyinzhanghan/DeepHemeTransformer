@@ -13,7 +13,7 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from torchvision import transforms, datasets, models
 from torchmetrics import Accuracy, AUROC
 from torch.utils.data import WeightedRandomSampler
-from dataset import CustomDataset
+
 
 ############################################################################
 ####### DEFINE HYPERPARAMETERS AND DATA DIRECTORIES ########################
@@ -146,18 +146,8 @@ class ImageDataModule(pl.LightningDataModule):
             root=os.path.join(self.data_dir, "test"), transform=self.transform
         )
 
-        # Prepare the train dataset with CustomDataset and DownsampledDataset
-        combined_train_dataset = CustomDataset(
-            base_data_dir=os.path.join(self.data_dir, "train"),
-            results_dirs_list=self.results_dirs_list,
-            cell_types_list=self.cell_types_list,
-            base_data_sample_probability=0.5,
-            sample_probabilities=[0.125] * len(self.results_dirs_list),
-            transform=self.transform,
-        )
-
         self.train_dataset = DownsampledDataset(
-            combined_train_dataset, self.downsample_factor, apply_augmentation=True
+            train_dataset, self.downsample_factor, apply_augmentation=True
         )
 
         self.val_dataset = DownsampledDataset(
