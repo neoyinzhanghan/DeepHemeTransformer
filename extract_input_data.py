@@ -79,6 +79,10 @@ if __name__ == "__main__":
 
         features_path = os.path.join(save_dir, f"{wsi_name}.h5")
 
+        # if the features file already exists, delete it
+        if os.path.exists(features_path):
+            os.remove(features_path)
+
         extract_h5_data(actual_result_dir, features_path, model, note=f"Extracted features from {result_dir_name}. Model: {model}. Using LLBMA pipeline before region classification update. 2024-10-27")
 
 
