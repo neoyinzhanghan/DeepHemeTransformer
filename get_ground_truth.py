@@ -22,6 +22,8 @@ for diff_class in BMA_final_classes:
 metadata = pd.read_csv(metadata_path)
 differential_df = pd.read_csv(differential_data_path)
 
+num_problematic = 0
+
 for idx, row in tqdm(metadata.iterrows(), total=len(metadata)):
     wsi_name = row["wsi_name"]
     result_dir_name = row["result_dir_name"]
@@ -38,6 +40,7 @@ for idx, row in tqdm(metadata.iterrows(), total=len(metadata)):
         print(
             f"UserWarning: Exactly only one row should match the accession number {accession_number}. Instead, {len(diff_data_row)} rows matched."
         )
+        num_problematic += 1
 
     for diff_class in BMA_final_classes:
         new_metadata_dict[diff_class].append(diff_data_row[diff_class])
@@ -50,3 +53,6 @@ for idx, row in tqdm(metadata.iterrows(), total=len(metadata)):
 new_metadata_df = pd.DataFrame(new_metadata_dict)
 
 new_metadata_df.to_csv(new_metadata_path, index=False)
+
+print(f"Number of problematic rows: {num_problematic}")
+print(f"Number of non-problematic rows: {len(metadata) - num_problematic}")
