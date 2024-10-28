@@ -1,7 +1,10 @@
 import os
 import h5py
 import torch
+import pandas as pd
+import pytorch_lightning as pl
 from torch.utils.data import Dataset
+from torch.utils.data import DataLoader, random_split
 from PIL import Image
 from BMAassumptions import BMA_final_classes
 
@@ -90,5 +93,51 @@ class CellFeaturesLogitsDataset(Dataset):
             features = torch.tensor(features).float()
             logits = torch.tensor(logits).float()
 
-
         return features, logits, diff_tensor
+
+
+class CellFeaturesDataModule(pl.LightningDataModule):
+    def __init__(self, metadata_file: str, batch_size: int = 32, num_workers: int = 4):
+        super().__init__()
+        self.metadata_file = metadata_file
+        self.batch_size = batch_size
+        self.num_workers = num_workers
+
+    def setup(self, stage=None):
+        # Load metadata
+        metadata = pd.read_csv(self.metadata_file)
+
+        # Determine dataset lengths based on the split ratios
+        dataset = CellFeaturesLogitsDataset(metadata)
+        train_size = int(0.8 * len(dataset))
+        val_size = int(0.1 * len(dataset))
+        test_size = len(dataset) - train_size - val_size
+
+        # Split the dataset
+        self.train_dataset, self.val_dataset, self.test_dataset = random_split(
+            dataset, [train_size, val_size, test_size]
+        )
+
+    def train_dataloader(self):
+        return DataLoader(
+            self.train_dataset,
+            batch_size=self.batch_size,
+            shuffle=True,
+            num_workers=self.num_workers,
+        )
+
+    def val_dataloader(self):
+        return DataLoader(
+            self.val_dataset,
+            batch_size=self.batch_size,
+            shuffle=False,
+            num_workers=self.num_workers,
+        )
+
+    def test_dataloader(self):
+        return DataLoader(
+            self.test_dataset,
+            batch_size=self.batch_size,
+            shuffle=False,
+            num_workers=self.num_workers,
+        )

@@ -1,7 +1,20 @@
+###########################################################################################################################
+###########################################################################################################################
+###########################################################################################################################
+# Base Pytorch Model Definition
+###########################################################################################################################
+###########################################################################################################################
+###########################################################################################################################
+
 import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from loss_fn import RegularizedDifferentialLoss
+from cell_dataloader import CellFeaturesLogitsDataset, CellFeaturesDataModule
+
+# usage example for the loss loss(forward_output, logits, differential)
+# the dataset output is a tuple of features, logits, differential
 
 
 class Attn(nn.Module):
@@ -153,3 +166,113 @@ class DeepHemeTransformer(nn.Module):
         ), f"Checkpoint 10: x.size(0)={x.size(0)}, expected {batch_size}"
 
         return x
+
+
+###########################################################################################################################
+###########################################################################################################################
+###########################################################################################################################
+# Pytorch Lightning Model Definition & Training Script
+###########################################################################################################################
+###########################################################################################################################
+###########################################################################################################################
+
+import math
+import torch
+import torch.nn.functional as F
+from torch.optim import AdamW
+from torch.optim.lr_scheduler import CosineAnnealingLR
+import pytorch_lightning as pl
+from torch.utils.data import DataLoader
+
+# Assuming DeepHemeTransformer and CellFeaturesDataModule are implemented elsewhere
+from your_model_module import DeepHemeTransformer
+from cell_dataloader import CellFeaturesDataModule
+
+
+class DeepHemeModule(pl.LightningModule):
+    def __init__(self, learning_rate=1e-3, max_epochs=50, weight_decay=1e-2):
+        super().__init__()
+        self.save_hyperparameters()
+        self.model = DeepHemeTransformer()
+        self.loss_fn = torch.nn.CrossEntropyLoss()
+
+    def forward(self, x):
+        return self.model(x)
+
+    def training_step(self, batch, batch_idx):
+        features, logits, differential = batch
+        outputs = self(features)
+
+        # Reshape the outputs and differential to [batch_size * num_cells, 23]
+        outputs = outputs.view(-1, 23)
+        differential = differential.view(-1)
+
+        loss = self.loss_fn(outputs, differential)
+        self.log(
+            "train_loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=True
+        )
+
+        return loss
+
+    def validation_step(self, batch, batch_idx):
+        features, logits, differential = batch
+        outputs = self(features)
+
+        # Reshape the outputs and differential to [batch_size * num_cells, 23]
+        outputs = outputs.view(-1, 23)
+        differential = differential.view(-1)
+
+        loss = self.loss_fn(outputs, differential)
+        self.log(
+            "val_loss", loss, on_step=False, on_epoch=True, prog_bar=True, logger=True
+        )
+
+        return loss
+
+    def configure_optimizers(self):
+        optimizer = AdamW(
+            self.parameters(),
+            lr=self.hparams.learning_rate,
+            weight_decay=self.hparams.weight_decay,
+        )
+        scheduler = CosineAnnealingLR(
+            optimizer, T_max=self.hparams.max_epochs, eta_min=1e-6
+        )
+
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": {
+                "scheduler": scheduler,
+                "interval": "epoch",
+                "frequency": 1,
+                "name": "cosine_decay",
+            },
+        }
+
+    def on_train_epoch_start(self):
+        current_lr = self.trainer.optimizers[0].param_groups[0]["lr"]
+        self.log("learning_rate", current_lr, on_epoch=True, logger=True)
+
+
+if __name__ == "__main__":
+    # Instantiate the DataModule
+    metadata_file_path = "path_to_metadata.csv"
+    batch_size = 32
+
+    datamodule = CellFeaturesDataModule(
+        metadata_file=metadata_file_path, batch_size=batch_size
+    )
+
+    # Define a PyTorch Lightning trainer
+    trainer = pl.Trainer(
+        max_epochs=50,
+        log_every_n_steps=10,
+        gpus=1 if torch.cuda.is_available() else 0,
+        precision=16 if torch.cuda.is_available() else 32,
+    )
+
+    # Create an instance of your LightningModule
+    model = DeepHemeModule(learning_rate=1e-3, max_epochs=50, weight_decay=1e-2)
+
+    # Train the model
+    trainer.fit(model, datamodule)
