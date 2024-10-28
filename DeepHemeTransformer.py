@@ -185,7 +185,6 @@ import pytorch_lightning as pl
 from torch.utils.data import DataLoader
 
 # Assuming DeepHemeTransformer and CellFeaturesDataModule are implemented elsewhere
-from your_model_module import DeepHemeTransformer
 from cell_dataloader import CellFeaturesDataModule
 
 
