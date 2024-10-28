@@ -255,7 +255,9 @@ class DeepHemeModule(pl.LightningModule):
 
 if __name__ == "__main__":
     # Instantiate the DataModule
-    metadata_file_path = "/media/hdd3/neo/DeepHemeTransformerData/features_metadata.csv"
+    metadata_file_path = (
+        "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"
+    )
     batch_size = 32
 
     datamodule = CellFeaturesDataModule(
