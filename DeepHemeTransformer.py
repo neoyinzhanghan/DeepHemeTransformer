@@ -266,8 +266,9 @@ if __name__ == "__main__":
     trainer = pl.Trainer(
         max_epochs=50,
         log_every_n_steps=10,
-        devices=1 if torch.cuda.is_available() else 0,
-        precision=16 if torch.cuda.is_available() else 32,
+        devices=1,
+        accelerator="gpu",
+        # precision=16 if torch.cuda.is_available() else 32,
     )
 
     # Create an instance of your LightningModule
