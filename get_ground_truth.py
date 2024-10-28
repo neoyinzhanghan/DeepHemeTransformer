@@ -3,7 +3,7 @@ import pandas as pd
 from tqdm import tqdm
 from BMAassumptions import BMA_final_classes
 
-metadata_path = "/media/hdd3/neo/features_metadata.csv"
+metadata_path = "/media/hdd3/neo/DeepHemeTransformerData/features_metadata.csv"
 new_metadata_path = "/media/hdd3/neo/labelled_features_metadata.csv"
 differential_data_path = "/media/hdd3/neo/test_diff_data.csv"
 
