@@ -206,6 +206,20 @@ cellnames = [
     "U4",
 ]
 
+index_map = {
+    0: [12],  # , "13", "4"],
+    1: [],
+    2: [13],
+    3: [14],
+    4: [15],
+    5: [16, 17],
+    6: [18],
+    7: [2, 3],
+    8: [4, 5, 6, 7],
+    9: [10],
+    10: [11],
+}
+
 what_to_ignore = "class"  # 'class' or 'instance' if ignore class, then the softmax probability of ignored classes will be set to -np.inf, if ignore instance, then instances of ignored classes will be removed
 
 cellnames_dict = {
