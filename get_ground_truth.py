@@ -4,7 +4,9 @@ from tqdm import tqdm
 from BMAassumptions import BMA_final_classes
 
 metadata_path = "/media/hdd3/neo/DeepHemeTransformerData/features_metadata.csv"
-new_metadata_path = "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"
+new_metadata_path = (
+    "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"
+)
 differential_data_path = "/media/hdd3/neo/differential_data_2024-10-10.csv"
 
 
@@ -22,7 +24,7 @@ for diff_class in BMA_final_classes:
 metadata = pd.read_csv(metadata_path)
 differential_df = pd.read_csv(differential_data_path)
 
-# make sure the specnum_formatted column is a string    
+# make sure the specnum_formatted column is a string
 
 num_problematic = 0
 
@@ -38,12 +40,15 @@ for idx, row in tqdm(metadata.iterrows(), total=len(metadata)):
         differential_df["specnum_formatted"] == accession_number
     ]
 
-
-    if len(diff_data_row) != 1:
+    if len(diff_data_row) == 0:
         print(
-            f"UserWarning: Exactly only one row should match the accession number {accession_number}. Instead, {len(diff_data_row)} rows matched."
-        ) 
+            f"UserWarning: No differential data found for {accession_number}. Skipping."
+        )
         num_problematic += 1
+        continue
+
+    if len(diff_data_row) > 1:
+        diff_data_row = diff_data_row.iloc[0]
 
     for diff_class in BMA_final_classes:
         new_metadata_dict[diff_class].append(diff_data_row[diff_class])
