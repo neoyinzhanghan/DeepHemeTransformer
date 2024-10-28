@@ -4,7 +4,7 @@ from tqdm import tqdm
 from BMAassumptions import BMA_final_classes
 
 metadata_path = "/media/hdd3/neo/DeepHemeTransformerData/features_metadata.csv"
-new_metadata_path = "/media/hdd3/neo/labelled_features_metadata.csv"
+new_metadata_path = "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"
 differential_data_path = "/media/hdd3/neo/differential_data_2024-10-10.csv"
 
 
