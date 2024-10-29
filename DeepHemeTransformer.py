@@ -157,16 +157,13 @@ class DeepHemeTransformer(nn.Module):
             # pass through final linear layer
             x_ele = self.last_layer_linear(x_ele)
             assert (
-                x_ele.size(0) == batch_size * num_cells
+                x_ele.size(0) == num_cells
             ), f"Checkpoint 9: x_ele.size(0)={x_ele.size(0)}, expected {batch_size * num_cells}"
 
             # assert that the output shape is [N, 23]
             assert (
                 x_ele.size(1) == 23
             ), f"Checkpoint 10: x_ele.size(1)={x_ele.size(1)}, expected 23"
-            assert (
-                x_ele.size(0) == num_cells
-            ), f"Checkpoint 11: x_ele.size(0)={x_ele.size(0)}, expected {num_cells}"
 
             output_list.append(x_ele)
 
