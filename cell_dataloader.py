@@ -16,21 +16,25 @@ def custom_collate_fn(batch):
     return list(indices), list(pil_images), list(paths)
 
 
+def clean_diff_value(value):
+    # if the entry is NA, nan, empty, non-numeric string, replace with 0
+    if (
+        value != value
+        or value == "NA"
+        or value == ""
+        or not str(value).replace(".", "", 1).isdigit()
+    ):
+        return 0
+    else:
+        return float(value)
+
+
 def get_diff_tensor(metadata, idx):
     # get the row of the metadata file corresponding to the idx
     row = metadata.iloc[idx]
 
-    # get the values of the columns name in BMA_final_classes, convert to float and divide by 100
-    # if the entry is NA, nan, empty or not a number, replace with 0
-    diff_tensor = (
-        torch.tensor(
-            [
-                row[class_name] if row[class_name] == row[class_name] else 0
-                for class_name in BMA_final_classes
-            ]
-        ).float()
-        / 100
-    )
+    diff_list = [row[class_name] for class_name in BMA_final_classes]
+    diff_tensor = torch.tensor([clean_diff_value(diff) for diff in diff_list]).float()
 
     return diff_tensor
 
