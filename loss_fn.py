@@ -95,6 +95,6 @@ class RegularizedDifferentialLoss(nn.Module):
         diff_loss = self.differential_loss(output, differential)
 
         # Combine the losses
-        total_loss = ce_loss + self.reg_lambda * diff_loss
+        total_loss = diff_loss + self.reg_lambda * ce_loss
 
         return total_loss

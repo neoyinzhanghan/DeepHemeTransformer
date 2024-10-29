@@ -269,7 +269,7 @@ supported_extensions = [".svs", ".ndpi"]
 
 differential_group_dict = {
     "blasts": ["M1"],  # , "M2", "ER1"],
-    "blast-equivalents": [],
+    "blast-equivalents": [], # sum blasts and blast-equivalents together and treat that as one class
     "promyelocytes": ["M2"],
     "myelocytes": ["M3"],
     "metamyelocytes": ["M4"],
