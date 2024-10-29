@@ -71,12 +71,6 @@ class MultiHeadAttentionClassifier(nn.Module):
         batch_size = x.size(0)
 
         input_shape = x.size()
-        print(input_shape)
-
-        import sys
-
-        sys.exit()
-
         # Linear projections for Q, K, V (batch_size, num_heads, N+1, head_dim)
         q = (
             self.q_proj(x)
