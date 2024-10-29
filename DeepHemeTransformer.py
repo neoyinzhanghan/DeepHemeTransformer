@@ -120,6 +120,8 @@ class DeepHemeTransformer(nn.Module):
     def forward(self, x):
         batch_size = len(x)
 
+        print(batch_size)
+
         output_list = []
 
         for x_ele in x:
