@@ -189,7 +189,6 @@ from torch.utils.data import DataLoader
 # Assuming DeepHemeTransformer and CellFeaturesDataModule are implemented elsewhere
 from cell_dataloader import CellFeaturesDataModule
 
-
 class DeepHemeModule(pl.LightningModule):
     def __init__(self, learning_rate=1e-3, max_epochs=50, weight_decay=1e-2):
         super().__init__()
@@ -201,34 +200,52 @@ class DeepHemeModule(pl.LightningModule):
         return self.model(x)
 
     def training_step(self, batch, batch_idx):
-        features, logits, differential = batch
-        outputs = self(features)
+        features_list, logits_list, differential_list = batch
+        total_loss = 0.0
 
-        # Reshape the outputs and differential to [batch_size * num_cells, 23]
-        outputs = outputs.view(-1, 23)
-        differential = differential.view(-1)
+        # Iterate over the list of inputs in the batch
+        for features, differential in zip(features_list, differential_list):
+            outputs = self(features)
 
-        loss = self.loss_fn(outputs, differential)
+            # Reshape the outputs and differential to match [num_cells, 23]
+            outputs = outputs.view(-1, 23)
+            differential = differential.view(-1)
+
+            # Calculate loss for each item in the batch
+            loss = self.loss_fn(outputs, differential)
+            total_loss += loss
+
+        # Average loss over the batch
+        avg_loss = total_loss / len(features_list)
         self.log(
-            "train_loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=True
+            "train_loss", avg_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True
         )
 
-        return loss
+        return avg_loss
 
     def validation_step(self, batch, batch_idx):
-        features, logits, differential = batch
-        outputs = self(features)
+        features_list, logits_list, differential_list = batch
+        total_loss = 0.0
 
-        # Reshape the outputs and differential to [batch_size * num_cells, 23]
-        outputs = outputs.view(-1, 23)
-        differential = differential.view(-1)
+        # Iterate over the list of inputs in the batch
+        for features, differential in zip(features_list, differential_list):
+            outputs = self(features)
 
-        loss = self.loss_fn(outputs, differential)
+            # Reshape the outputs and differential to match [num_cells, 23]
+            outputs = outputs.view(-1, 23)
+            differential = differential.view(-1)
+
+            # Calculate loss for each item in the batch
+            loss = self.loss_fn(outputs, differential)
+            total_loss += loss
+
+        # Average loss over the batch
+        avg_loss = total_loss / len(features_list)
         self.log(
-            "val_loss", loss, on_step=False, on_epoch=True, prog_bar=True, logger=True
+            "val_loss", avg_loss, on_step=False, on_epoch=True, prog_bar=True, logger=True
         )
 
-        return loss
+        return avg_loss
 
     def configure_optimizers(self):
         optimizer = AdamW(
@@ -253,6 +270,7 @@ class DeepHemeModule(pl.LightningModule):
     def on_train_epoch_start(self):
         current_lr = self.trainer.optimizers[0].param_groups[0]["lr"]
         self.log("learning_rate", current_lr, on_epoch=True, logger=True)
+
 
 
 if __name__ == "__main__":
