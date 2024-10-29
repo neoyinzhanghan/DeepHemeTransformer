@@ -110,7 +110,7 @@ class DeepHemeTransformer(nn.Module):
         self.last_layer_linear = nn.Linear(1024, 23)
 
     def forward(self, x):
-        batch_length = x.size(0)
+        batch_size = len(x)
 
         output_list = []
 
