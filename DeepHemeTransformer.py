@@ -70,6 +70,8 @@ class MultiHeadAttentionClassifier(nn.Module):
 
         batch_size = x.size(0)
 
+        input_shape = x.size()
+
         # Linear projections for Q, K, V (batch_size, num_heads, N+1, head_dim)
         q = (
             self.q_proj(x)
@@ -97,6 +99,13 @@ class MultiHeadAttentionClassifier(nn.Module):
 
         # Apply final linear projection
         x = self.out_proj(attn_output)
+
+        # check that the output and input shapes match
+        output_shape = x.size() 
+
+        assert (
+            output_shape == input_shape
+        ), f"Output shape {output_shape} does not match input shape {input_shape} in transformer forward."
 
         return x
 
