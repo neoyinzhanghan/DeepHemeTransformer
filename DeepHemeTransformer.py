@@ -74,6 +74,7 @@ class MultiHeadAttentionClassifier(nn.Module):
         print(input_shape)
 
         import sys
+
         sys.exit()
 
         # Linear projections for Q, K, V (batch_size, num_heads, N+1, head_dim)
@@ -105,7 +106,7 @@ class MultiHeadAttentionClassifier(nn.Module):
         x = self.out_proj(attn_output)
 
         # check that the output and input shapes match
-        output_shape = x.size() 
+        output_shape = x.size()
 
         assert (
             output_shape == input_shape
@@ -129,6 +130,12 @@ class DeepHemeTransformer(nn.Module):
 
         for x_ele in x:
             # x should be a list of inputs with shape [N, 2048]
+
+            print(x_ele.size())
+
+            import sys
+
+            sys.exit()
             num_cells = x_ele.size(0)
 
             # project features to 1024
@@ -202,6 +209,7 @@ from torch.utils.data import DataLoader
 # Assuming DeepHemeTransformer and CellFeaturesDataModule are implemented elsewhere
 from cell_dataloader import CellFeaturesDataModule
 
+
 class DeepHemeModule(pl.LightningModule):
     def __init__(self, learning_rate=1e-3, max_epochs=50, weight_decay=1e-2):
         super().__init__()
@@ -231,7 +239,12 @@ class DeepHemeModule(pl.LightningModule):
         # Average loss over the batch
         avg_loss = total_loss / len(features_list)
         self.log(
-            "train_loss", avg_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True
+            "train_loss",
+            avg_loss,
+            on_step=True,
+            on_epoch=True,
+            prog_bar=True,
+            logger=True,
         )
 
         return avg_loss
@@ -255,7 +268,12 @@ class DeepHemeModule(pl.LightningModule):
         # Average loss over the batch
         avg_loss = total_loss / len(features_list)
         self.log(
-            "val_loss", avg_loss, on_step=False, on_epoch=True, prog_bar=True, logger=True
+            "val_loss",
+            avg_loss,
+            on_step=False,
+            on_epoch=True,
+            prog_bar=True,
+            logger=True,
         )
 
         return avg_loss
@@ -283,7 +301,6 @@ class DeepHemeModule(pl.LightningModule):
     def on_train_epoch_start(self):
         current_lr = self.trainer.optimizers[0].param_groups[0]["lr"]
         self.log("learning_rate", current_lr, on_epoch=True, logger=True)
-
 
 
 if __name__ == "__main__":
