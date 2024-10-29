@@ -110,62 +110,67 @@ class DeepHemeTransformer(nn.Module):
         self.last_layer_linear = nn.Linear(1024, 23)
 
     def forward(self, x):
+        batch_length = x.size(0)
 
-        # x should be shaped like [b, N, 2048]
-        batch_size = x.size(0)
-        num_cells = x.size(1)
+        output_list = []
 
-        # reshape x to [b * N, 2048]
-        x = x.view(-1, 2048)
-        assert (
-            x.size(0) == batch_size * num_cells
-        ), f"Checkpoint 0: x.size(0)={x.size(0)}, expected {batch_size * num_cells}"
+        for x_ele in x:
+            # x should be a list of inputs with shape [N, 2048]
+            num_cells = x_ele.size(0)
 
-        # project features to 1024
-        x = self.feature_projector(x)
-        assert x.size(1) == 1024, f"Checkpoint 1: x.size(1)={x.size(1)}, expected 1024"
-        assert (
-            x.size(0) == batch_size * num_cells
-        ), f"Checkpoint 2: x.size(0)={x.size(0)}, expected {batch_size * num_cells}"
+            # project features to 1024
+            x_ele = self.feature_projector(x_ele)
+            assert (
+                x_ele.size(1) == 1024
+            ), f"Checkpoint 1: x_ele.size(1)={x_ele.size(1)}, expected 1024"
+            assert (
+                x_ele.size(0) == num_cells
+            ), f"Checkpoint 2: x_ele.size(0)={x_ele.size(0)}, expected {batch_size * num_cells}"
 
-        # reshape x to [b, N, 1024]
-        x = x.view(batch_size, num_cells, 1024)
-        assert (
-            x.size(0) == batch_size
-        ), f"Checkpoint 3: x.size(0)={x.size(0)}, expected {batch_size}"
-        assert (
-            x.size(1) == num_cells
-        ), f"Checkpoint 4: x.size(1)={x.size(1)}, expected {num_cells}"
+            # add a batch dimension to x_ele
+            x_ele = x_ele.unsqueeze(0)
+            assert (
+                x_ele.size(0) == 1
+            ), f"Checkpoint 3: x_ele.size(0)={x_ele.size(0)}, expected 1"
+            assert (
+                x_ele.size(1) == num_cells
+            ), f"Checkpoint 4: x_ele.size(1)={x_ele.size(1)}, expected {num_cells}"
+            assert (
+                x_ele.size(2) == 1024
+            ), f"Checkpoint 5: x_ele.size(2)={x_ele.size(2)}, expected 1024"
 
-        # pass through transformer
-        x = self.transformer(x)
-        assert (
-            x.size(0) == batch_size
-        ), f"Checkpoint 5: x.size(0)={x.size(0)}, expected {batch_size}"
-        assert (
-            x.size(1) == num_cells
-        ), f"Checkpoint 6: x.size(1)={x.size(1)}, expected {num_cells}"
-        assert x.size(2) == 1024, f"Checkpoint 7: x.size(2)={x.size(2)}, expected 1024"
+            # pass through transformer
+            x_ele = self.transformer(x_ele)
+            assert (
+                x_ele.size(0) == 1
+            ), f"Checkpoint 6: x_ele.size(0)={x.size(0)}, expected {1}"
+            assert (
+                x_ele.size(1) == num_cells
+            ), f"Checkpoint 7: x_ele.size(1)={x_ele.size(1)}, expected {num_cells}"
+            assert (
+                x_ele.size(2) == 1024
+            ), f"Checkpoint 8: x_ele.size(2)={x_ele.size(2)}, expected 1024"
 
-        # reshape x to [b * N, 1024]
-        x = x.view(-1, 1024)
-        assert (
-            x.size(0) == batch_size * num_cells
-        ), f"Checkpoint 8: x.size(0)={x.size(0)}, expected {batch_size * num_cells}"
+            # reshape x to [N, 1024] by removing the batch dimension
+            x_ele = x_ele.squeeze(0)
 
-        # pass through final linear layer
-        x = self.last_layer_linear(x)
-        assert (
-            x.size(0) == batch_size * num_cells
-        ), f"Checkpoint 9: x.size(0)={x.size(0)}, expected {batch_size * num_cells}"
+            # pass through final linear layer
+            x_ele = self.last_layer_linear(x_ele)
+            assert (
+                x_ele.size(0) == batch_size * num_cells
+            ), f"Checkpoint 9: x_ele.size(0)={x_ele.size(0)}, expected {batch_size * num_cells}"
 
-        # reshape x to [b, N, 23]
-        x = x.view(batch_size, num_cells, 23)
-        assert (
-            x.size(0) == batch_size
-        ), f"Checkpoint 10: x.size(0)={x.size(0)}, expected {batch_size}"
+            # assert that the output shape is [N, 23]
+            assert (
+                x_ele.size(1) == 23
+            ), f"Checkpoint 10: x_ele.size(1)={x_ele.size(1)}, expected 23"
+            assert (
+                x_ele.size(0) == num_cells
+            ), f"Checkpoint 11: x_ele.size(0)={x_ele.size(0)}, expected {num_cells}"
 
-        return x
+            output_list.append(x_ele)
+
+        return output_list
 
 
 ###########################################################################################################################

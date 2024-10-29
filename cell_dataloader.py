@@ -14,12 +14,7 @@ def custom_collate_fn(batch):
     # Batch is a list of tuples features, logits, diff_tensor
     features, logits, diff_tensor = zip(*batch)
 
-    # Stack features and logits in batch dimension
-    features = torch.stack(features)
-    logits = torch.stack(logits)
-    diff_tensor = torch.stack(diff_tensor)
-
-    return features, logits, diff_tensor
+    return list(features), list(logits), list(diff_tensor)
 
 
 def clean_diff_value(value):

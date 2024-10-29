@@ -10,30 +10,32 @@ class AvgCELoss(nn.Module):
             reduction="none"
         )  # Set reduction to 'none' to calculate per-sample loss
 
-    def forward(self, inputs, targets):
-        # Check the shape of inputs and targets
-        if inputs.dim() != 3 or targets.dim() != 2 or targets.size(1) != inputs.size(1):
-            raise ValueError(
-                "Input should be of shape [b, N, 23] and targets should be of shape [b, N]"
-            )
+    def forward(self, inputs_list, targets_list):
+        # Initialize a list to store the individual losses
+        batch_losses = []
 
-        # Reshape inputs to [b*N, 23] for cross-entropy loss calculation
-        inputs_reshaped = inputs.view(-1, inputs.size(-1))  # Shape: [b*N, 23]
+        for inputs, targets in zip(inputs_list, targets_list):
+            # Check the shape of inputs and targets for each sample in the batch
+            if (
+                inputs.dim() != 2
+                or targets.dim() != 1
+                or targets.size(0) != inputs.size(0)
+            ):
+                raise ValueError(
+                    "Each input should be of shape [N, 23] and targets should be of shape [N]"
+                )
 
-        # Flatten targets to match the reshaped inputs
-        targets_flattened = targets.view(-1)  # Shape: [b*N]
+            # Compute the cross-entropy loss for each sample in the batch
+            losses = self.criterion(inputs, targets)
 
-        # Compute the cross-entropy loss for each sample in the batch
-        losses = self.criterion(inputs_reshaped, targets_flattened)
+            # Average the loss across N for each sample
+            avg_loss = losses.mean()  # Shape: []
 
-        # Reshape losses back to [b, N]
-        losses = losses.view(inputs.size(0), -1)  # Shape: [b, N]
-
-        # Average the loss across N for each batch
-        avg_loss = losses.mean(dim=1)  # Shape: [b]
+            # Append the average loss for each sample to the batch_losses list
+            batch_losses.append(avg_loss)
 
         # Average the losses across the batch dimension
-        return avg_loss.mean()  # Final average across batches
+        return torch.mean(torch.stack(batch_losses))  # Final average across the batch
 
 
 class GroupedLossWithIndexMap(nn.Module):
@@ -42,39 +44,47 @@ class GroupedLossWithIndexMap(nn.Module):
         self.index_map = index_map
         self.criterion = nn.KLDivLoss(reduction="batchmean")
 
-    def forward(self, inputs, targets):
-        # Check input shapes
-        if (
-            inputs.dim() != 3
-            or targets.dim() != 2
-            or targets.size(1) != len(self.index_map)
-        ):
-            raise ValueError(
-                "Input should be of shape [b, N, 23] and targets should be of shape [b, 11]"
-            )
+    def forward(self, inputs_list, targets_list):
+        # Initialize a list to store the individual losses
+        batch_losses = []
 
-        # Initialize an output tensor for the summed values
-        b, N, _ = inputs.shape
-        outputs = torch.zeros(b, N, len(self.index_map), device=inputs.device)
+        for inputs, targets in zip(inputs_list, targets_list):
+            # Check input shapes for each sample in the batch
+            if (
+                inputs.dim() != 2
+                or targets.dim() != 1
+                or targets.size(0) != len(self.index_map)
+            ):
+                raise ValueError(
+                    "Each input should be of shape [N, 23] and targets should be of shape [11]"
+                )
 
-        # Sum values according to the index map
-        for new_idx, old_indices in self.index_map.items():
-            for old_idx in old_indices:
-                outputs[:, :, new_idx] += inputs[:, :, old_idx]
+            # Initialize an output tensor for the summed values
+            N, _ = inputs.shape
+            outputs = torch.zeros(N, len(self.index_map), device=inputs.device)
 
-        # Normalize to get a probability distribution
-        sum_outputs = outputs.sum(
-            dim=-1, keepdim=True
-        )  # Compute the sum across the last dimension
-        probabilities = outputs / sum_outputs  # Basic normalization
+            # Sum values according to the index map
+            for new_idx, old_indices in self.index_map.items():
+                for old_idx in old_indices:
+                    outputs[:, new_idx] += inputs[:, old_idx]
 
-        # Average across N to get shape [b, 11]
-        avg_probabilities = probabilities.mean(dim=1)  # Average over N
+            # Normalize to get a probability distribution
+            sum_outputs = outputs.sum(
+                dim=-1, keepdim=True
+            )  # Compute the sum across the last dimension
+            probabilities = outputs / sum_outputs  # Basic normalization
 
-        # Compute the cross-entropy loss
-        loss = self.criterion(avg_probabilities.log(), targets)
+            # Average across N to get shape [11]
+            avg_probabilities = probabilities.mean(dim=0)  # Average over N
 
-        return loss
+            # Compute the cross-entropy loss for each sample
+            loss = self.criterion(avg_probabilities.log(), targets)
+
+            # Append the loss for each sample to the batch_losses list
+            batch_losses.append(loss)
+
+        # Average the losses across the batch dimension
+        return torch.mean(torch.stack(batch_losses))  # Final average across the batch
 
 
 class RegularizedDifferentialLoss(nn.Module):
