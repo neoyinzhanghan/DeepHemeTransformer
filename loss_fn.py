@@ -19,12 +19,13 @@ class AvgCELoss(nn.Module):
         print(targets_list)
 
         for inputs, targets in zip(inputs_list, targets_list):
-            
+
             # print(inputs.shape, targets.shape)
             print(f"Shape of inputs: {inputs.shape}")
             print(f"Shape of targets: {targets.shape}")
 
-            import sys  
+            import sys
+
             sys.exit()
 
             # Compute the cross-entropy loss for each sample in the batch
@@ -86,15 +87,15 @@ class RegularizedDifferentialLoss(nn.Module):
         self.average_ce_loss = AvgCELoss()
         self.differential_loss = GroupedLossWithIndexMap(index_map)
 
-    def forward(self, output, logits, differential):
+    def forward(self, outputs_list, logits_list, differentials_list):
 
-        cell_classes = logits.argmax(dim=1)
+        cell_classes = [logits.argmax(dim=1) for logits in logits_list]
 
         # Compute the average cross-entropy loss
-        ce_loss = self.average_ce_loss(output, cell_classes)
+        ce_loss = self.average_ce_loss(outputs_list, cell_classes)
 
         # Compute the differential loss
-        diff_loss = self.differential_loss(output, differential)
+        diff_loss = self.differential_loss(outputs_list, differentials_list)
 
         # Combine the losses
         total_loss = diff_loss + self.reg_lambda * ce_loss

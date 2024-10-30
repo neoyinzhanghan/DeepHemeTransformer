@@ -120,8 +120,6 @@ class DeepHemeTransformer(nn.Module):
 
     def forward(self, x):
 
-        output_list = []
-
         x_ele = x
         # x should be a list of inputs with shape [N, 2048]
 
@@ -174,9 +172,7 @@ class DeepHemeTransformer(nn.Module):
             x_ele.size(1) == 23
         ), f"Checkpoint 10: x_ele.size(1)={x_ele.size(1)}, expected 23"
 
-        output_list.append(x_ele)
-
-        return output_list
+        return x_ele
 
 
 ###########################################################################################################################
