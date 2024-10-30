@@ -121,9 +121,6 @@ class DeepHemeTransformer(nn.Module):
     def forward(self, x):
         batch_size = len(x)
 
-        print(batch_size)
-        print(type(x))
-
         output_list = []
 
         x_ele = x
@@ -239,15 +236,17 @@ class DeepHemeModule(pl.LightningModule):
         total_loss = 0.0
 
         # Iterate over the list of inputs in the batch
-        for features, differential in zip(features_list, differential_list):
+        for features, logits, differential in zip(
+            features_list, logits_list, differential_list
+        ):
             outputs = self(features)
 
-            # Reshape the outputs and differential to match [num_cells, 23]
-            outputs = outputs.view(-1, 23)
-            differential = differential.view(-1)
+            # Reshape the outputs and logits to match [num_cells, num_classes]
+            outputs = outputs.view(-1, logits.size(-1))
+            logits = logits.view(-1, logits.size(-1))
 
-            # Calculate loss for each item in the batch
-            loss = self.loss_fn(outputs, differential)
+            # Compute the loss for each item in the batch
+            loss = self.loss_fn(outputs, logits, differential)
             total_loss += loss
 
         # Average loss over the batch
