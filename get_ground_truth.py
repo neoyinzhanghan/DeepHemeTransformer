@@ -58,6 +58,12 @@ for idx, row in tqdm(metadata.iterrows(), total=len(metadata)):
         # we need to get the actual value
         val = val.values[0]
 
+        # now it is numpy.float64, we want to convert it to a float, and if it is nan, convert it to 0
+        if pd.isna(val):
+            val = 0.0
+        else:
+            val = float(val)
+
         print(type(val))
         print(val)
         new_metadata_dict[diff_class].append(val)
