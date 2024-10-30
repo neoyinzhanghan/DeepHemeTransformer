@@ -54,9 +54,10 @@ for idx, row in tqdm(metadata.iterrows(), total=len(metadata)):
 
         val = diff_data_row[diff_class]
 
-        # get the value, right now it is a row
-        if len(val) > 1:
-            val = val.iloc[0]
+        # get the value, right now it is a pandas.core.series.Series
+        # we need to get the actual value
+        val = val.values[0]
+
         print(type(val))
         print(val)
         new_metadata_dict[diff_class].append(val)
