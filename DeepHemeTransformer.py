@@ -121,6 +121,7 @@ class DeepHemeTransformer(nn.Module):
         batch_size = len(x)
 
         print(batch_size)
+        print(type(x))
 
         output_list = []
 
