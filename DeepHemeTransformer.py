@@ -241,10 +241,6 @@ class DeepHemeModule(pl.LightningModule):
         ):
             outputs = self(features)
 
-            # Reshape the outputs and logits to match [num_cells, num_classes]
-            outputs = outputs.view(-1, logits.size(-1))
-            logits = logits.view(-1, logits.size(-1))
-
             # Compute the loss for each item in the batch
             loss = self.loss_fn(outputs, logits, differential)
             total_loss += loss
