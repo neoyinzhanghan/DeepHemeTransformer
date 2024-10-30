@@ -15,6 +15,13 @@ class AvgCELoss(nn.Module):
         batch_losses = []
 
         for inputs, targets in zip(inputs_list, targets_list):
+            
+            # print(inputs.shape, targets.shape)
+            print(f"Shape of inputs: {inputs.shape}")
+            print(f"Shape of targets: {targets.shape}")
+
+            import sys  
+            sys.exit()
 
             # Compute the cross-entropy loss for each sample in the batch
             losses = self.criterion(inputs, targets)
