@@ -298,7 +298,7 @@ if __name__ == "__main__":
 
     # Define a PyTorch Lightning trainer
     trainer = pl.Trainer(
-        max_epochs=50,
+        max_epochs=10,
         log_every_n_steps=10,
         devices=1,
         accelerator="gpu",
