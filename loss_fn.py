@@ -90,6 +90,7 @@ class RegularizedDifferentialLoss(nn.Module):
     def forward(self, outputs_list, logits_list, differentials_list):
 
         print(len(outputs_list))
+        print(outputs_list[0].shape[0])
 
         print(len(logits_list))
         print(logits_list[0].shape)
