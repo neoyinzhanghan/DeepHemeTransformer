@@ -64,8 +64,6 @@ for idx, row in tqdm(metadata.iterrows(), total=len(metadata)):
         else:
             val = float(val)
 
-        print(type(val))
-        print(val)
         new_metadata_dict[diff_class].append(val)
 
     new_metadata_dict["wsi_name"].append(wsi_name)
