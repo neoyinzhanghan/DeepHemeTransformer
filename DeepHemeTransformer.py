@@ -12,6 +12,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from loss_fn import RegularizedDifferentialLoss
 from cell_dataloader import CellFeaturesLogitsDataset, CellFeaturesDataModule
+from loss_fn import RegularizedDifferentialLoss
 
 # usage example for the loss loss(forward_output, logits, differential)
 # the dataset output is a tuple of features, logits, differential
@@ -125,64 +126,64 @@ class DeepHemeTransformer(nn.Module):
 
         output_list = []
 
-        for x_ele in x:
-            # x should be a list of inputs with shape [N, 2048]
+        x_ele = x
+        # x should be a list of inputs with shape [N, 2048]
 
-            print(x_ele.size())
+        print(x_ele.size())
 
-            import sys
+        import sys
 
-            sys.exit()
-            num_cells = x_ele.size(0)
+        sys.exit()
+        num_cells = x_ele.size(0)
 
-            # project features to 1024
-            x_ele = self.feature_projector(x_ele)
-            assert (
-                x_ele.size(1) == 1024
-            ), f"Checkpoint 1: x_ele.size(1)={x_ele.size(1)}, expected 1024"
-            assert (
-                x_ele.size(0) == num_cells
-            ), f"Checkpoint 2: x_ele.size(0)={x_ele.size(0)}, expected {batch_size * num_cells}"
+        # project features to 1024
+        x_ele = self.feature_projector(x_ele)
+        assert (
+            x_ele.size(1) == 1024
+        ), f"Checkpoint 1: x_ele.size(1)={x_ele.size(1)}, expected 1024"
+        assert (
+            x_ele.size(0) == num_cells
+        ), f"Checkpoint 2: x_ele.size(0)={x_ele.size(0)}, expected {batch_size * num_cells}"
 
-            # add a batch dimension to x_ele
-            x_ele = x_ele.unsqueeze(0)
-            assert (
-                x_ele.size(0) == 1
-            ), f"Checkpoint 3: x_ele.size(0)={x_ele.size(0)}, expected 1"
-            assert (
-                x_ele.size(1) == num_cells
-            ), f"Checkpoint 4: x_ele.size(1)={x_ele.size(1)}, expected {num_cells}"
-            assert (
-                x_ele.size(2) == 1024
-            ), f"Checkpoint 5: x_ele.size(2)={x_ele.size(2)}, expected 1024"
+        # add a batch dimension to x_ele
+        x_ele = x_ele.unsqueeze(0)
+        assert (
+            x_ele.size(0) == 1
+        ), f"Checkpoint 3: x_ele.size(0)={x_ele.size(0)}, expected 1"
+        assert (
+            x_ele.size(1) == num_cells
+        ), f"Checkpoint 4: x_ele.size(1)={x_ele.size(1)}, expected {num_cells}"
+        assert (
+            x_ele.size(2) == 1024
+        ), f"Checkpoint 5: x_ele.size(2)={x_ele.size(2)}, expected 1024"
 
-            # pass through transformer
-            x_ele = self.transformer(x_ele)
-            assert (
-                x_ele.size(0) == 1
-            ), f"Checkpoint 6: x_ele.size(0)={x.size(0)}, expected {1}"
-            assert (
-                x_ele.size(1) == num_cells
-            ), f"Checkpoint 7: x_ele.size(1)={x_ele.size(1)}, expected {num_cells}"
-            assert (
-                x_ele.size(2) == 1024
-            ), f"Checkpoint 8: x_ele.size(2)={x_ele.size(2)}, expected 1024"
+        # pass through transformer
+        x_ele = self.transformer(x_ele)
+        assert (
+            x_ele.size(0) == 1
+        ), f"Checkpoint 6: x_ele.size(0)={x.size(0)}, expected {1}"
+        assert (
+            x_ele.size(1) == num_cells
+        ), f"Checkpoint 7: x_ele.size(1)={x_ele.size(1)}, expected {num_cells}"
+        assert (
+            x_ele.size(2) == 1024
+        ), f"Checkpoint 8: x_ele.size(2)={x_ele.size(2)}, expected 1024"
 
-            # reshape x to [N, 1024] by removing the batch dimension
-            x_ele = x_ele.squeeze(0)
+        # reshape x to [N, 1024] by removing the batch dimension
+        x_ele = x_ele.squeeze(0)
 
-            # pass through final linear layer
-            x_ele = self.last_layer_linear(x_ele)
-            assert (
-                x_ele.size(0) == num_cells
-            ), f"Checkpoint 9: x_ele.size(0)={x_ele.size(0)}, expected {batch_size * num_cells}"
+        # pass through final linear layer
+        x_ele = self.last_layer_linear(x_ele)
+        assert (
+            x_ele.size(0) == num_cells
+        ), f"Checkpoint 9: x_ele.size(0)={x_ele.size(0)}, expected {batch_size * num_cells}"
 
-            # assert that the output shape is [N, 23]
-            assert (
-                x_ele.size(1) == 23
-            ), f"Checkpoint 10: x_ele.size(1)={x_ele.size(1)}, expected 23"
+        # assert that the output shape is [N, 23]
+        assert (
+            x_ele.size(1) == 23
+        ), f"Checkpoint 10: x_ele.size(1)={x_ele.size(1)}, expected 23"
 
-            output_list.append(x_ele)
+        output_list.append(x_ele)
 
         return output_list
 
@@ -212,7 +213,7 @@ class DeepHemeModule(pl.LightningModule):
         super().__init__()
         self.save_hyperparameters()
         self.model = DeepHemeTransformer()
-        self.loss_fn = torch.nn.CrossEntropyLoss()
+        self.loss_fn = RegularizedDifferentialLoss(reg_lambda=0.1)
 
     def forward(self, x):
         return self.model(x)
@@ -222,29 +223,21 @@ class DeepHemeModule(pl.LightningModule):
         total_loss = 0.0
 
         # Iterate over the list of inputs in the batch
-        for features, differential in zip(features_list, differential_list):
+        for features, logits, differential in zip(
+            features_list, logits_list, differential_list
+        ):
             outputs = self(features)
 
-            # Reshape the outputs and differential to match [num_cells, 23]
-            outputs = outputs.view(-1, 23)
-            differential = differential.view(-1)
+        loss = self.loss_fn(outputs, logits, differential)
 
-            # Calculate loss for each item in the batch
-            loss = self.loss_fn(outputs, differential)
-            total_loss += loss
-
-        # Average loss over the batch
-        avg_loss = total_loss / len(features_list)
         self.log(
             "train_loss",
-            avg_loss,
+            loss,
             on_step=True,
             on_epoch=True,
             prog_bar=True,
             logger=True,
         )
-
-        return avg_loss
 
     def validation_step(self, batch, batch_idx):
         features_list, logits_list, differential_list = batch
