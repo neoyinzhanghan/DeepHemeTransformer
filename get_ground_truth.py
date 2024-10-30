@@ -75,7 +75,7 @@ new_metadata_df = pd.DataFrame(new_metadata_dict)
 
 # sum the blasts and blast_equivalents column together into a new column named "blasts and blast equivalents"
 new_metadata_df["blasts and blast equivalents"] = (
-    new_metadata_df["blasts"] + new_metadata_df["blast_equivalents"]
+    new_metadata_df["blasts"] + new_metadata_df["blast equivalents"]
 )
 
 # delete the blasts and blast_equivalents columns
