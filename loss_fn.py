@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from BMAassumptions import index_map
 
 
@@ -81,43 +82,43 @@ class GroupedLossWithIndexMap(nn.Module):
 
 
 class RegularizedDifferentialLoss(nn.Module):
-    def __init__(self, reg_lambda=0.1, index_map=index_map):
+    def __init__(self, reg_lambda=0.1, index_map=None):
         super(RegularizedDifferentialLoss, self).__init__()
         self.reg_lambda = reg_lambda
-        self.average_ce_loss = AvgCELoss()
+        self.index_map = index_map
         self.differential_loss = GroupedLossWithIndexMap(index_map)
+        self.cross_entropy_loss = nn.CrossEntropyLoss()
 
-    def forward(self, outputs_list, logits_list, differentials_list):
+    def forward(self, logits_list, differentials_list):
+        """
+        Args:
+            logits_list (list of torch.Tensor): List of tensors containing raw model outputs (logits) for each batch.
+            differentials_list (list of torch.Tensor): List of tensors containing ground truth differentials.
 
-        # print(type(outputs_list))
+        Returns:
+            torch.Tensor: Combined loss value.
+        """
+        # Softmax logits to get probabilities
+        outputs_list = [F.softmax(logits, dim=1) for logits in logits_list]
 
-        # print(len(outputs_list))
-        # print(outputs_list[0].shape[0])
+        # Softmax differentials to get probability distributions
+        differentials_list = [
+            F.softmax(differential, dim=1) for differential in differentials_list
+        ]
 
-        # print(type(logits_list))
-
-        # print(len(logits_list))
-        # print(logits_list[0].shape)
-
-        # print(type(differentials_list))
-
-        # print(len(differentials_list))
-        # print
-
-        # import sys
-
-        # sys.exit() # TODO to remove only for debugging
-
+        # Compute the cell classes (argmax of logits to determine predicted class)
         cell_classes = [logits.argmax(dim=1) for logits in logits_list]
 
-        # Compute the average cross-entropy loss
-        ce_loss = self.average_ce_loss(outputs_list, cell_classes)
+        # Compute the average cross-entropy loss over all batches in logits_list
+        ce_loss = sum(
+            self.cross_entropy_loss(logits, cell_class)
+            for logits, cell_class in zip(logits_list, cell_classes)
+        ) / len(logits_list)
 
-        # Compute the differential loss
+        # Compute the differential loss using the provided differentials_list
         diff_loss = self.differential_loss(outputs_list, differentials_list)
 
-        # Combine the losses
-        # total_loss = ce_loss
+        # Combine the losses using the regularization weight
         total_loss = diff_loss + self.reg_lambda * ce_loss
 
         return total_loss
