@@ -233,15 +233,19 @@ class DeepHemeModule(pl.LightningModule):
         features_list, logits_list, differential_list = batch
         total_loss = 0.0
 
+        outputs_list = []s
+
         # Iterate over the list of inputs in the batch
         for features, logits, differential in zip(
             features_list, logits_list, differential_list
         ):
             outputs = self(features)
+            outputs_list.append(outputs)
+            
 
-            # Compute the loss for each item in the batch
-            loss = self.loss_fn(outputs, logits, differential)
-            total_loss += loss
+        # Compute the loss for each item in the batch
+        loss = self.loss_fn(outputs_list, logits_list, differential_list)   
+
 
         # Average loss over the batch
         avg_loss = total_loss / len(features_list)
