@@ -207,18 +207,45 @@ cellnames = [
 ]
 
 index_map = {
-    0: [12],  # , "13", "4"],
-    1: [],
-    2: [13],
-    3: [14],
-    4: [15],
-    5: [16, 17],
-    6: [18],
-    7: [2, 3],
-    8: [4, 5, 6, 7],
-    9: [10],
-    10: [11],
+    0: [14], # myelocytes
+    1: [15], # metamyelocytes
+    2: [16, 17], # neutrophils/bands
+    3: [18], # monocytes
+    4: [2, 3], # eosinophils
+    5: [4, 5, 6, 7], # erythroid precursors
+    6: [10], # lymphocytes
+    7: [11], # plasma cells
+    8: [12, 13], # blasts and blast-equivalents
 }
+
+differential_group_dict = {
+    "blasts": ["M1"],  # , "M2", "ER1"],
+    "blast-equivalents": [],  # sum blasts and blast-equivalents together and treat that as one class
+    "promyelocytes": ["M2"],
+    "myelocytes": ["M3"],  # 0
+    "metamyelocytes": ["M4"],  # 1
+    "neutrophils/bands": ["M5", "M6"],  # 2
+    "monocytes": ["MO2"],  # 3
+    "eosinophils": ["E1", "E4"],  # 4
+    "erythroid precursors": ["ER1", "ER2", "ER3", "ER4"],  # 5
+    "lymphocytes": ["L2"],  # 6
+    "plasma cells": ["L4"],  # 7
+    "blasts and blast-equivalents": ["M1", "M2"],  # 8
+}
+
+BMA_final_classes = [
+    # "blasts",
+    # "blast-equivalents",
+    "myelocytes",
+    "metamyelocytes",
+    "neutrophils/bands",
+    "monocytes",
+    "eosinophils",
+    "erythroid precursors",
+    "lymphocytes",
+    "plasma cells",
+    "blasts and blast-equivalents",
+]
 
 what_to_ignore = "class"  # 'class' or 'instance' if ignore class, then the softmax probability of ignored classes will be set to -np.inf, if ignore instance, then instances of ignored classes will be removed
 
@@ -267,32 +294,6 @@ cellnames_dict = {
 
 supported_extensions = [".svs", ".ndpi"]
 
-differential_group_dict = {
-    "blasts": ["M1"],  # , "M2", "ER1"],
-    "blast-equivalents": [], # sum blasts and blast-equivalents together and treat that as one class
-    "promyelocytes": ["M2"],
-    "myelocytes": ["M3"],
-    "metamyelocytes": ["M4"],
-    "neutrophils/bands": ["M5", "M6"],
-    "monocytes": ["MO2"],
-    "eosinophils": ["E1", "E4"],
-    "erythroid precursors": ["ER1", "ER2", "ER3", "ER4"],
-    "lymphocytes": ["L2"],
-    "plasma cells": ["L4"],
-}
-
-BMA_final_classes = [
-    "blasts",
-    "blast-equivalents",
-    "myelocytes",
-    "metamyelocytes",
-    "neutrophils/bands",
-    "monocytes",
-    "eosinophils",
-    "erythroid precursors",
-    "lymphocytes",
-    "plasma cells",
-]
 
 omitted_classes = ["B1", "B2"]
 removed_classes = ["U1", "PL2", "PL3", "ER5", "ER6", "U4"]
