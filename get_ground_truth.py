@@ -73,6 +73,14 @@ for idx, row in tqdm(metadata.iterrows(), total=len(metadata)):
 
 new_metadata_df = pd.DataFrame(new_metadata_dict)
 
+# sum the blasts and blast_equivalents column together into a new column named "blasts and blast equivalents"
+new_metadata_df["blasts and blast equivalents"] = (
+    new_metadata_df["blasts"] + new_metadata_df["blast_equivalents"]
+)
+
+# delete the blasts and blast_equivalents columns
+new_metadata_df.drop(columns=["blasts", "blast_equivalents"], inplace=True)
+
 new_metadata_df.to_csv(new_metadata_path, index=False)
 
 print(f"Number of problematic rows: {num_problematic}")
