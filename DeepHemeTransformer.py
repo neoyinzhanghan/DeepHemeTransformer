@@ -306,7 +306,7 @@ if __name__ == "__main__":
     )
 
     # Create an instance of your LightningModule
-    model = DeepHemeModule(learning_rate=1e-3, max_epochs=50, weight_decay=1e-2)
+    model = DeepHemeModule(learning_rate=1e-4, max_epochs=50, weight_decay=1e-2)
 
     # Train the model
     trainer.fit(model, datamodule)
