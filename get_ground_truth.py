@@ -51,7 +51,10 @@ for idx, row in tqdm(metadata.iterrows(), total=len(metadata)):
         diff_data_row = diff_data_row.iloc[0]
 
     for diff_class in BMA_final_classes:
-        new_metadata_dict[diff_class].append(diff_data_row[diff_class])
+
+        val = diff_data_row[diff_class]
+        print(val)
+        new_metadata_dict[diff_class].append(val)
 
     new_metadata_dict["wsi_name"].append(wsi_name)
     new_metadata_dict["accession_number"].append(accession_number)

@@ -227,6 +227,7 @@ class DeepHemeModule(pl.LightningModule):
             on_epoch=True,
             prog_bar=True,
             logger=True,
+            batch_size=len(features_list),
         )
 
     def validation_step(self, batch, batch_idx):
@@ -241,11 +242,9 @@ class DeepHemeModule(pl.LightningModule):
         ):
             outputs = self(features)
             outputs_list.append(outputs)
-            
 
         # Compute the loss for each item in the batch
-        loss = self.loss_fn(outputs_list, logits_list, differential_list)   
-
+        loss = self.loss_fn(outputs_list, logits_list, differential_list)
 
         # Average loss over the batch
         avg_loss = total_loss / len(features_list)
@@ -256,6 +255,7 @@ class DeepHemeModule(pl.LightningModule):
             on_epoch=True,
             prog_bar=True,
             logger=True,
+            batch_size=len(features_list),
         )
 
         return avg_loss
