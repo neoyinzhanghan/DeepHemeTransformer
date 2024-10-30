@@ -114,10 +114,10 @@ class RegularizedDifferentialLoss(nn.Module):
         ce_loss = self.average_ce_loss(outputs_list, cell_classes)
 
         # Compute the differential loss
-        # diff_loss = self.differential_loss(outputs_list, differentials_list)
+        diff_loss = self.differential_loss(outputs_list, differentials_list)
 
         # Combine the losses
-        total_loss = ce_loss
-        # total_loss = diff_loss + self.reg_lambda * ce_loss
+        # total_loss = ce_loss
+        total_loss = diff_loss + self.reg_lambda * ce_loss
 
         return total_loss
