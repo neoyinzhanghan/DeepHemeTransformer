@@ -53,6 +53,11 @@ for idx, row in tqdm(metadata.iterrows(), total=len(metadata)):
     for diff_class in BMA_final_classes:
 
         val = diff_data_row[diff_class]
+
+        # get the value, right now it is a row
+        if len(val) > 1:
+            val = val.iloc[0]
+        print(type(val))
         print(val)
         new_metadata_dict[diff_class].append(val)
 
