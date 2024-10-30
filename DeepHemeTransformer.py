@@ -233,7 +233,7 @@ class DeepHemeModule(pl.LightningModule):
         features_list, logits_list, differential_list = batch
         total_loss = 0.0
 
-        outputs_list = []s
+        outputs_list = []
 
         # Iterate over the list of inputs in the batch
         for features, logits, differential in zip(
