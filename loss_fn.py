@@ -14,19 +14,19 @@ class AvgCELoss(nn.Module):
         # Initialize a list to store the individual losses
         batch_losses = []
 
-        print(f"Length of inputs_list: {len(inputs_list)}")
-        print(f"Length of targets_list: {len(targets_list)}")
-        print(targets_list)
+        # print(f"Length of inputs_list: {len(inputs_list)}")
+        # print(f"Length of targets_list: {len(targets_list)}")
+        # print(targets_list) # TODO to remove only for debugging
 
         for inputs, targets in zip(inputs_list, targets_list):
 
             # print(inputs.shape, targets.shape)
-            print(f"Shape of inputs: {inputs.shape}")
-            print(f"Shape of targets: {targets.shape}")
+            # print(f"Shape of inputs: {inputs.shape}")
+            # print(f"Shape of targets: {targets.shape}") # TODO to remove only for debugging
 
-            import sys
+            # import sys
 
-            sys.exit()
+            # sys.exit()
 
             # Compute the cross-entropy loss for each sample in the batch
             losses = self.criterion(inputs, targets)
@@ -89,24 +89,24 @@ class RegularizedDifferentialLoss(nn.Module):
 
     def forward(self, outputs_list, logits_list, differentials_list):
 
-        print(type(outputs_list))
+        # print(type(outputs_list))
 
-        print(len(outputs_list))
-        print(outputs_list[0].shape[0])
+        # print(len(outputs_list))
+        # print(outputs_list[0].shape[0])
 
-        print(type(logits_list))
+        # print(type(logits_list))
 
-        print(len(logits_list))
-        print(logits_list[0].shape)
+        # print(len(logits_list))
+        # print(logits_list[0].shape)
 
-        print(type(differentials_list))
+        # print(type(differentials_list))
 
-        print(len(differentials_list))
-        print(differentials_list[0].shape)
+        # print(len(differentials_list))
+        # print
 
-        import sys
+        # import sys
 
-        sys.exit()
+        # sys.exit() # TODO to remove only for debugging
 
         cell_classes = [logits.argmax(dim=1) for logits in logits_list]
 
