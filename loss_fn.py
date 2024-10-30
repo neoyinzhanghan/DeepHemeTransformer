@@ -63,7 +63,7 @@ class GroupedLossWithIndexMap(nn.Module):
 
         for inputs, targets in zip(inputs_list, targets_list):
             # Initialize an output tensor for the summed values
-            N, _ = inputs.shape
+            N = inputs.shape[0]
             outputs = torch.zeros(N, len(self.index_map), device=inputs.device)
 
             # Sum values according to the index map
@@ -77,11 +77,11 @@ class GroupedLossWithIndexMap(nn.Module):
             )  # Compute the sum across the last dimension
             probabilities = outputs / sum_outputs  # Basic normalization
 
-            # Apply softmax for additional smoothing on model outputs
-            smoothed_probabilities = nn.Softmax(dim=1)(probabilities)
+            # Apply softmax for additional smoothing on model outputs (single vector)
+            smoothed_probabilities = nn.Softmax(dim=0)(probabilities.squeeze())
 
-            # Apply softmax to the target tensor to get smoothed probabilities
-            smoothed_targets = nn.Softmax(dim=1)(targets)
+            # Apply softmax to the target tensor to get smoothed probabilities (single vector)
+            smoothed_targets = nn.Softmax(dim=0)(targets.squeeze())
 
             # Apply log to the model probabilities since KLDivLoss expects log-probabilities
             log_probabilities = torch.log(
