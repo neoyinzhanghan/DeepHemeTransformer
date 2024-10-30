@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from tqdm import tqdm
-from BMAassumptions import BMA_final_classes
+from BMAassumptions import BMA_reported_classes, BMA_final_classes
 
 metadata_path = "/media/hdd3/neo/DeepHemeTransformerData/features_metadata.csv"
 new_metadata_path = (
@@ -17,7 +17,7 @@ new_metadata_dict = {
     "features_path": [],
 }
 
-for diff_class in BMA_final_classes:
+for diff_class in BMA_reported_classes:
     new_metadata_dict[diff_class] = []
 
 # traverse through the rows of metadata_path
@@ -50,7 +50,7 @@ for idx, row in tqdm(metadata.iterrows(), total=len(metadata)):
     if len(diff_data_row) > 1:
         diff_data_row = diff_data_row.iloc[0]
 
-    for diff_class in BMA_final_classes:
+    for diff_class in BMA_reported_classes:
 
         val = diff_data_row[diff_class]
 
@@ -81,7 +81,18 @@ new_metadata_df["blasts and blast-equivalents"] = (
 # delete the blasts and blast_equivalents columns
 new_metadata_df.drop(columns=["blasts", "blast-equivalents"], inplace=True)
 
-new_metadata_df.to_csv(new_metadata_path, index=False)
+# sum the colums in BMA_final_classes which is a list of strings and assign to a new column named "total"
+new_metadata_df["total"] = new_metadata_df[BMA_final_classes].sum(axis=1)
 
+# find how many rows have a total value < 90
+num_total_less_than_90 = len(new_metadata_df[new_metadata_df["total"] < 90])
+
+# remove all rows where the total value is < 90
+new_metadata_df = new_metadata_df[new_metadata_df["total"] >= 90]
+
+print(f"Number of rows with total < 90: {num_total_less_than_90}")
 print(f"Number of problematic rows: {num_problematic}")
-print(f"Number of non-problematic rows: {len(metadata) - num_problematic}")
+print(
+    f"Number of non-problematic rows: {len(metadata) - num_problematic - num_total_less_than_90}"
+)
+new_metadata_df.to_csv(new_metadata_path, index=False)

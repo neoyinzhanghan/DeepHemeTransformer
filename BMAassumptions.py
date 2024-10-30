@@ -233,6 +233,22 @@ differential_group_dict = {
     "blasts and blast-equivalents": ["M1", "M2"],  # 8
 }
 
+
+BMA_reported_classes = [
+    "blasts",
+    "blast-equivalents",
+    "myelocytes",
+    "metamyelocytes",
+    "neutrophils/bands",
+    "monocytes",
+    "eosinophils",
+    "erythroid precursors",
+    "lymphocytes",
+    "plasma cells",
+    # "blasts and blast-equivalents",
+]
+
+
 BMA_final_classes = [
     # "blasts",
     # "blast-equivalents",
