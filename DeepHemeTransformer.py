@@ -129,11 +129,6 @@ class DeepHemeTransformer(nn.Module):
         x_ele = x
         # x should be a list of inputs with shape [N, 2048]
 
-        print(x_ele.size())
-
-        import sys
-
-        sys.exit()
         num_cells = x_ele.size(0)
 
         # project features to 1024
