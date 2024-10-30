@@ -14,6 +14,10 @@ class AvgCELoss(nn.Module):
         # Initialize a list to store the individual losses
         batch_losses = []
 
+        print(f"Length of inputs_list: {len(inputs_list)}")
+        print(f"Length of targets_list: {len(targets_list)}")
+        print(targets_list)
+
         for inputs, targets in zip(inputs_list, targets_list):
             
             # print(inputs.shape, targets.shape)
