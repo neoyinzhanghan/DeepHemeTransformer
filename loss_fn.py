@@ -15,15 +15,6 @@ class AvgCELoss(nn.Module):
         batch_losses = []
 
         for inputs, targets in zip(inputs_list, targets_list):
-            # Check the shape of inputs and targets for each sample in the batch
-            if (
-                inputs.dim() != 2
-                or targets.dim() != 1
-                or targets.size(0) != inputs.size(0)
-            ):
-                raise ValueError(
-                    "Each input should be of shape [N, 23] and targets should be of shape [N]"
-                )
 
             # Compute the cross-entropy loss for each sample in the batch
             losses = self.criterion(inputs, targets)
@@ -49,16 +40,6 @@ class GroupedLossWithIndexMap(nn.Module):
         batch_losses = []
 
         for inputs, targets in zip(inputs_list, targets_list):
-            # Check input shapes for each sample in the batch
-            if (
-                inputs.dim() != 2
-                or targets.dim() != 1
-                or targets.size(0) != len(self.index_map)
-            ):
-                raise ValueError(
-                    "Each input should be of shape [N, 23] and targets should be of shape [11]"
-                )
-
             # Initialize an output tensor for the summed values
             N, _ = inputs.shape
             outputs = torch.zeros(N, len(self.index_map), device=inputs.device)

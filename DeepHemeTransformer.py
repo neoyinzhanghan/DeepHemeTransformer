@@ -119,7 +119,6 @@ class DeepHemeTransformer(nn.Module):
         self.last_layer_linear = nn.Linear(1024, 23)
 
     def forward(self, x):
-        batch_size = len(x)
 
         output_list = []
 
@@ -135,7 +134,7 @@ class DeepHemeTransformer(nn.Module):
         ), f"Checkpoint 1: x_ele.size(1)={x_ele.size(1)}, expected 1024"
         assert (
             x_ele.size(0) == num_cells
-        ), f"Checkpoint 2: x_ele.size(0)={x_ele.size(0)}, expected {batch_size * num_cells}"
+        ), f"Checkpoint 2: x_ele.size(0)={x_ele.size(0)}, expected {num_cells}"
 
         # add a batch dimension to x_ele
         x_ele = x_ele.unsqueeze(0)
