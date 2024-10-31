@@ -5,6 +5,7 @@ import pytorch_lightning as pl
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from ray import tune
+from ray.air import RunConfig  # Added correct import for RunConfig
 from ray.tune.integration.pytorch_lightning import TuneReportCallback
 import pandas as pd
 from pathlib import Path
@@ -32,7 +33,7 @@ def train_deep_heme_module(config, metadata_file_path, num_epochs=50):
         datamodule = CellFeaturesDataModule(
             metadata_file=metadata_file_path,
             batch_size=config.get("batch_size", 32),
-            num_workers=4  # Added explicit num_workers for better GPU utilization
+            num_workers=4
         )
     except Exception as e:
         print(f"Error initializing DataModule: {str(e)}")
@@ -72,11 +73,11 @@ def train_deep_heme_module(config, metadata_file_path, num_epochs=50):
         max_epochs=num_epochs,
         log_every_n_steps=10,
         accelerator="gpu",
-        devices=[int(gpu_id)],  # Use the GPU assigned by Ray
+        devices=[int(gpu_id)],
         callbacks=callbacks,
         deterministic=True,
-        enable_progress_bar=False,  # Disable progress bar for cleaner logging
-        precision="32-true"  # Use full precision for debugging
+        enable_progress_bar=False,
+        precision="32-true"
     )
     
     # Train the model with error handling
@@ -108,10 +109,12 @@ def main():
     if not metadata_file_path.exists():
         raise FileNotFoundError(f"Metadata file not found at {metadata_file_path}")
     
-    # Configure resources per trial
-    resources_per_trial = {"gpu": 1}  # Request 1 GPU per trial
-    
     # Configure Ray Tune
+    run_config = RunConfig(
+        name="deep_heme_multi_gpu",
+        local_dir="./ray_results",
+    )
+    
     tune_config = tune.TuneConfig(
         metric="loss",
         mode="min",
@@ -121,17 +124,16 @@ def main():
     
     # Initialize and run tuner with resource configuration
     tuner = tune.Tuner(
-        tune.with_parameters(
-            train_deep_heme_module,
-            metadata_file_path=str(metadata_file_path)
+        tune.with_resources(
+            tune.with_parameters(
+                train_deep_heme_module,
+                metadata_file_path=str(metadata_file_path)
+            ),
+            resources={"gpu": 1}  # Request 1 GPU per trial
         ),
         param_space=search_space,
         tune_config=tune_config,
-        run_config=tune.RunConfig(
-            storage_path="./ray_results",
-            name="deep_heme_multi_gpu",
-            resources_per_trial=resources_per_trial
-        )
+        run_config=run_config
     )
     
     # Run hyperparameter search
