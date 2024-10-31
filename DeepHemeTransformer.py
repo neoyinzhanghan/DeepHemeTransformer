@@ -111,11 +111,13 @@ class MultiHeadAttentionClassifier(nn.Module):
 
 
 class DeepHemeTransformer(nn.Module):
-    def __init__(self):
+    def __init__(self, num_heads=8):
         super(DeepHemeTransformer, self).__init__()
 
         self.feature_projector = nn.Linear(2048, 1024)
-        self.transformer = MultiHeadAttentionClassifier(d_model=1024, num_heads=8)
+        self.transformer = MultiHeadAttentionClassifier(
+            d_model=1024, num_heads=num_heads
+        )
         self.last_layer_linear = nn.Linear(1024, 23)
 
     def forward(self, x):
@@ -196,11 +198,11 @@ from cell_dataloader import CellFeaturesDataModule
 
 
 class DeepHemeModule(pl.LightningModule):
-    def __init__(self, learning_rate=1e-3, max_epochs=50, weight_decay=1e-2):
+    def __init__(self, learning_rate=1e-3, max_epochs=50, weight_decay=1e-2, num_heads=8, reg_lambda=0.1):
         super().__init__()
         self.save_hyperparameters()
-        self.model = DeepHemeTransformer()
-        self.loss_fn = RegularizedDifferentialLoss(reg_lambda=0.1)
+        self.model = DeepHemeTransformer(num_heads=num_heads)
+        self.loss_fn = RegularizedDifferentialLoss(reg_lambda=reg_lambda)
 
     def forward(self, x):
         return self.model(x)
