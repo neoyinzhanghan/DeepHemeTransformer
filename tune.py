@@ -58,9 +58,10 @@ tuner = tune.Tuner(
     tune_config=tune.TuneConfig(
         metric="loss",
         mode="min",
-        num_samples=50,  # Set the number of random search samples
-        name="deep_heme_random_search"
+        num_samples=50  # Set the number of random search samples
     ),
+    # Specify the experiment name here
+    name="deep_heme_random_search",
 )
 
 # Run the tuning and save results to CSV
