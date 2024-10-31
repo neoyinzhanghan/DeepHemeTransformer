@@ -12,12 +12,15 @@ import pandas as pd
 from pathlib import Path
 import os
 import logging
-from DeepHemeTransformer import DeepHemeModule
-from cell_dataloader import CellFeaturesDataModule
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Assuming these are implemented in the same directory
+from cell_dataloader import CellFeaturesDataModule
+from loss_fn import RegularizedDifferentialLoss
+from DeepHemeTransformer import DeepHemeModule
 
 def train_deep_heme_module(config, metadata_file_path, num_epochs=50):
     """
@@ -124,13 +127,19 @@ def main():
         "accumulate_grad_batches": tune.choice([1, 2, 4])  # For larger effective batch sizes
     }
 
+    # Validate metadata file path
     metadata_file_path = Path("/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv")
     if not metadata_file_path.exists():
         raise FileNotFoundError(f"Metadata file not found at {metadata_file_path}")
 
-    # Updated Ray configuration
+    # Create absolute path for Ray results
+    current_dir = os.path.abspath(os.path.dirname(__file__))
+    ray_results_path = os.path.abspath(os.path.join(current_dir, "ray_results"))
+    os.makedirs(ray_results_path, exist_ok=True)
+
+    # Updated Ray configuration with absolute path
     run_config = RunConfig(
-        storage_path="./ray_results",  # Updated from local_dir
+        storage_path=ray_results_path,  # Using absolute path
         name="deep_heme_multi_gpu",
         checkpoint_config=CheckpointConfig(
             num_to_keep=2,
@@ -173,7 +182,7 @@ def main():
         
         # Save and analyze results
         results_df = result.get_dataframe()
-        results_df.to_csv("ray_results/tune_results.csv", index=False)
+        results_df.to_csv(os.path.join(ray_results_path, "tune_results.csv"), index=False)
         
         best_trial = result.get_best_trial("loss", "min", "last")
         logger.info("\nBest trial config:")
@@ -181,7 +190,7 @@ def main():
         logger.info(f"Best trial final validation loss: {best_trial.last_result['loss']:.4f}")
         
         # Save best configuration
-        with open("ray_results/best_config.txt", "w") as f:
+        with open(os.path.join(ray_results_path, "best_config.txt"), "w") as f:
             for key, value in best_trial.config.items():
                 f.write(f"{key}: {value}\n")
             
