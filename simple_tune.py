@@ -14,7 +14,7 @@ def get_random_config():
     """Generate random hyperparameters within defined ranges."""
     return {
         "num_heads": random.choice([1, 2, 4, 8]),
-        "learning_rate": float(np.exp(np.random.uniform(np.log(1e-5), np.log(1e-3)))),
+        "learning_rate": float(np.exp(np.random.uniform(np.log(1e-7), np.log(1e-1)))),
         "reg_lambda": 1,  # random.uniform(0.01, 1.0),
         "batch_size": random.choice([16, 32, 64, 128]),
         "weight_decay": float(np.exp(np.random.uniform(np.log(1e-5), np.log(1e-2)))),

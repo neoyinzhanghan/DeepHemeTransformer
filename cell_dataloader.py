@@ -1,6 +1,7 @@
 import os
 import h5py
 import torch
+import random
 import pandas as pd
 import pytorch_lightning as pl
 from torch.utils.data import Dataset
@@ -78,6 +79,14 @@ class CellFeaturesLogitsDataset(Dataset):
 
         # get the features_path column as a list
         self.features_path = metadata["features_path"].tolist()
+
+        # shuffle the features_path list
+        random.shuffle(self.features_path)
+
+        # randomly sample 10% of the data
+        self.features_path = random.sample(
+            self.features_path, int(0.1 * len(self.features_path))
+        )
 
     def __len__(self):
         return len(self.features_path)
