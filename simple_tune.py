@@ -82,7 +82,7 @@ def train_model(config, metadata_file_path):
 def main():
     """Run random hyperparameter search and save results."""
     # Configuration
-    num_trials = 5
+    num_trials = 3
     metadata_file_path = (
         "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"
     )
