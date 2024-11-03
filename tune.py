@@ -8,7 +8,6 @@ from ray.train.lightning import (
     prepare_trainer,
 )
 from ray.tune.schedulers import ASHAScheduler
-from ray.air import ScalingConfig  # Import ScalingConfig from ray.air
 import os
 
 from cell_dataloader import CellFeaturesDataModule
@@ -33,7 +32,7 @@ def train_deep_heme(config):
         devices=1,
         strategy=RayDDPStrategy(),
         plugins=[RayLightningEnvironment()],
-        callbacks=[RayTrainReportCallback()],
+        callbacks=[RayTrainReportCallback(metrics=["val_loss"])],
         enable_progress_bar=False
     )
     
@@ -53,14 +52,8 @@ def main():
     scheduler = ASHAScheduler(
         max_t=50,
         grace_period=10,
-        metric="loss",
+        metric="val_loss",
         mode="min"
-    )
-
-    scaling_config = ScalingConfig(
-        num_workers=1,
-        use_gpu=True,
-        resources_per_worker={"CPU": 2, "GPU": 1}
     )
 
     analysis = tune.run(
@@ -68,12 +61,14 @@ def main():
         config=config,
         num_samples=50,
         scheduler=scheduler,
-        scaling_config=scaling_config,
-        name="deepheme_tune"
+        resources_per_trial={"gpu": 1, "cpu": 2},
+        local_dir="./ray_results",
+        name="deepheme_tune",
+        stop={"training_iteration": 50}
     )
 
     print("Best config:", analysis.best_trial.config)
-    print(f"Best validation loss: {analysis.best_trial.last_result['loss']:.4f}")
+    print(f"Best validation loss: {analysis.best_trial.last_result['val_loss']:.4f}")
     
 if __name__ == "__main__":
     main()
