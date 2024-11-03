@@ -5,7 +5,6 @@ from ray.tune.integration.pytorch_lightning import TuneReportCheckpointCallback
 from ray.tune.schedulers import ASHAScheduler
 import os
 
-# Import your custom modules
 from cell_dataloader import CellFeaturesDataModule
 from DeepHemeTransformer import DeepHemeModule
 
@@ -26,7 +25,13 @@ def train_deep_heme(config):
         max_epochs=50,
         accelerator="gpu",
         devices=1,
-        callbacks=[TuneReportCheckpointCallback({"loss": "val_loss"}, on="validation_end")],
+        callbacks=[
+            TuneReportCheckpointCallback(
+                metrics={"loss": "val_loss"},
+                filename="checkpoint",
+                on="validation_end"
+            )
+        ],
         enable_progress_bar=False
     )
     
@@ -45,8 +50,8 @@ def main():
     scheduler = ASHAScheduler(
         max_t=50,
         grace_period=10,
-        metric="loss",  # Added metric
-        mode="min"      # Added mode
+        metric="loss",
+        mode="min"
     )
 
     analysis = tune.run(
@@ -54,10 +59,13 @@ def main():
         config=config,
         num_samples=50,
         scheduler=scheduler,
-        resources_per_trial={"gpu": 1}
+        resources_per_trial={"gpu": 1, "cpu": 2},  # Added CPU allocation
+        local_dir="./ray_results",  # Specify output directory
+        name="deepheme_tune"  # Add experiment name
     )
 
     print("Best config:", analysis.best_trial.config)
+    print(f"Best validation loss: {analysis.best_trial.last_result['loss']:.4f}")
     
 if __name__ == "__main__":
     main()
