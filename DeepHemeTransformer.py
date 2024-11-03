@@ -313,11 +313,26 @@ class DeepHemeModule(pl.LightningModule):
         self.log("learning_rate", current_lr, on_epoch=True, logger=True)
 
 
+def load_model(checkpoint_path):
+    """
+    Load a DeepHemeModule model from a specified checkpoint.
+
+    Args:
+        checkpoint_path (str): Path to the saved PyTorch Lightning checkpoint.
+
+    Returns:
+        DeepHemeModule: The model loaded from the checkpoint.
+    """
+    # Load the model from checkpoint
+    model = DeepHemeModule.load_from_checkpoint(checkpoint_path)
+    return model
+
+
 if __name__ == "__main__":
 
     import numpy as np
 
-    for i in range(10):
+    for i in range(1):
         # learning_rate = 10 ** np.random.uniform(-10, 0)
         # Set up parameters
         metadata_file_path = (
@@ -333,7 +348,7 @@ if __name__ == "__main__":
         learning_rate = 1e-4
 
         # Set up the logger with a subfolder named after the learning rate
-        log_dir = f"logs/lr_1e-4_no_reg"
+        log_dir = f"logs/train_nov3/lr_1e-4_no_reg"
         logger = TensorBoardLogger(
             save_dir=log_dir,
             name="",
@@ -341,7 +356,7 @@ if __name__ == "__main__":
 
         # Define a PyTorch Lightning trainer with the custom logger
         trainer = pl.Trainer(
-            max_epochs=20,
+            max_epochs=50,
             log_every_n_steps=10,
             devices=1,
             accelerator="gpu",
