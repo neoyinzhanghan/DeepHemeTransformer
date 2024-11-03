@@ -13,6 +13,7 @@ import torch.nn.functional as F
 from loss_fn import RegularizedDifferentialLoss
 from cell_dataloader import CellFeaturesLogitsDataset, CellFeaturesDataModule
 from loss_fn import RegularizedDifferentialLoss
+from BMAassumptions import index_map
 
 # usage example for the loss loss(forward_output, logits, differential)
 # the dataset output is a tuple of features, logits, differential
@@ -175,6 +176,27 @@ class DeepHemeTransformer(nn.Module):
         ), f"Checkpoint 10: x_ele.size(1)={x_ele.size(1)}, expected 23"
 
         return x_ele
+
+    def predict_diff(self, x, index_map=index_map):
+        x_ele = self.forward(x)
+
+        # Initialize an output tensor for the summed values
+        N = x_ele.shape[0]
+
+        outputs = torch.zeros(N, len(index_map), device=x_ele.device)
+
+        # Sum values according to the index map
+        for new_idx, old_indices in self.index_map.items():
+            for old_idx in old_indices:
+                outputs[:, new_idx] += x_ele[:, old_idx]
+
+        # Normalize to get a probability distribution
+        sum_outputs = outputs.sum(
+            dim=-1, keepdim=True
+        )  # Compute the sum across the last dimension
+        probabilities = outputs / sum_outputs  # Basic normalization
+
+        return probabilities
 
 
 ###########################################################################################################################
