@@ -32,7 +32,7 @@ def train_deep_heme(config):
         devices=1,
         strategy=RayDDPStrategy(),
         plugins=[RayLightningEnvironment()],
-        callbacks=[RayTrainReportCallback(metrics=["val_loss"])],
+        callbacks=[RayTrainReportCallback()],  # Removed metrics parameter
         enable_progress_bar=False
     )
     
@@ -62,7 +62,7 @@ def main():
         num_samples=50,
         scheduler=scheduler,
         resources_per_trial={"gpu": 1, "cpu": 2},
-        # local_dir="./ray_results",
+        local_dir="./ray_results",
         name="deepheme_tune",
         stop={"training_iteration": 50}
     )
