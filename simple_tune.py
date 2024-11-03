@@ -50,7 +50,7 @@ def train_model(config, metadata_file_path):
 
     # Configure trainer
     trainer = pl.Trainer(
-        max_epochs=50,
+        max_epochs=5,  # should be 50
         accelerator="gpu",
         devices=1,
         callbacks=[
@@ -82,7 +82,7 @@ def train_model(config, metadata_file_path):
 def main():
     """Run random hyperparameter search and save results."""
     # Configuration
-    num_trials = 50
+    num_trials = 5
     metadata_file_path = (
         "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"
     )
