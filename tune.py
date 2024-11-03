@@ -8,6 +8,7 @@ from ray.train.lightning import (
     prepare_trainer,
 )
 from ray.tune.schedulers import ASHAScheduler
+from ray.air import ScalingConfig  # Import ScalingConfig from ray.air
 import os
 
 from cell_dataloader import CellFeaturesDataModule
@@ -56,7 +57,7 @@ def main():
         mode="min"
     )
 
-    scaling_config = tune.ScalingConfig(
+    scaling_config = ScalingConfig(
         num_workers=1,
         use_gpu=True,
         resources_per_worker={"CPU": 2, "GPU": 1}
