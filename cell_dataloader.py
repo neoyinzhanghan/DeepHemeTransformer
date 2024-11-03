@@ -69,16 +69,20 @@ class ImagePathDataset(Dataset):
 
 
 class CellFeaturesLogitsDataset(Dataset):
-    def __init__(self, metadata):
+    def __init__(self, metadata, split="train"):
         """
         Args:
             metadata (pd.DataFrame): DataFrame containing features and logits.
             features_path (str): Path to the features file.
+            split (str): Dataset split (train, val, test).
         """
-        self.metadata = metadata
 
-        # get the features_path column as a list
-        self.features_path = metadata["features_path"].tolist()
+        # get the features_path column as a list for all the rows where split is equal to the split
+        self.metadata = metadata[metadata["split"] == split]
+        self.features_path = self.metadata["features_path"].tolist()
+
+        self.split = split
+        assert self.split in ["train", "val", "test"]
 
         # shuffle the features_path list
         random.shuffle(self.features_path)
@@ -122,15 +126,13 @@ class CellFeaturesDataModule(pl.LightningDataModule):
         metadata = pd.read_csv(self.metadata_file)
 
         # Determine dataset lengths based on the split ratios
-        dataset = CellFeaturesLogitsDataset(metadata)
-        train_size = int(0.8 * len(dataset))
-        val_size = int(0.1 * len(dataset))
-        test_size = len(dataset) - train_size - val_size
+        train_dataset = CellFeaturesLogitsDataset(metadata, split="train")
+        val_dataset = CellFeaturesLogitsDataset(metadata, split="val")
+        test_dataset = CellFeaturesLogitsDataset(metadata, split="test")
 
-        # Split the dataset
-        self.train_dataset, self.val_dataset, self.test_dataset = random_split(
-            dataset, [train_size, val_size, test_size]
-        )
+        self.train_dataset = train_dataset
+        self.val_dataset = val_dataset
+        self.test_dataset = test_dataset
 
     def train_dataloader(self):
         return DataLoader(
