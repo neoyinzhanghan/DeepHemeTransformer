@@ -180,12 +180,6 @@ class DeepHemeTransformer(nn.Module):
 ###########################################################################################################################
 ###########################################################################################################################
 ###########################################################################################################################
-# Pytorch Lightning Model Definition & Training Script with Ray Distributed Training
-###########################################################################################################################
-###########################################################################################################################
-###########################################################################################################################
-###########################################################################################################################
-###########################################################################################################################
 # Pytorch Lightning Model Definition & Training Script
 ###########################################################################################################################
 ###########################################################################################################################
@@ -198,6 +192,7 @@ from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader
+from pytorch_lightning.loggers import TensorBoardLogger
 
 # Assuming DeepHemeTransformer and CellFeaturesDataModule are implemented elsewhere
 from cell_dataloader import CellFeaturesDataModule
@@ -225,7 +220,9 @@ class DeepHemeModule(pl.LightningModule):
         outputs_list = []
 
         # Iterate over the list of inputs in the batch
-        for features, logits, differential in zip(features_list, logits_list, differential_list):
+        for features, logits, differential in zip(
+            features_list, logits_list, differential_list
+        ):
             outputs = self(features)
             outputs_list.append(outputs)
 
@@ -248,7 +245,9 @@ class DeepHemeModule(pl.LightningModule):
         outputs_list = []
 
         # Iterate over the list of inputs in the batch
-        for features, logits, differential in zip(features_list, logits_list, differential_list):
+        for features, logits, differential in zip(
+            features_list, logits_list, differential_list
+        ):
             outputs = self(features)
             outputs_list.append(outputs)
 
@@ -293,26 +292,38 @@ class DeepHemeModule(pl.LightningModule):
 
 
 if __name__ == "__main__":
-    # Instantiate the DataModule
+    # Set up parameters
     metadata_file_path = (
         "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"
     )
     batch_size = 32
+    learning_rate = 1e-4
 
+    # Instantiate the DataModule
     datamodule = CellFeaturesDataModule(
         metadata_file=metadata_file_path, batch_size=batch_size
     )
 
-    # Define a PyTorch Lightning trainer without RayStrategy
+    # Set up the logger with a subfolder named after the learning rate
+    log_dir = f"logs/lr_{learning_rate}"
+    logger = TensorBoardLogger(
+        save_dir=log_dir,
+        name="",
+    )
+
+    # Define a PyTorch Lightning trainer with the custom logger
     trainer = pl.Trainer(
         max_epochs=10,
         log_every_n_steps=10,
         devices=1,
         accelerator="gpu",
+        logger=logger,
     )
 
     # Create an instance of your LightningModule
-    model = DeepHemeModule(learning_rate=1e-4, max_epochs=50, weight_decay=1e-2)
+    model = DeepHemeModule(
+        learning_rate=learning_rate, max_epochs=50, weight_decay=1e-2
+    )
 
     # Train the model
     trainer.fit(model, datamodule)
