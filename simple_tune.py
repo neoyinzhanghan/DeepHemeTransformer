@@ -2,7 +2,7 @@ import os
 import random
 import numpy as np
 import pandas as pd
-import lightning as pl
+import pytorch_lightning as pl
 from datetime import datetime
 import torch
 
