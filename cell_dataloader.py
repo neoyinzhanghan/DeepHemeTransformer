@@ -83,10 +83,10 @@ class CellFeaturesLogitsDataset(Dataset):
         # shuffle the features_path list
         random.shuffle(self.features_path)
 
-        # randomly sample 10% of the data
-        self.features_path = random.sample(
-            self.features_path, int(0.25 * len(self.features_path))
-        )
+        # # randomly sample 10% of the data
+        # self.features_path = random.sample(
+        #     self.features_path, int(0.25 * len(self.features_path))
+        # )
 
     def __len__(self):
         return len(self.features_path)
