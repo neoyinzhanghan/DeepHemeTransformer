@@ -34,3 +34,7 @@ metadata["split"] = ""
 metadata.loc[:train_N, "split"] = "train"
 metadata.loc[train_N : train_N + val_N, "split"] = "val"
 metadata.loc[train_N + val_N :, "split"] = "test"
+
+
+# save the metadata file with the split column
+metadata.to_csv(data_metadata_path, index=False)
