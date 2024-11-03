@@ -205,7 +205,7 @@ class DeepHemeModule(pl.LightningModule):
         max_epochs=50,
         weight_decay=1e-2,
         num_heads=8,
-        reg_lambda=0.1,
+        reg_lambda=0,
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -296,7 +296,7 @@ if __name__ == "__main__":
     import numpy as np
 
     for i in range(10):
-        learning_rate = 10 ** np.random.uniform(-10, 0)
+        # learning_rate = 10 ** np.random.uniform(-10, 0)
         # Set up parameters
         metadata_file_path = (
             "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"
@@ -307,8 +307,11 @@ if __name__ == "__main__":
             metadata_file=metadata_file_path, batch_size=batch_size
         )
 
+        # use a 1e-4 learning rate
+        learning_rate = 1e-4
+
         # Set up the logger with a subfolder named after the learning rate
-        log_dir = f"logs/lr_{learning_rate}"
+        log_dir = f"logs/lr_1e-4_no_reg"
         logger = TensorBoardLogger(
             save_dir=log_dir,
             name="",
