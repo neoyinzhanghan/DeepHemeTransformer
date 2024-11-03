@@ -32,7 +32,7 @@ def train_deep_heme(config):
         devices=1,
         callbacks=[
             RayTrainReportCallback(
-                metrics={"loss": "val_loss"},
+                # metrics={"loss": "val_loss"},
                 filename="checkpoint",
                 on="validation_end"
             )
