@@ -302,8 +302,6 @@ if __name__ == "__main__":
             "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"
         )
         batch_size = 32
-        learning_rate = 1e-4
-
         # Instantiate the DataModule
         datamodule = CellFeaturesDataModule(
             metadata_file=metadata_file_path, batch_size=batch_size
