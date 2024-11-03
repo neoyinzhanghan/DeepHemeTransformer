@@ -4,7 +4,7 @@ import pytorch_lightning as pl
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from ray import tune
-from ray.tune.integration.pytorch_lightning import TuneReportCallback
+from ray.tune.integration.pytorch_lightning import TuneReportCheckpointCallback
 from ray.tune.schedulers import ASHAScheduler
 import pandas as pd
 from pathlib import Path
@@ -53,7 +53,7 @@ def train_deep_heme_module(config: Dict[str, Any], num_epochs: int = 50) -> None
 
     # Callbacks following Ray's documentation
     callbacks = [
-        TuneReportCallback(
+        TuneReportCheckpointCallback(
             {
                 "loss": "val_loss",
                 "mean_accuracy": "val_accuracy"
