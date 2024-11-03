@@ -15,7 +15,7 @@ def get_random_config():
     return {
         "num_heads": random.choice([1, 2, 4, 8]),
         "learning_rate": float(np.exp(np.random.uniform(np.log(1e-5), np.log(1e-3)))),
-        "reg_lambda": random.uniform(0.01, 1.0),
+        "reg_lambda": 1,  # random.uniform(0.01, 1.0),
         "batch_size": random.choice([16, 32, 64, 128]),
         "weight_decay": float(np.exp(np.random.uniform(np.log(1e-5), np.log(1e-2)))),
     }
@@ -50,9 +50,9 @@ def train_model(config, metadata_file_path):
 
     # Configure trainer
     trainer = pl.Trainer(
-        max_epochs=5,  # should be 50
+        max_epochs=1,  # should be 50
         accelerator="gpu",
-        devices=1,
+        devices=2,
         callbacks=[
             pl.callbacks.EarlyStopping(monitor="val_loss", patience=5, mode="min"),
             pl.callbacks.ModelCheckpoint(
