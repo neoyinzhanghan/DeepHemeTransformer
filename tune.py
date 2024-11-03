@@ -1,7 +1,7 @@
 import torch
 import pytorch_lightning as pl
 from ray import tune
-from ray.tune.integration.pytorch_lightning import TuneReportCallback
+from ray.tune.integration.pytorch_lightning import TuneReportCheckpointCallback
 from ray.tune.schedulers import ASHAScheduler
 import os
 
@@ -26,7 +26,7 @@ def train_deep_heme(config):
         max_epochs=50,
         accelerator="gpu",
         devices=1,
-        callbacks=[TuneReportCallback({"loss": "val_loss"}, on="validation_end")],
+        callbacks=[TuneReportCheckpointCallback({"loss": "val_loss"}, on="validation_end")],
         enable_progress_bar=False
     )
     
