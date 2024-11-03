@@ -1,5 +1,5 @@
 import torch
-import lighting as pl
+import lightning as pl
 from ray import tune
 from ray.tune.integration.pytorch_lightning import TuneReportCheckpointCallback
 from ray.tune.schedulers import ASHAScheduler
