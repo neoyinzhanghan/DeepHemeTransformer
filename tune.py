@@ -42,7 +42,12 @@ def main():
         "metadata_file_path": "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"
     }
 
-    scheduler = ASHAScheduler(max_t=50, grace_period=10)
+    scheduler = ASHAScheduler(
+        max_t=50,
+        grace_period=10,
+        metric="loss",  # Added metric
+        mode="min"      # Added mode
+    )
 
     analysis = tune.run(
         train_deep_heme,
