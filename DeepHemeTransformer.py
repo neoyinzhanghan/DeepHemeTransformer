@@ -180,8 +180,7 @@ class DeepHemeTransformer(nn.Module):
 ###########################################################################################################################
 ###########################################################################################################################
 ###########################################################################################################################
-# Pytorch Lightning Model Definition & Training Script
-###########################################################################################################################
+# Pytorch Lightning Model Definition & Training Script with Ray Distributed Training
 ###########################################################################################################################
 ###########################################################################################################################
 
@@ -192,6 +191,8 @@ from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader
+import ray
+from ray_lightning import RayStrategy  # Import Ray's PyTorch Lightning Strategy
 
 # Assuming DeepHemeTransformer and CellFeaturesDataModule are implemented elsewhere
 from cell_dataloader import CellFeaturesDataModule
@@ -216,8 +217,6 @@ class DeepHemeModule(pl.LightningModule):
 
     def training_step(self, batch, batch_idx):
         features_list, logits_list, differential_list = batch
-        total_loss = 0.0
-
         outputs_list = []
 
         # Iterate over the list of inputs in the batch
@@ -229,6 +228,7 @@ class DeepHemeModule(pl.LightningModule):
 
         loss = self.loss_fn(outputs_list, logits_list, differential_list)
 
+        # Log and return a dictionary with relevant metrics
         self.log(
             "train_loss",
             loss,
@@ -238,11 +238,10 @@ class DeepHemeModule(pl.LightningModule):
             logger=True,
             batch_size=len(features_list),
         )
+        return {"loss": loss}
 
     def validation_step(self, batch, batch_idx):
         features_list, logits_list, differential_list = batch
-        total_loss = 0.0
-
         outputs_list = []
 
         # Iterate over the list of inputs in the batch
@@ -252,22 +251,20 @@ class DeepHemeModule(pl.LightningModule):
             outputs = self(features)
             outputs_list.append(outputs)
 
-        # Compute the loss for each item in the batch
+        # Compute the loss for the batch
         loss = self.loss_fn(outputs_list, logits_list, differential_list)
 
-        # Average loss over the batch
-        avg_loss = total_loss / len(features_list)
+        # Log the validation loss and return it for tracking
         self.log(
             "val_loss",
-            avg_loss,
+            loss,
             on_step=False,
             on_epoch=True,
             prog_bar=True,
             logger=True,
             batch_size=len(features_list),
         )
-
-        return avg_loss
+        return {"val_loss": loss}
 
     def configure_optimizers(self):
         optimizer = AdamW(
@@ -295,6 +292,10 @@ class DeepHemeModule(pl.LightningModule):
 
 
 if __name__ == "__main__":
+    # Initialize Ray and set up the Ray Strategy for distributed training
+    ray.init(ignore_reinit_error=True)
+    strategy = RayStrategy(num_workers=2, use_gpu=True)  # Adjust num_workers as needed
+
     # Instantiate the DataModule
     metadata_file_path = (
         "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"
@@ -305,13 +306,13 @@ if __name__ == "__main__":
         metadata_file=metadata_file_path, batch_size=batch_size
     )
 
-    # Define a PyTorch Lightning trainer
+    # Define a PyTorch Lightning trainer with RayStrategy
     trainer = pl.Trainer(
         max_epochs=10,
         log_every_n_steps=10,
-        devices=1,
+        strategy=strategy,
+        devices="auto",
         accelerator="gpu",
-        # precision=16 if torch.cuda.is_available() else 32,
     )
 
     # Create an instance of your LightningModule
@@ -319,3 +320,6 @@ if __name__ == "__main__":
 
     # Train the model
     trainer.fit(model, datamodule)
+
+    # Shut down Ray
+    ray.shutdown()
