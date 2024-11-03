@@ -60,7 +60,6 @@ def main():
         num_samples=50,
         scheduler=scheduler,
         resources_per_trial={"gpu": 1, "cpu": 2},  # Added CPU allocation
-        local_dir="./ray_results",  # Specify output directory
         name="deepheme_tune"  # Add experiment name
     )
 
