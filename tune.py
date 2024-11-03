@@ -135,7 +135,7 @@ def main():
                 "gpu": 1 if torch.cuda.is_available() else 0
             },
             name="deep_heme_tune",
-            storage_path="./ray_results",
+            # storage_path="./ray_results",
             fail_fast=True,  # For debugging
         )
 
