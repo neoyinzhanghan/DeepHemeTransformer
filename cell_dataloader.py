@@ -85,7 +85,7 @@ class CellFeaturesLogitsDataset(Dataset):
 
         # randomly sample 10% of the data
         self.features_path = random.sample(
-            self.features_path, int(0.1 * len(self.features_path))
+            self.features_path, int(0.25 * len(self.features_path))
         )
 
     def __len__(self):
