@@ -34,7 +34,7 @@ def train_deep_heme(config):
             RayTrainReportCallback(
                 # metrics={"loss": "val_loss"},
                 filename="checkpoint",
-                on="validation_end"
+                on="training_end"
             )
         ],
         enable_progress_bar=False
