@@ -190,7 +190,7 @@ import torch
 import torch.nn.functional as F
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR
-import pytorch_lightning as pl
+import lighting as pl
 from torch.utils.data import DataLoader
 
 # Assuming DeepHemeTransformer and CellFeaturesDataModule are implemented elsewhere
@@ -198,7 +198,14 @@ from cell_dataloader import CellFeaturesDataModule
 
 
 class DeepHemeModule(pl.LightningModule):
-    def __init__(self, learning_rate=1e-3, max_epochs=50, weight_decay=1e-2, num_heads=8, reg_lambda=0.1):
+    def __init__(
+        self,
+        learning_rate=1e-3,
+        max_epochs=50,
+        weight_decay=1e-2,
+        num_heads=8,
+        reg_lambda=0.1,
+    ):
         super().__init__()
         self.save_hyperparameters()
         self.model = DeepHemeTransformer(num_heads=num_heads)
