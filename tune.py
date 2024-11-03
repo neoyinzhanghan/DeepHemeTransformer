@@ -62,7 +62,7 @@ def main():
         num_samples=50,
         scheduler=scheduler,
         resources_per_trial={"gpu": 1, "cpu": 2},
-        local_dir="./ray_results",
+        # local_dir="./ray_results",
         name="deepheme_tune",
         stop={"training_iteration": 50}
     )
