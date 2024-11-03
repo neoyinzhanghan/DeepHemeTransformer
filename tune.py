@@ -30,16 +30,13 @@ def train_deep_heme(config):
         max_epochs=50,
         accelerator="gpu",
         devices=1,
-        callbacks=[
-            RayTrainReportCallback(
-                # metrics={"loss": "val_loss"},
-                filename="checkpoint",
-                on="training_end"
-            )
-        ],
+        strategy=RayDDPStrategy(),
+        plugins=[RayLightningEnvironment()],
+        callbacks=[RayTrainReportCallback()],
         enable_progress_bar=False
     )
     
+    trainer = prepare_trainer(trainer)
     trainer.fit(model, datamodule=datamodule)
 
 def main():
@@ -59,13 +56,19 @@ def main():
         mode="min"
     )
 
+    scaling_config = tune.ScalingConfig(
+        num_workers=1,
+        use_gpu=True,
+        resources_per_worker={"CPU": 2, "GPU": 1}
+    )
+
     analysis = tune.run(
         train_deep_heme,
         config=config,
         num_samples=50,
         scheduler=scheduler,
-        resources_per_trial={"gpu": 1, "cpu": 2},  # Added CPU allocation
-        name="deepheme_tune"  # Add experiment name
+        scaling_config=scaling_config,
+        name="deepheme_tune"
     )
 
     print("Best config:", analysis.best_trial.config)
