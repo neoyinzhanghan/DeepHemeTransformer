@@ -183,6 +183,13 @@ class DeepHemeTransformer(nn.Module):
 # Pytorch Lightning Model Definition & Training Script with Ray Distributed Training
 ###########################################################################################################################
 ###########################################################################################################################
+###########################################################################################################################
+###########################################################################################################################
+###########################################################################################################################
+# Pytorch Lightning Model Definition & Training Script
+###########################################################################################################################
+###########################################################################################################################
+###########################################################################################################################
 
 import math
 import torch
@@ -191,8 +198,6 @@ from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader
-import ray
-from ray_lightning import RayStrategy  # Import Ray's PyTorch Lightning Strategy
 
 # Assuming DeepHemeTransformer and CellFeaturesDataModule are implemented elsewhere
 from cell_dataloader import CellFeaturesDataModule
@@ -220,9 +225,7 @@ class DeepHemeModule(pl.LightningModule):
         outputs_list = []
 
         # Iterate over the list of inputs in the batch
-        for features, logits, differential in zip(
-            features_list, logits_list, differential_list
-        ):
+        for features, logits, differential in zip(features_list, logits_list, differential_list):
             outputs = self(features)
             outputs_list.append(outputs)
 
@@ -245,9 +248,7 @@ class DeepHemeModule(pl.LightningModule):
         outputs_list = []
 
         # Iterate over the list of inputs in the batch
-        for features, logits, differential in zip(
-            features_list, logits_list, differential_list
-        ):
+        for features, logits, differential in zip(features_list, logits_list, differential_list):
             outputs = self(features)
             outputs_list.append(outputs)
 
@@ -292,10 +293,6 @@ class DeepHemeModule(pl.LightningModule):
 
 
 if __name__ == "__main__":
-    # Initialize Ray and set up the Ray Strategy for distributed training
-    ray.init(ignore_reinit_error=True)
-    strategy = RayStrategy(num_workers=2, use_gpu=True)  # Adjust num_workers as needed
-
     # Instantiate the DataModule
     metadata_file_path = (
         "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"
@@ -306,12 +303,11 @@ if __name__ == "__main__":
         metadata_file=metadata_file_path, batch_size=batch_size
     )
 
-    # Define a PyTorch Lightning trainer with RayStrategy
+    # Define a PyTorch Lightning trainer without RayStrategy
     trainer = pl.Trainer(
         max_epochs=10,
         log_every_n_steps=10,
-        strategy=strategy,
-        devices="auto",
+        devices=1,
         accelerator="gpu",
     )
 
@@ -320,6 +316,3 @@ if __name__ == "__main__":
 
     # Train the model
     trainer.fit(model, datamodule)
-
-    # Shut down Ray
-    ray.shutdown()
