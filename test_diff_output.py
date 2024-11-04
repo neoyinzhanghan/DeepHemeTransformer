@@ -27,7 +27,7 @@ def one_hot_encode_and_average(ground_truth_probabilities):
         round(float(torch.sum(average_one_hot)), 3) == 1.0
     ), f"Sum of average_one_hot should be 1.0. We got {torch.sum(average_one_hot)}"
 
-    return average_one_hot * 100
+    return average_one_hot
 
 
 def plot_probability_bar_chart(
@@ -71,6 +71,12 @@ def plot_probability_bar_chart(
             old_avg_predicted_probabilities[
                 new_idx
             ] += old_avg_predicted_probabilities_ungrouped[old_idx]
+
+    for i in range(len(old_avg_predicted_probabilities)):
+        assert (
+            old_avg_predicted_probabilities[i] <= 1
+        ), f"old_avg_predicted_probabilities should be less than or equal to 1. We got {old_avg_predicted_probabilities[i]}"
+        print(f"{BMA_final_classes[i]}: {old_avg_predicted_probabilities[i]}")
 
     ground_truth_probabilities = ground_truth_probabilities.cpu().numpy()
 
