@@ -220,6 +220,9 @@ index_map = {
     8: [12, 13],  # blasts and blast-equivalents
 }
 
+removed_indices = [0, 1, 21, 19, 20, 8, 9, 22]
+non_removed_indices = [i for i in range(num_classes) if i not in removed_indices]
+
 differential_group_dict = {
     "blasts": ["M1"],  # , "M2", "ER1"],
     "blast-equivalents": [],  # sum blasts and blast-equivalents together and treat that as one class
