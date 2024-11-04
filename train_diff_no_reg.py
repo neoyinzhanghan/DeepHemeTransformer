@@ -6,7 +6,7 @@ from cell_dataloader import CellFeaturesDataModule
 from pytorch_lightning.loggers import TensorBoardLogger
 
 for i in range(1):
-    num_epoches = 100
+    num_epoches = 10
     # learning_rate = 10 ** np.random.uniform(-10, 0)
     # Set up parameters
     metadata_file_path = (
@@ -22,7 +22,7 @@ for i in range(1):
     learning_rate = 1e-4
 
     # Set up the logger with a subfolder named after the learning rate
-    log_dir = f"logs/train_nov3/lr_{learning_rate}_no_reg"
+    log_dir = f"logs/train_nov4/lr_{learning_rate}_no_reg"
     logger = TensorBoardLogger(
         save_dir=log_dir,
         name="",
