@@ -29,6 +29,8 @@ def class_removed_one_hot_encode_and_average(ground_truth_probabilities):
     cleaned_max_indices = torch.tensor(cleaned_max_indices)
 
     try:
+        print(cleaned_max_indices)
+        print(max_indices)
         # One-hot encode the cleaned_max_indices, with depth equal to the number of classes
         num_classes = ground_truth_probabilities.shape[1]
         one_hot_encoded = F.one_hot(cleaned_max_indices, num_classes=num_classes).float()
