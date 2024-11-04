@@ -66,7 +66,7 @@ class GroupedLossWithIndexMap(nn.Module):
             # Initialize an output tensor for the summed values
             N = inputs.shape[0]
 
-            outputs = F.softmax(outputs, dim=1)
+            inputs = F.softmax(inputs, dim=1)
             outputs = torch.zeros(N, len(self.index_map), device=inputs.device)
 
             # Sum values according to the index map
