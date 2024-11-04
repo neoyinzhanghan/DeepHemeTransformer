@@ -8,8 +8,8 @@ class AvgCELoss(nn.Module):
     def __init__(self):
         super(AvgCELoss, self).__init__()
         self.criterion = nn.CrossEntropyLoss(
-            reduction="none"
-        )  # Set reduction to 'none' to calculate per-sample loss
+            reduction="mean"
+        )  # Set reduction to 'mean'
 
     def forward(self, inputs_list, targets_list):
         # Initialize a list to store the individual losses
