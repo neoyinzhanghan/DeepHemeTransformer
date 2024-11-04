@@ -6,7 +6,7 @@ from cell_dataloader import CellFeaturesDataModule
 from pytorch_lightning.loggers import TensorBoardLogger
 
 for i in range(1):
-    learning_rate = 10 ** np.random.uniform(-10, 0)
+    # learning_rate = 10 ** np.random.uniform(-10, 0)
     # Set up parameters
     metadata_file_path = (
         "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"

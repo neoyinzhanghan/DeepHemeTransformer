@@ -10,7 +10,24 @@ from cell_dataloader import ImagePathDataset, custom_collate_fn, CellFeaturesDat
 from BMAassumptions import index_map, BMA_final_classes
 
 
-def plot_probability_bar_chart(inputs, ground_truth_probabilities, save_path):
+def one_hot_encode_and_average(ground_truth_probabilities):
+    # Get the index of the maximum probability for each sample
+    max_indices = ground_truth_probabilities.argmax(dim=1)
+
+    # Create a one-hot encoded tensor based on these indices
+    one_hot_encoded = F.one_hot(
+        max_indices, num_classes=ground_truth_probabilities.shape[1]
+    ).float()
+
+    # Average across N to get the final probabilities
+    average_one_hot = one_hot_encoded.mean(dim=0)
+
+    return average_one_hot
+
+
+def plot_probability_bar_chart(
+    inputs, ground_truth_prob_tens, ground_truth_probabilities, save_path
+):
     # Initialize an output tensor for the summed values
     N = inputs.shape[0]
 
@@ -33,6 +50,15 @@ def plot_probability_bar_chart(inputs, ground_truth_probabilities, save_path):
 
     # Averaging predicted probabilities across all samples
     avg_predicted_probabilities = average_probabilities.cpu().detach().numpy()
+
+    # old_avg_predicted_probabilities = (
+    #     ground_truth_probabilities.mean(dim=0).cpu().numpy()
+    # ) # this the non-one-hot encoded version
+
+    old_avg_predicted_probabilities = (
+        one_hot_encode_and_average(ground_truth_probabilities).cpu().numpy()
+    )
+
     ground_truth_probabilities = ground_truth_probabilities.cpu().numpy()
 
     # divide the ground truth probabilities by 100
@@ -44,7 +70,7 @@ def plot_probability_bar_chart(inputs, ground_truth_probabilities, save_path):
 
     # Plotting
     x = range(len(BMA_final_classes))
-    width = 0.35  # Width of the bars
+    width = 0.25  # Adjusted width for three sets of bars
 
     fig, ax = plt.subplots(figsize=(12, 7))
 
@@ -66,11 +92,20 @@ def plot_probability_bar_chart(inputs, ground_truth_probabilities, save_path):
         color=palette[3],
     )
 
+    # Plot old average predicted probabilities with a further offset
+    ax.bar(
+        [i + 2 * width for i in x],
+        old_avg_predicted_probabilities,
+        width,
+        label="Old Avg Predicted Probabilities",
+        color=palette[4],
+    )
+
     # Labels, title, and legend
     ax.set_xlabel("Classes", fontsize=14)
     ax.set_ylabel("Probability", fontsize=14)
     ax.set_title("Predicted vs Ground Truth Probabilities", fontsize=16, weight="bold")
-    ax.set_xticks([i + width / 2 for i in x])
+    ax.set_xticks([i + width for i in x])
     ax.set_xticklabels(BMA_final_classes, rotation=45, ha="right", fontsize=12)
     ax.legend(fontsize=12)
 
@@ -107,6 +142,7 @@ for i, (features, logits, diff_tensors) in tqdm(
         # move the feature to GPU
         feature = features[j]
         feature = feature.cuda()
+        ground_truth_prob_tens = logits[j]
 
         inputs = model(feature)
 
@@ -120,4 +156,9 @@ for i, (features, logits, diff_tensors) in tqdm(
         ground_truth_probabilities = ground_truth_probabilities.cpu()
 
         save_path = os.path.join(plot_save_dir, f"bar_chart_{i}_{j}.png")
-        plot_probability_bar_chart(inputs, ground_truth_probabilities, save_path)
+        plot_probability_bar_chart(
+            inputs=inputs,
+            ground_truth_prob_tens=ground_truth_prob_tens,
+            ground_truth_probabilities=ground_truth_probabilities,
+            save_path=save_path,
+        )
