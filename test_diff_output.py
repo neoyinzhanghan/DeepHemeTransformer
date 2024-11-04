@@ -32,7 +32,7 @@ def plot_probability_bar_chart(inputs, ground_truth_probabilities, save_path):
     ), f"Length of predicted_probabilities and ground_truth_probabilities should be the same and equal to the length of BMA_final_classes. We got predicted_probabilities: {len(average_probabilities)}, ground_truth_probabilities: {len(ground_truth_probabilities)}, BMA_final_classes: {len(BMA_final_classes)}"
 
     # Averaging predicted probabilities across all samples
-    avg_predicted_probabilities = average_probabilities.cpu().numpy()
+    avg_predicted_probabilities = average_probabilities.cpu().detach().numpy()
     ground_truth_probabilities = ground_truth_probabilities.cpu().numpy()
 
     # Set seaborn style and color palette
