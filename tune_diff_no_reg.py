@@ -5,7 +5,7 @@ from DeepHemeTransformer import DeepHemeModule
 from cell_dataloader import CellFeaturesDataModule
 from pytorch_lightning.loggers import TensorBoardLogger
 
-for i in range(1):
+for i in range(10):
     learning_rate = 10 ** np.random.uniform(-10, 0)
     # Set up parameters
     metadata_file_path = (

@@ -17,11 +17,11 @@ for i in range(1):
         metadata_file=metadata_file_path, batch_size=batch_size
     )
 
-    # # use a 1e-4 learning rate
-    # learning_rate = 1e-4
+    # use a 1e-4 learning rate
+    learning_rate = 1e-4
 
     # Set up the logger with a subfolder named after the learning rate
-    log_dir = f"logs/tune_nov3/lr_{learning_rate}_no_reg"
+    log_dir = f"logs/train_nov3/lr_{learning_rate}_no_reg"
     logger = TensorBoardLogger(
         save_dir=log_dir,
         name="",
@@ -29,7 +29,7 @@ for i in range(1):
 
     # Define a PyTorch Lightning trainer with the custom logger
     trainer = pl.Trainer(
-        max_epochs=5,
+        max_epochs=100,
         log_every_n_steps=10,
         devices=1,
         accelerator="gpu",
