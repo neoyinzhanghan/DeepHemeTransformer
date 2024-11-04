@@ -21,6 +21,9 @@ def one_hot_encode_and_average(ground_truth_probabilities):
 
     # Average across N to get the final probabilities
     average_one_hot = one_hot_encoded.mean(dim=0)
+    
+    # assert that the sum of the average_one_hot is 1
+    assert torch.sum(average_one_hot) == 1, f"Sum of the average_one_hot tensor should be 1. We got {torch.sum(average_one_hot)}"
 
     return average_one_hot
 
