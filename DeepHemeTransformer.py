@@ -227,7 +227,7 @@ class DeepHemeModule(pl.LightningModule):
         max_epochs=50,
         weight_decay=1e-2,
         num_heads=8,
-        reg_lambda=0,
+        reg_lambda=1,
     ):
         super().__init__()
         self.save_hyperparameters()
