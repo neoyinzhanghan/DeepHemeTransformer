@@ -27,7 +27,7 @@ def one_hot_encode_and_average(ground_truth_probabilities):
         round(float(torch.sum(average_one_hot)), 3) == 1.0
     ), f"Sum of average_one_hot should be 1.0. We got {torch.sum(average_one_hot)}"
 
-    return average_one_hot
+    return average_one_hot * 100
 
 
 def plot_probability_bar_chart(
