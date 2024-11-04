@@ -206,16 +206,18 @@ cellnames = [
     "U4",
 ]
 
+removed_classes = ["U1", "PL2", "PL3", "ER5", "ER6", "U4"]
+
 index_map = {
-    0: [14], # myelocytes
-    1: [15], # metamyelocytes
-    2: [16, 17], # neutrophils/bands
-    3: [18], # monocytes
-    4: [2, 3], # eosinophils
-    5: [4, 5, 6, 7], # erythroid precursors
-    6: [10], # lymphocytes
-    7: [11], # plasma cells
-    8: [12, 13], # blasts and blast-equivalents
+    0: [14],  # myelocytes
+    1: [15],  # metamyelocytes
+    2: [16, 17],  # neutrophils/bands
+    3: [18],  # monocytes
+    4: [2, 3],  # eosinophils
+    5: [4, 5, 6, 7],  # erythroid precursors
+    6: [10],  # lymphocytes
+    7: [11],  # plasma cells
+    8: [12, 13],  # blasts and blast-equivalents
 }
 
 differential_group_dict = {

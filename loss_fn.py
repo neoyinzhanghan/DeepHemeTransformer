@@ -1,7 +1,23 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from BMAassumptions import index_map
+from BMAassumptions import index_map, removed_indices, non_removed_indices
+
+
+def class_removed_diff(class_prob_tens):
+    """The input is of shape [N, 23]."""
+
+    # parallel across N, sum over the classes that were not removed
+    weights = class_prob_tens[:, non_removed_indices].sum(dim=1)
+
+    # weights should have shape [N]
+    total_weights = weights.sum()
+
+    # use the weights [N] to take a weights average of class_prob_tens
+    weighted_avg = torch.einsum("ij,i->j", class_prob_tens, weights)
+
+    # weighted average should have shape [23]
+    return weighted_avg
 
 
 class AvgCELoss(nn.Module):
@@ -59,14 +75,16 @@ class GroupedLossWithIndexMap(nn.Module):
             N = inputs.shape[0]
 
             inputs = F.softmax(inputs, dim=1)
-            outputs = torch.zeros(N, len(self.index_map), device=inputs.device)
+
+            group_removed_diff = class_removed_diff(inputs)  # Shape: [23]
+            average_probabilities = torch.zeros(
+                len(self.index_map), device=inputs.device
+            )
 
             # Sum values according to the index map
             for new_idx, old_indices in self.index_map.items():
                 for old_idx in old_indices:
-                    outputs[:, new_idx] += inputs[:, old_idx]
-
-            average_probabilities = outputs.mean(dim=0)
+                    average_probabilities[new_idx] += group_removed_diff[old_idx]
 
             # Apply softmax for additional smoothing on model outputs (single vector)
             smoothed_probabilities = F.softmax(average_probabilities, dim=0)

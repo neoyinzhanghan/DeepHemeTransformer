@@ -5,27 +5,35 @@ import seaborn as sns
 import numpy as np
 import torch.nn.functional as F
 from tqdm import tqdm
+from loss_fn import class_removed_diff
 from DeepHemeTransformer import DeepHemeModule, load_model
 from cell_dataloader import ImagePathDataset, custom_collate_fn, CellFeaturesDataModule
-from BMAassumptions import index_map, BMA_final_classes, cellnames
+from BMAassumptions import (
+    index_map,
+    BMA_final_classes,
+    cellnames,
+    removed_indices,
+    non_removed_indices,
+)
 
 
-def one_hot_encode_and_average(ground_truth_probabilities):
-    # Get the index of the maximum probability for each sample
+def class_removed_one_hot_encode_and_average(ground_truth_probabilities):
+    # Get the index of the maximum probability for each sample, output shape: [N]
     max_indices = ground_truth_probabilities.argmax(dim=1)
 
-    # Create a one-hot encoded tensor based on these indices
-    one_hot_encoded = F.one_hot(
-        max_indices, num_classes=ground_truth_probabilities.shape[1]
-    ).float()
+    cleaned_max_indices = []
+    for max_index in max_indices:
+        if max_index in non_removed_indices:
+            cleaned_max_indices.append(max_index)
 
-    # Average across N to get the final probabilities
-    average_one_hot = one_hot_encoded.mean(dim=0)
+    cleaned_max_indices = torch.tensor(cleaned_max_indices)
 
-    # assert that the sum of the average_one_hot is 1
-    assert (
-        round(float(torch.sum(average_one_hot)), 3) == 1.0
-    ), f"Sum of average_one_hot should be 1.0. We got {torch.sum(average_one_hot)}"
+    # One-hot encode the cleaned_max_indices, with depth equal to the number of classes
+    num_classes = ground_truth_probabilities.shape[1]
+    one_hot_encoded = F.one_hot(cleaned_max_indices, num_classes=num_classes).float()
+
+    # Calculate the average across all one-hot vectors
+    average_one_hot = one_hot_encoded.mean(dim=0)  # Shape: [num_classes]
 
     return average_one_hot
 
@@ -37,14 +45,14 @@ def plot_probability_bar_chart(
     N = inputs.shape[0]
 
     inputs = F.softmax(inputs, dim=1)
-    outputs = torch.zeros(N, len(index_map), device=inputs.device)
+    average_probabilities = torch.zeros(N, len(index_map), device=inputs.device)
+
+    group_removed_diff = class_removed_diff(inputs)  # Shape: [23]
 
     # Sum values according to the index map
     for new_idx, old_indices in index_map.items():
         for old_idx in old_indices:
-            outputs[:, new_idx] += inputs[:, old_idx]
-
-    average_probabilities = outputs.mean(dim=0)
+            average_probabilities[new_idx] += group_removed_diff[old_idx]
 
     # Ensure lengths match the final class list length
     assert (
@@ -56,13 +64,13 @@ def plot_probability_bar_chart(
     # Averaging predicted probabilities across all samples
     avg_predicted_probabilities = average_probabilities.cpu().detach().numpy()
 
-    old_avg_predicted_probabilities_ungrouped = (
-        ground_truth_prob_tens.mean(dim=0).cpu().numpy()
-    ) # this the non-one-hot encoded version
-
     # old_avg_predicted_probabilities_ungrouped = (
-    #     one_hot_encode_and_average(ground_truth_prob_tens).cpu().numpy()
-    # )
+    #     ground_truth_prob_tens.mean(dim=0).cpu().numpy()
+    # )  # this the non-one-hot encoded version
+
+    old_avg_predicted_probabilities_ungrouped = (
+        class_removed_one_hot_encode_and_average(ground_truth_prob_tens).cpu().numpy()
+    )
 
     old_avg_predicted_probabilities = np.zeros(len(BMA_final_classes))
 
