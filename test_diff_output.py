@@ -32,8 +32,13 @@ def class_removed_one_hot_encode_and_average(ground_truth_probabilities):
     num_classes = ground_truth_probabilities.shape[1]
     one_hot_encoded = F.one_hot(cleaned_max_indices, num_classes=num_classes).float()
 
-    # Calculate the average across all one-hot vectors
-    average_one_hot = one_hot_encoded.mean(dim=0)  # Shape: [num_classes]
+    try:
+        # Calculate the average across all one-hot vectors
+        average_one_hot = one_hot_encoded.mean(dim=0)  # Shape: [num_classes]
+
+    except Exception as e:
+        print(one_hot_encoded)
+        raise e
 
     return average_one_hot
 
