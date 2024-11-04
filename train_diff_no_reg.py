@@ -6,6 +6,7 @@ from cell_dataloader import CellFeaturesDataModule
 from pytorch_lightning.loggers import TensorBoardLogger
 
 for i in range(1):
+    num_epoches = 100
     # learning_rate = 10 ** np.random.uniform(-10, 0)
     # Set up parameters
     metadata_file_path = (
@@ -29,7 +30,7 @@ for i in range(1):
 
     # Define a PyTorch Lightning trainer with the custom logger
     trainer = pl.Trainer(
-        max_epochs=100,
+        max_epochs=num_epoches,
         log_every_n_steps=10,
         devices=1,
         accelerator="gpu",
@@ -38,7 +39,7 @@ for i in range(1):
 
     # Create an instance of your LightningModule
     model = DeepHemeModule(
-        learning_rate=learning_rate, max_epochs=50, weight_decay=1e-2
+        learning_rate=learning_rate, max_epochs=num_epoches, weight_decay=1e-2
     )
 
     # Train the model
