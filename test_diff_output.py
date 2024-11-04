@@ -52,11 +52,11 @@ def plot_probability_bar_chart(
     avg_predicted_probabilities = average_probabilities.cpu().detach().numpy()
 
     # old_avg_predicted_probabilities = (
-    #     ground_truth_probabilities.mean(dim=0).cpu().numpy()
+    #     ground_truth_prob_tens.mean(dim=0).cpu().numpy()
     # ) # this the non-one-hot encoded version
 
     old_avg_predicted_probabilities = (
-        one_hot_encode_and_average(ground_truth_probabilities).cpu().numpy()
+        one_hot_encode_and_average(ground_truth_prob_tens).cpu().numpy()
     )
 
     ground_truth_probabilities = ground_truth_probabilities.cpu().numpy()
