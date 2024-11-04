@@ -295,7 +295,7 @@ class DeepHemeModule(pl.LightningModule):
             weight_decay=self.hparams.weight_decay,
         )
         scheduler = CosineAnnealingLR(
-            optimizer, T_max=self.hparams.max_epochs, eta_min=1e-6
+            optimizer, T_max=self.hparams.max_epochs, eta_min=1e-10
         )
 
         return {
