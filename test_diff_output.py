@@ -37,6 +37,7 @@ def class_removed_one_hot_encode_and_average(ground_truth_probabilities):
 
     except Exception as e:
         print(cleaned_max_indices)
+        print(max_indices)
         raise e
 
     return average_one_hot
