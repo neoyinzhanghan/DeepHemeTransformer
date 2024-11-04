@@ -22,7 +22,7 @@ for i in range(10):
     # learning_rate = 1e-4
 
     # Set up the logger with a subfolder named after the learning rate
-    log_dir = f"logs/tune_nov3/lr_{learning_rate}_no_reg"
+    log_dir = f"logs/tune_nov3_v2/lr_{learning_rate}_no_reg"
     logger = TensorBoardLogger(
         save_dir=log_dir,
         name="",
