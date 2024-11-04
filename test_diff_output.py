@@ -76,7 +76,7 @@ def plot_probability_bar_chart(inputs, ground_truth_probabilities, save_path):
     plt.close(fig)
 
 
-model_checkpoint_path = ""
+model_checkpoint_path = "/home/greg/Documents/neo/DeepHemeTransformer/logs/train_nov3/lr_1e-4_no_reg/version_0/checkpoints/epoch=49-step=3750.ckpt"
 metadata_path = "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"
 plot_save_dir = "/media/hdd3/neo/DeepHemeTransformerResults/diff_bar_plots"
 model = load_model(model_checkpoint_path)
@@ -84,7 +84,7 @@ model.eval()
 
 
 cell_features_data_module = CellFeaturesDataModule(
-    metadata_file="metadata.csv", batch_size=32
+    metadata_file=metadata_path, batch_size=32
 )
 
 test_dataset = cell_features_data_module.test_dataloader()
