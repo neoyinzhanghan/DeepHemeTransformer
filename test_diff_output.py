@@ -3,6 +3,7 @@ import torch
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+import torch.nn.functional as F
 from tqdm import tqdm
 from DeepHemeTransformer import DeepHemeModule, load_model
 from cell_dataloader import ImagePathDataset, custom_collate_fn, CellFeaturesDataModule
@@ -12,6 +13,8 @@ from BMAassumptions import index_map, BMA_final_classes
 def plot_probability_bar_chart(inputs, ground_truth_probabilities, save_path):
     # Initialize an output tensor for the summed values
     N = inputs.shape[0]
+
+    outputs = F.softmax(outputs, dim=1)
     outputs = torch.zeros(N, len(index_map), device=inputs.device)
 
     # Sum values according to the index map
@@ -19,19 +22,17 @@ def plot_probability_bar_chart(inputs, ground_truth_probabilities, save_path):
         for old_idx in old_indices:
             outputs[:, new_idx] += inputs[:, old_idx]
 
-    # Normalize to get a probability distribution
-    sum_outputs = outputs.sum(dim=-1, keepdim=True)
-    predicted_probabilities = outputs / sum_outputs
+    average_probabilities = outputs.mean(dim=0)
 
     # Ensure lengths match the final class list length
     assert (
-        len(predicted_probabilities)
+        len(average_probabilities)
         == len(ground_truth_probabilities)
         == len(BMA_final_classes)
-    ), f"Length of predicted_probabilities and ground_truth_probabilities should be the same and equal to the length of BMA_final_classes. We got predicted_probabilities: {len(predicted_probabilities)}, ground_truth_probabilities: {len(ground_truth_probabilities)}, BMA_final_classes: {len(BMA_final_classes)}"
+    ), f"Length of predicted_probabilities and ground_truth_probabilities should be the same and equal to the length of BMA_final_classes. We got predicted_probabilities: {len(average_probabilities)}, ground_truth_probabilities: {len(ground_truth_probabilities)}, BMA_final_classes: {len(BMA_final_classes)}"
 
     # Averaging predicted probabilities across all samples
-    avg_predicted_probabilities = predicted_probabilities.mean(dim=0).cpu().numpy()
+    avg_predicted_probabilities = average_probabilities.cpu().numpy()
     ground_truth_probabilities = ground_truth_probabilities.cpu().numpy()
 
     # Set seaborn style and color palette

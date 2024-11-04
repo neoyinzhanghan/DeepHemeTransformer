@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from BMAassumptions import index_map
 
 
@@ -64,6 +65,8 @@ class GroupedLossWithIndexMap(nn.Module):
         for inputs, targets in zip(inputs_list, targets_list):
             # Initialize an output tensor for the summed values
             N = inputs.shape[0]
+
+            outputs = F.softmax(outputs, dim=1)
             outputs = torch.zeros(N, len(self.index_map), device=inputs.device)
 
             # Sum values according to the index map
@@ -71,14 +74,15 @@ class GroupedLossWithIndexMap(nn.Module):
                 for old_idx in old_indices:
                     outputs[:, new_idx] += inputs[:, old_idx]
 
-            # Normalize to get a probability distribution
-            sum_outputs = outputs.sum(
-                dim=-1, keepdim=True
-            )  # Compute the sum across the last dimension
-            probabilities = outputs / sum_outputs  # Basic normalization
+            average_probabilities = outputs.mean(dim=0)
 
             # Apply softmax for additional smoothing on model outputs (single vector)
-            smoothed_probabilities = nn.Softmax(dim=0)(probabilities.squeeze())
+            smoothed_probabilities = F.softmax(average_probabilities, dim=0)
+
+            # assert that targets is of shape [len(index_map)]
+            assert targets.shape[0] == len(
+                self.index_map
+            ), f"Expected targets to have shape [{len(index_map)}], but got [{targets.shape}]."
 
             # Apply softmax to the target tensor to get smoothed probabilities (single vector)
             smoothed_targets = nn.Softmax(dim=0)(targets.squeeze())
