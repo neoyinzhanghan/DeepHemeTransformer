@@ -45,7 +45,7 @@ def plot_probability_bar_chart(
     N = inputs.shape[0]
 
     inputs = F.softmax(inputs, dim=1)
-    average_probabilities = torch.zeros(N, len(index_map), device=inputs.device)
+    average_probabilities = torch.zeros(len(index_map), device=inputs.device)
 
     group_removed_diff = class_removed_diff(inputs)  # Shape: [23]
 
