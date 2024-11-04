@@ -31,7 +31,7 @@ def extract_h5_data(result_folder, save_path, model, note=""):
                 jpg_paths.append(os.path.join(root, file))
 
     # shuffle the jpg_paths
-    np.random.shuffle(jpg_paths) # TODO remove this line after debugging is complete
+    np.random.shuffle(jpg_paths)  # TODO remove this line after debugging is complete
 
     N = len(jpg_paths)
 

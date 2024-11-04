@@ -56,13 +56,13 @@ def plot_probability_bar_chart(
     # Averaging predicted probabilities across all samples
     avg_predicted_probabilities = average_probabilities.cpu().detach().numpy()
 
-    # old_avg_predicted_probabilities = (
-    #     ground_truth_prob_tens.mean(dim=0).cpu().numpy()
-    # ) # this the non-one-hot encoded version
-
     old_avg_predicted_probabilities_ungrouped = (
-        one_hot_encode_and_average(ground_truth_prob_tens).cpu().numpy()
-    )
+        ground_truth_prob_tens.mean(dim=0).cpu().numpy()
+    ) # this the non-one-hot encoded version
+
+    # old_avg_predicted_probabilities_ungrouped = (
+    #     one_hot_encode_and_average(ground_truth_prob_tens).cpu().numpy()
+    # )
 
     old_avg_predicted_probabilities = np.zeros(len(BMA_final_classes))
 
