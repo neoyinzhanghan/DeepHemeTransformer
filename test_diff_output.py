@@ -80,6 +80,8 @@ model_checkpoint_path = "/home/greg/Documents/neo/DeepHemeTransformer/logs/train
 metadata_path = "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"
 plot_save_dir = "/media/hdd3/neo/DeepHemeTransformerResults/diff_bar_plots"
 model = load_model(model_checkpoint_path)
+# move model to GPU
+model = model.cuda()
 model.eval()
 
 
@@ -96,12 +98,21 @@ for i, (features, logits, diff_tensors) in tqdm(
 ):
 
     for j in range(len(features)):
+
+        # move the feature to GPU
         feature = features[j]
+        feature = feature.cuda()
 
         inputs = model(feature)
 
+        # move inputs to cpu
+        inputs = inputs.cpu()
+
         # Get the ground truth probabilities
         ground_truth_probabilities = diff_tensors[j]
+
+        # move the ground truth probabilities to cpu
+        ground_truth_probabilities = ground_truth_probabilities.cpu()
 
         save_path = os.path.join(plot_save_dir, f"bar_chart_{i}_{j}.png")
         plot_probability_bar_chart(inputs, ground_truth_probabilities, save_path)
