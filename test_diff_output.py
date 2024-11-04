@@ -35,6 +35,9 @@ def plot_probability_bar_chart(inputs, ground_truth_probabilities, save_path):
     avg_predicted_probabilities = average_probabilities.cpu().detach().numpy()
     ground_truth_probabilities = ground_truth_probabilities.cpu().numpy()
 
+    # divide the ground truth probabilities by 100
+    ground_truth_probabilities = ground_truth_probabilities / 100
+
     # Set seaborn style and color palette
     sns.set(style="whitegrid")
     palette = sns.color_palette("pastel")
