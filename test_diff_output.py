@@ -7,7 +7,7 @@ import torch.nn.functional as F
 from tqdm import tqdm
 from DeepHemeTransformer import DeepHemeModule, load_model
 from cell_dataloader import ImagePathDataset, custom_collate_fn, CellFeaturesDataModule
-from BMAassumptions import index_map, BMA_final_classes
+from BMAassumptions import index_map, BMA_final_classes, cellnames
 
 
 def one_hot_encode_and_average(ground_truth_probabilities):
@@ -65,6 +65,10 @@ def plot_probability_bar_chart(
     )
 
     old_avg_predicted_probabilities = np.zeros(len(BMA_final_classes))
+
+    for i in range(len(old_avg_predicted_probabilities_ungrouped)):
+        cellname = cellnames[i]
+        print(f"{cellname}: {old_avg_predicted_probabilities_ungrouped[i]}")
 
     for new_idx, old_indices in index_map.items():
         for old_idx in old_indices:
