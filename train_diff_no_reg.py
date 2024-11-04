@@ -29,7 +29,7 @@ for i in range(1):
 
     # Define a PyTorch Lightning trainer with the custom logger
     trainer = pl.Trainer(
-        max_epochs=50,
+        max_epochs=5,
         log_every_n_steps=10,
         devices=1,
         accelerator="gpu",
