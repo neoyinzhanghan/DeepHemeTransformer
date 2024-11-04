@@ -37,9 +37,9 @@ for i in range(10):
         logger=logger,
     )
 
-    # Create an instance of your LightningModule
+    # Create an instance of your LightningModule # NOTE the max epochs is 20*num_epoches because we are trying to make sure the cosine scheduler does not actually reduce the learning rate we are using flat learning rate for tuning the model
     model = DeepHemeModule(
-        learning_rate=learning_rate, max_epochs=num_epoches, weight_decay=1e-2
+        learning_rate=learning_rate, max_epochs=20 * num_epoches, weight_decay=1e-2
     )
 
     # Train the model

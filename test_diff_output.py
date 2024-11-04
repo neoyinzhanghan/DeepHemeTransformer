@@ -115,7 +115,7 @@ def plot_probability_bar_chart(
     plt.close(fig)
 
 
-model_checkpoint_path = "/home/greg/Documents/neo/DeepHemeTransformer/logs/train_nov3/lr_1e-4_no_reg/version_0/checkpoints/epoch=49-step=3750.ckpt"
+model_checkpoint_path = "/home/greg/Documents/neo/DeepHemeTransformer/logs/tune_nov3/lr_3.698482555831662e-05_no_reg/version_0/checkpoints/epoch=4-step=375.ckpt"
 metadata_path = "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"
 plot_save_dir = "/media/hdd3/neo/DeepHemeTransformerResults/diff_bar_plots"
 os.makedirs(plot_save_dir, exist_ok=True)
