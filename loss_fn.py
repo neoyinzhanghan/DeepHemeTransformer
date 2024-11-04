@@ -84,6 +84,9 @@ class GroupedLossWithIndexMap(nn.Module):
                 self.index_map
             ), f"Expected targets to have shape [{len(index_map)}], but got [{targets.shape}]."
 
+            # divide the ground truth probabilities by 100
+            targets = targets / 100
+
             # Apply softmax to the target tensor to get smoothed probabilities (single vector)
             smoothed_targets = nn.Softmax(dim=0)(targets.squeeze())
 
