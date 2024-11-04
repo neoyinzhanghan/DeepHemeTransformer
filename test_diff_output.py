@@ -87,6 +87,8 @@ cell_features_data_module = CellFeaturesDataModule(
     metadata_file=metadata_path, batch_size=32
 )
 
+cell_features_data_module.setup()
+
 test_dataset = cell_features_data_module.test_dataloader()
 
 for i, (features, logits, diff_tensors) in tqdm(
