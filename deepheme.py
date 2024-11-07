@@ -368,7 +368,7 @@ def model_predict(model, pil_image):
     """
 
     # Preprocess the image, by resizing and converting to tensor
-    image = transforms.Resize((96, 96))(pil_image)
+    # image = transforms.Resize((96, 96))(pil_image)
     image = transforms.ToTensor()(image)
 
     # add a batch dimension
@@ -484,7 +484,7 @@ def extract_features_batch(model, pil_images):
     Returns the batched stacked features.
     """
     # Preprocess the images: resize and convert to tensor, then stack into a batch
-    images = [transforms.Resize((96, 96))(img) for img in pil_images]
+    # images = [transforms.Resize((96, 96))(img) for img in pil_images]
     images = [transforms.ToTensor()(img) for img in images]
     images = torch.stack(images)  # Creates a batch of images
 
