@@ -368,8 +368,8 @@ def model_predict(model, pil_image):
     """
 
     # Preprocess the image, by resizing and converting to tensor
-    # image = transforms.Resize((96, 96))(pil_image)
-    image = transforms.ToTensor()(image)
+    # pil_image = transforms.Resize((96, 96))(pil_image)
+    image = transforms.ToTensor()(pil_image)
 
     # add a batch dimension
     image = image.unsqueeze(0)
