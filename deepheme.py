@@ -513,7 +513,7 @@ if __name__ == "__main__":
 
     model = model_create(HemeLabel_ckpt_path)
 
-    test_image = "/media/greg/534773e3-83ea-468f-a40d-46c913378014/neo/results_dir/BMA-diff_2024-10-05 14:55:49/cells/ER1/ER1-L2-U1-M1_1223-7.jpg"
+    test_image = "/media/greg/534773e3-83ea-468f-a40d-46c913378014/neo/results_dir/BMA-diff_2024-10-05 15:21:08/cells/M4/M4-E4-E1-MO2_8350-16.jpg"
 
     # Load the test image
     image = Image.open(test_image)
