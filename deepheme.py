@@ -463,6 +463,8 @@ def model_predict_batch(model, pil_images):
         probabilities.sum(axis=1), 1, atol=1e-5
     ), "Probabilities do not sum to 1"
 
+    list_of_probabilities = predict_batch(pil_images, model)
+
     print("Example Output")
     print(probabilities[0])
     print(list_of_probabilities[0])
@@ -472,8 +474,6 @@ def model_predict_batch(model, pil_images):
     #         print(
     #             f"{cellnames[i]}: {prob[i]}"
     #         )  # TODO remove this line, this is for debugging only
-
-    list_of_probabilities = predict_batch(pil_images, model)
 
     return probabilities
 
