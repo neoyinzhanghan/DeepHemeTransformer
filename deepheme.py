@@ -534,11 +534,8 @@ if __name__ == "__main__":
     # If you want to convert it back to PIL Image
     image_bgr_pil = Image.fromarray(image_bgr)
 
-    # change the image to BGR instead of RGB
-    image = image.convert("RGB")
-
     # Perform inference
-    probabilities = model_predict(model, image)
+    probabilities = model_predict(model, image_bgr_pil)
 
     print("Example Output")
     print(probabilities)
