@@ -518,9 +518,6 @@ if __name__ == "__main__":
     # Load the test image
     image = Image.open(test_image)
 
-    # generate an image that is 96x96 that is just black
-    image = Image.new("RGB", (96, 96), color="black")
-
     # Perform inference
     probabilities = model_predict(model, image)
 
