@@ -131,7 +131,7 @@ if __name__ == "__main__":
 
         num_slides += 1
 
-        if num_slides > 20:
+        if num_slides > 250:
 
             # make a bar plot of the class tally
             import matplotlib.pyplot as plt
