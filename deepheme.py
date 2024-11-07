@@ -440,8 +440,8 @@ def model_predict_batch(model, pil_images):
     Returns the batched stacked softmax probabilities.
     """
     # Preprocess the images: resize and convert to tensor, then stack into a batch
-    # images = [transforms.Resize((96, 96))(img) for img in pil_images]
-    images = [transforms.ToTensor()(img) for img in images]
+    # pil_images = [transforms.Resize((96, 96))(img) for img in pil_images]
+    images = [transforms.ToTensor()(img) for img in pil_images]
     images = torch.stack(images)  # Creates a batch of images
 
     # Perform inference
