@@ -39,7 +39,10 @@ for i in range(1):
 
     # Create an instance of your LightningModule
     model = DeepHemeModule(
-        learning_rate=learning_rate, max_epochs=num_epoches, weight_decay=1e-2
+        learning_rate=learning_rate,
+        max_epochs=num_epoches,
+        weight_decay=1e-2,
+        reg_lambda=1,
     )
 
     # Train the model
