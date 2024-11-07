@@ -72,7 +72,7 @@ def extract_h5_data(result_folder, save_path, model, note=""):
             all_class_probs[idx] = probabilities[j]
             all_paths[idx] = paths[j]
 
-        all_paths = np.array(all_paths, dtype="S")
+        all_paths = np.array(all_paths, dtype="S256")
 
     with h5py.File(save_path, "w") as f:
         f.create_dataset("features", data=all_features)
@@ -131,7 +131,7 @@ if __name__ == "__main__":
 
         num_slides += 1
 
-        if num_slides > 250:
+        if num_slides > 10:
 
             # make a bar plot of the class tally
             import matplotlib.pyplot as plt
