@@ -506,4 +506,20 @@ if __name__ == "__main__":
     # Run training for each downsampling factor
 
     # Train the model
-    train_model(downsample_factor=downsample_factor)
+    # train_model(downsample_factor=downsample_factor)
+
+    from BMAassumptions import HemeLabel_ckpt_path
+    from PIL import Image
+
+    model = model_create(HemeLabel_ckpt_path)
+
+    test_image = "/media/greg/534773e3-83ea-468f-a40d-46c913378014/neo/results_dir/BMA-diff_2024-10-05 14:55:49/cells/ER1/ER1-L2-U1-M1_1223-7.jpg"
+
+    # Load the test image
+    image = Image.open(test_image)
+
+    # Perform inference
+    probabilities = model_predict(model, image)
+
+    print("Example Output")
+    print(probabilities)
