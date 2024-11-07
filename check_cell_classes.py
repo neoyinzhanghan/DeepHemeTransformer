@@ -73,3 +73,5 @@ validity_check_results_df = pd.DataFrame(validity_check_results)
 validity_check_results_df.to_csv(
     os.path.join(h5_dir_path, "validity_check_results.csv"), index=False
 )
+
+print(invalid_h5_files)
