@@ -16,6 +16,8 @@ validity_check_results = {
     "num_samples": [],
 }
 
+class_tally = []
+
 
 def check_cell_classes(h5_path):
     # firt open the h5 file
@@ -31,6 +33,9 @@ def check_cell_classes(h5_path):
         print(f"Unique class indices: {set(class_indices)}")
 
         num_samples = class_probs.shape[0]
+
+        # appen the class indices to the class_tally list
+        class_tally.append(class_indices)
 
         # return false if class_indices is a subset of {0, 21}
         return not set(class_indices).issubset({0, 21}), class_indices, num_samples
@@ -51,6 +56,15 @@ for h5_path in tqdm(h5_paths, desc="Checking cell classes..."):
     validity_check_results["h5_name"].append(os.path.basename(h5_path))
     validity_check_results["unique_classes"].append(set(class_indices))
     validity_check_results["num_samples"].append(num_samples)
+
+# make a bar plot of the class tally
+import matplotlib.pyplot as plt
+
+plt.hist(class_tally, bins=22)
+plt.xlabel("Class index")
+
+# save the plot at the h5 directory
+plt.savefig(os.path.join(h5_dir_path, "class_tally.png"))
 
 print(f"Found {len(valid_h5_files)} valid h5 files.")
 print(f"Found {len(invalid_h5_files)} invalid h5 files.")
