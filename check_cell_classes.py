@@ -2,7 +2,7 @@ import os
 import h5py
 from tqdm import tqdm
 
-h5_dir_path = ""
+h5_dir_path = "/media/hdd3/neo/DeepHemeTransformerData"
 
 # get all the paths to all the h5 files
 h5_paths = [
