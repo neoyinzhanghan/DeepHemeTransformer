@@ -35,7 +35,7 @@ def check_cell_classes(h5_path):
         num_samples = class_probs.shape[0]
 
         # appen the class indices to the class_tally list
-        class_tally.append(class_indices)
+        class_tally.extend(list(class_indices))
 
         # return false if class_indices is a subset of {0, 21}
         return not set(class_indices).issubset({0, 21}), class_indices, num_samples
