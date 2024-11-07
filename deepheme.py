@@ -518,24 +518,11 @@ if __name__ == "__main__":
     # Load the test image
     image = Image.open(test_image)
 
-    from PIL import Image
-    import cv2
-    import numpy as np
-
-    # Open the image with PIL
-    image = Image.open(test_image).convert("RGB")
-
-    # Convert the image to a numpy array
-    image_np = np.array(image)
-
-    # Convert RGB to BGR using OpenCV
-    image_bgr = cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR)
-
-    # If you want to convert it back to PIL Image
-    image_bgr_pil = Image.fromarray(image_bgr)
+    # generate an image that is 96x96 that is just black
+    image = Image.new("RGB", (96, 96), color="black")
 
     # Perform inference
-    probabilities = model_predict(model, image_bgr_pil)
+    probabilities = model_predict(model, image)
 
     print("Example Output")
     print(probabilities)
