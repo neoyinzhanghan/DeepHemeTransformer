@@ -33,7 +33,7 @@ def check_cell_classes(h5_path):
         num_samples = class_probs.shape[0]
 
         # return false if class_indices is a subset of {0, 21}
-        return set(class_indices).issubset({0, 21}), class_indices, num_samples
+        return not set(class_indices).issubset({0, 21}), class_indices, num_samples
 
 
 valid_h5_files = []
