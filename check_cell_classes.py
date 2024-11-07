@@ -32,18 +32,8 @@ def check_cell_classes(h5_path):
 
         num_samples = class_probs.shape[0]
 
-        # if only contains 0 and 21, then return False, else return True
-        return (
-            (
-                set(class_indices) != {0, 21}
-                or set(class_indices) != {21, 0}
-                or set(class_indices) != {0}
-                or set(class_indices) != {21}
-                or set(class_indices) != {}
-            ),
-            class_indices,
-            num_samples,
-        )
+        # return false if class_indices is a subset of {0, 21}
+        return set(class_indices).issubset({0, 21}), class_indices, num_samples
 
 
 valid_h5_files = []
