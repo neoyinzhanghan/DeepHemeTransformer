@@ -30,6 +30,9 @@ def extract_h5_data(result_folder, save_path, model, note=""):
             if file.endswith(".jpg"):
                 jpg_paths.append(os.path.join(root, file))
 
+    # only keeps the jpg_paths that do not have "blurry" in the path
+    jpg_paths = [path for path in jpg_paths if "blurry" not in path]
+
     # shuffle the jpg_paths
     np.random.shuffle(jpg_paths)  # TODO remove this line after debugging is complete
 
