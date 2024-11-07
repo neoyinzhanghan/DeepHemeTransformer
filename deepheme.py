@@ -401,6 +401,39 @@ def model_predict(model, pil_image):
     return probabilities
 
 
+def predict_batch(pil_images, model):
+    # Define the transformations
+    image_transforms = transforms.Compose(
+        [
+            transforms.Resize(96),
+            transforms.ToTensor(),
+        ]
+    )
+
+    # Apply transformations to each image and create a batch
+    batch = torch.stack([image_transforms(image).float() for image in pil_images])
+
+    # Move the batch to the GPU if available
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    batch = batch.to(device)
+
+    # Set the model to evaluation mode and make predictions
+    model.eval()
+    with torch.no_grad():
+        outputs = model(batch)
+
+    # Process each output as in the original code snippet
+    predictions = []
+    for output in outputs:
+        # apply softmax to the output
+        output = F.softmax(output, dim=0)
+        output = output.detach().cpu().numpy()
+        predictions.append(tuple(output))
+
+    # Return a list of predictions in the same order as the input images
+    return predictions
+
+
 def model_predict_batch(model, pil_images):
     """
     Perform inference using the given model on a batch of provided images.
@@ -435,6 +468,12 @@ def model_predict_batch(model, pil_images):
             print(
                 f"{cellnames[i]}: {prob[i]}"
             )  # TODO remove this line, this is for debugging only
+
+    list_of_probabilities = predict_batch(pil_images, model)
+
+    print("Example Output")
+    print(probabilities[0])
+    print(list_of_probabilities[0])
 
     return probabilities
 
