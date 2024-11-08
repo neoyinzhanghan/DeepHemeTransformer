@@ -14,7 +14,7 @@ from BMAassumptions import HemeLabel_ckpt_path
 
 metadata_path = "/media/hdd3/neo/test_diff_results.csv"
 results_dir = "/media/greg/534773e3-83ea-468f-a40d-46c913378014/neo/results_dir"
-save_dir = "/media/hdd3/neo/DeepHemeTransformerDataTest"  # TODO remove the Test after debugging is complete
+save_dir = "/media/hdd3/neo/DeepHemeTransformerData"
 os.makedirs(save_dir, exist_ok=True)
 model = model_create(HemeLabel_ckpt_path)
 
