@@ -67,7 +67,7 @@ def extract_h5_data(result_folder, save_path, model, note=""):
             all_class_probs[idx] = probabilities[j]
             all_paths[idx] = paths[j]
 
-        all_paths = np.array(all_paths, dtype="S")
+        all_paths = np.array(all_paths, dtype="S256")
 
     with h5py.File(save_path, "w") as f:
         f.create_dataset("features", data=all_features)
