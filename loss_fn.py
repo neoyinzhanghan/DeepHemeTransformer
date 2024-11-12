@@ -118,9 +118,10 @@ class GroupedLossWithIndexMap(nn.Module):
 
 
 class RegularizedDifferentialLoss(nn.Module):
-    def __init__(self, reg_lambda=0.1, index_map=index_map):
+    def __init__(self, reg_lambda1=0.1, reg_lambda2=0.1, index_map=index_map):
         super(RegularizedDifferentialLoss, self).__init__()
-        self.reg_lambda = reg_lambda
+        self.reg_lambda1 = reg_lambda1
+        self.reg_lambda2 = reg_lambda2
         self.average_ce_loss = AvgCELoss()
         self.differential_loss = GroupedLossWithIndexMap(index_map)
 
@@ -155,6 +156,6 @@ class RegularizedDifferentialLoss(nn.Module):
 
         # Combine the losses
         # total_loss = ce_loss
-        total_loss = diff_loss + self.reg_lambda * ce_loss
+        total_loss = self.reg_lambda1 * diff_loss + self.reg_lambda2 * ce_loss
 
         return total_loss

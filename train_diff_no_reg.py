@@ -42,7 +42,8 @@ for i in range(1):
         learning_rate=learning_rate,
         max_epochs=num_epoches,
         weight_decay=1e-2,
-        reg_lambda=0,
+        reg_lambda1=0,
+        reg_lambda2=1,
     )
 
     # Train the model
