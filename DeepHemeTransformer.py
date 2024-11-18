@@ -227,12 +227,15 @@ class DeepHemeModule(pl.LightningModule):
         max_epochs=50,
         weight_decay=1e-2,
         num_heads=8,
-        reg_lambda=1,
+        reg_lambda1=0,
+        reg_lambda2=1,
     ):
         super().__init__()
         self.save_hyperparameters()
         self.model = DeepHemeTransformer(num_heads=num_heads)
-        self.loss_fn = RegularizedDifferentialLoss(reg_lambda=reg_lambda)
+        self.loss_fn = RegularizedDifferentialLoss(
+            reg_lambda1=reg_lambda1, reg_lambda2=reg_lambda2
+        )
 
     def forward(self, x):
         return self.model(x)
