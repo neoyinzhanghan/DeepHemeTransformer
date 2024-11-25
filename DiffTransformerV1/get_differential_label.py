@@ -7,6 +7,9 @@ metadata = pd.read_csv(metadata_path)
 # get the accession_numbers as a list of strings
 accession_numbers = metadata["accession_number"].tolist()
 
+# print the length of the accession_numbers list
+print(f"Number of accession numbers: {len(accession_numbers)}")
+
 path_df = get_path_data(accession_numbers)
 diff = get_diff(path_df)
 
