@@ -1,4 +1,5 @@
 import os
+import shutil
 from tqdm import tqdm
 
 results_folder = "/media/hdd3/neo/results_dir"
@@ -71,5 +72,4 @@ print(f"Found {num_error} error directories and {num_non_error} non-error direct
 
 for non_error_dir in tqdm(non_error_dirs, desc="Copying non-error directories"):
     save_path = os.path.join(save_dir, os.path.basename(non_error_dir))
-    os.makedirs(save_path, exist_ok=True)
-    os.system(f"cp -r {non_error_dir} {save_path}")
+    shutil.copytree(non_error_dir, save_path)
