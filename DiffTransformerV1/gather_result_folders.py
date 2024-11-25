@@ -1,5 +1,4 @@
 import os
-import shutil
 import pandas as pd
 from tqdm import tqdm
 
@@ -22,4 +21,5 @@ print(f"Found {len(result_dir_names)} result directories")
 for result_dir_name in tqdm(result_dir_names, desc="Copying result directories"):
     result_dir = os.path.join(results_dir, result_dir_name)
     save_path = os.path.join(save_dir, result_dir_name)
-    shutil.copytree(result_dir, save_path)
+    # use symbolic link to save space
+    os.symlink(result_dir, save_path)
