@@ -18,7 +18,7 @@ metadata = {
 
 for result_dir in tqdm(result_dirs, desc="Getting accession numbers"):
     # look for the raow in pipeline_run_history where result_dir is in result_dir column
-    row = pipeline_run_history[result_dir in pipeline_run_history["result_dir"]]
+    row = pipeline_run_history[pipeline_run_history["result_dir"] == result_dir]
 
     assert len(row) == 1, f"Found {len(row)} rows for {result_dir}"
 
