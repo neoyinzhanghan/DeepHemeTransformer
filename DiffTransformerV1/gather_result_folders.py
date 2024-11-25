@@ -1,4 +1,5 @@
 import os
+import shutil
 import pandas as pd
 from tqdm import tqdm
 
@@ -18,8 +19,21 @@ result_dir_names = metadata["result_dir_name"].tolist()
 
 print(f"Found {len(result_dir_names)} result directories")
 
+copy_errors = {
+    "result_dir_name": [],
+    "error": [],
+}
+
 for result_dir_name in tqdm(result_dir_names, desc="Copying result directories"):
     result_dir = os.path.join(results_dir, result_dir_name)
     save_path = os.path.join(save_dir, result_dir_name)
     # use symbolic link to save space
-    os.symlink(result_dir, save_path)
+    try:
+        shutil.copytree(result_dir, save_path)
+    except Exception as e:
+        print(f"Error copying {result_dir_name}: {str(e)}")
+        copy_errors["result_dir_name"].append(result_dir_name)
+        copy_errors["error"].append(str(e))
+
+copy_errors_df = pd.DataFrame(copy_errors)
+copy_errors_df.to_csv(os.path.join(save_dir, "copy_errors.csv"), index=False)
