@@ -11,6 +11,10 @@ accession_numbers = metadata["accession_number"].tolist()
 print(f"Number of accession numbers: {len(accession_numbers)}")
 
 path_df = get_path_data(accession_numbers)
+
+# print the number of rows in the path data
+print(f"Number of rows in path data: {len(path_df)}")
+
 diff = get_diff(path_df)
 
 # print the number of rows in the differential data
