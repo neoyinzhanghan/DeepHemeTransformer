@@ -37,6 +37,16 @@ class AvgCELoss(nn.Module):
 
         for inputs, targets in zip(inputs_list, targets_list):
 
+            # assert that the input and target shapes match
+            assert (
+                inputs.shape[0] == targets.shape[0]
+            ), f"Error in AvgCELoss Computation Expected inputs and targets to have the same number of samples. Got inputs: {inputs.shape[0]}, targets: {targets.shape[0]}."
+
+            # assert that the input and target do not have any nan values or negative values
+            assert (
+                torch.isnan(inputs).sum() == 0
+            ), f"Error in AvgCELoss Computation Expected inputs to not have any nan values. Got {torch.isnan(inputs).sum()} nan values."
+
             # Compute the cross-entropy loss for each sample in the batch
             losses = self.criterion(inputs, targets)
 
