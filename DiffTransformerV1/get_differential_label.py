@@ -10,5 +10,8 @@ accession_numbers = metadata["accession_number"].tolist()
 path_df = get_path_data(accession_numbers)
 diff = get_diff(path_df)
 
+# print the number of rows in the differential data
+print(f"Number of rows in differential data: {len(diff)}")
+
 # save the differential data to a csv file
 diff.to_csv("/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv", index=False)
