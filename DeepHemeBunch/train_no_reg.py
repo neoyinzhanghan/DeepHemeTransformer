@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import pytorch_lightning as pl
-from DeepHemeTransformer import DeepHemeModule
+from DeepHemeBunch import DeepHemeModule
 from cell_dataloader import CellFeaturesDataModule
 from pytorch_lightning.loggers import TensorBoardLogger
 
@@ -22,7 +22,7 @@ for i in range(1):
     learning_rate = 1e-4
 
     # Set up the logger with a subfolder named after the learning rate
-    log_dir = f"../logs/train_nov25/lr_{learning_rate}_no_reg_bunch"
+    log_dir = f"../logs/train_nov25_no_reg/lr_{learning_rate}_no_reg_bunch"
     logger = TensorBoardLogger(
         save_dir=log_dir,
         name="",
@@ -42,8 +42,8 @@ for i in range(1):
         learning_rate=learning_rate,
         max_epochs=num_epoches,
         weight_decay=1e-2,
-        reg_lambda1=0,
-        reg_lambda2=1,
+        reg_lambda1=1,
+        reg_lambda2=0,
     )
 
     # Train the model
