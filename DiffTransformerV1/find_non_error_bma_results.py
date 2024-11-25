@@ -1,6 +1,11 @@
 import os
+from tqdm import tqdm
 
 results_folder = "/media/hdd3/neo/results_dir"
+
+save_dir = "/media/hdd3/neo/DiffTransformerV1DataMini"
+os.makedirs(save_dir, exist_ok=True)
+
 removed_classes = ["U1", "PL2", "PL3", "ER5", "ER6", "U4"]
 
 # get all the result directories
@@ -17,7 +22,10 @@ bma_results_dirs_paths = [
 ]
 
 num_error, num_non_error = 0, 0
-for bma_results_dir in bma_results_dirs_paths:
+
+non_error_dirs = []
+
+for bma_results_dir in tqdm(bma_results_dirs_paths, desc="Checking directories"):
     # if an error.txt file exists in the directory, then it is an error directory
     if os.path.exists(os.path.join(bma_results_dir, "error.txt")):
         num_error += 1
@@ -56,6 +64,12 @@ for bma_results_dir in bma_results_dirs_paths:
                 num_error += 1
             else:
                 num_non_error += 1
+                non_error_dirs.append(bma_results_dir)
 
 
 print(f"Found {num_error} error directories and {num_non_error} non-error directories")
+
+for non_error_dir in tqdm(non_error_dirs, desc="Copying non-error directories"):
+    save_path = os.path.join(save_dir, os.path.basename(non_error_dir))
+    os.makedirs(save_path, exist_ok=True)
+    os.system(f"cp -r {non_error_dir} {save_path}")
