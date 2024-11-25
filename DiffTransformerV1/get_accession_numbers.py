@@ -33,4 +33,6 @@ for result_dir in tqdm(result_dirs, desc="Getting accession numbers"):
     metadata["wsi_name"].append(wsi_name)
 
 metadata_df = pd.DataFrame(metadata)
-metadata_df.to_csv("wsi_metadata.csv", index=False)
+metadata_df.to_csv(
+    "/media/hdd3/neo/DiffTransformerV1DataMini/wsi_metadata.csv", index=False
+)

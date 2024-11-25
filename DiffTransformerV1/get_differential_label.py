@@ -1,1 +1,1 @@
-good_results_dir = "/media/hdd3/neo/DiffTransformerV1DataMini"
+metadata_path = "/media/hdd3/neo/DeepHemeTransformerData/labelled_features_metadata.csv"
