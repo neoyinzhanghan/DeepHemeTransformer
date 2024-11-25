@@ -45,7 +45,7 @@ def get_diff(df):
         "lymphocytes",
         "plasma cells",
     ]
-    conn = sqlite3.connect("/media/ssd2/clinical_text_data/Copath Database/copath.db")
+    conn = sqlite3.connect("/media/hdd3/neo/copath.db")
     new_df = lab_value_query(df["specnum_formatted"].unique(), diff_cols, conn)
     conn.close()
     new_df = new_df.drop_duplicates(subset="specnum_formatted", keep="first")
@@ -83,7 +83,7 @@ def get_cbc(df):
         "Hairy Cells",
         "Other.*",
     ]
-    conn = sqlite3.connect("/media/ssd2/clinical_text_data/Copath Database/copath.db")
+    conn = sqlite3.connect("/media/hdd3/neo/copath.db")
     new_df = lab_value_query(df["specnum_formatted"].unique(), cbc_cols, conn)
     new_df = new_df.drop_duplicates(subset="specnum_formatted", keep="first")
     conn.close()
