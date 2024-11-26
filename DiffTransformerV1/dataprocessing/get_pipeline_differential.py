@@ -6,6 +6,7 @@ from PIL import Image
 from tqdm import tqdm
 from BMAassumptions import (
     removed_classes,
+    omitted_classes,
     non_removed_classes,
     BMA_final_classes,
     differential_group_dict,
@@ -135,6 +136,9 @@ for cellname in cellnames:
 # first remove all the columns named numX where X in removed_classes
 for removed_class in removed_classes:
     nonerror_df = nonerror_df.drop(columns=[f"{removed_class}"])
+
+for omitted_class in omitted_classes:
+    nonerror_df = nonerror_df.drop(columns=[f"{omitted_class}"])
 
 # renamed the num_cells column to num_objects
 nonerror_df = nonerror_df.rename(columns={"num_cells": "num_objects"})
