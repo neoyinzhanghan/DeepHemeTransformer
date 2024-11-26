@@ -60,5 +60,13 @@ removed_diff = diff[diff["total"] < 0.9]
 print(f"Number of rows removed: {len(removed_diff)}")
 print(f"Number of rows remaining: {len(good_diff)}")
 
+# sum together the columns named blasts and blast-equivalents into a new column named "blasts and blast-equivalents"
+good_diff["blasts and blast-equivalents"] = (
+    good_diff["blasts"] + good_diff["blast-equivalents"]
+)
+
+# remove the columns named blasts and blast-equivalents
+good_diff = good_diff.drop(["blasts", "blast-equivalents"], axis=1)
+
 # save the differential data to a csv file
 good_diff.to_csv("/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv", index=False)
