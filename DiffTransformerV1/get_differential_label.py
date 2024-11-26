@@ -23,5 +23,22 @@ diff = get_diff(path_df)
 # print the number of rows in the differential data
 print(f"Number of rows in differential data: {len(diff)}")
 
+# remove the columns named text_data_final, part_description
+diff = diff.drop(["text_data_final", "part_description"], axis=1)
+
+# rename specnum_formatted to accession_number
+diff = diff.rename(columns={"specnum_formatted": "accession_number"})
+
+# traverse through the rows of diff
+for i, row in diff.iterrows():
+    # get the accession number
+    accession_number = row["accession_number"]
+    # get the accession number from the metadata
+    metadata_row = metadata[metadata["accession_number"] == accession_number]
+    # get the result_dir_name
+    result_dir_name = metadata_row["result_dir_name"].values[0]
+    # assign the result_dir_name to the result_dir_name column in the diff dataframe
+    diff.loc[i, "result_dir_name"] = result_dir_name
+
 # save the differential data to a csv file
 diff.to_csv("/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv", index=False)
