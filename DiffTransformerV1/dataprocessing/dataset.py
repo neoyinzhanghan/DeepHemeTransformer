@@ -31,7 +31,12 @@ class TensorStackDataset(Dataset):
 
         feature_stack = torch.load(feature_stack_path)  # this has shape [N, d]
 
-        # randomly sample 100
+        # randomly sample 100 to get shape [100, d]
+
+        assert feature_stack.shape[0] > 100, "Feature stack has fewer than 100 samples"
+        if feature_stack.shape[0] > 100:
+            idxs = np.random.choice(feature_stack.shape[0], 100, replace=False)
+            feature_stack = feature_stack[idxs]
 
         diff_list = []
 
