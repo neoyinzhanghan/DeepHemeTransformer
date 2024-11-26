@@ -4,6 +4,7 @@ import random
 import pandas as pd
 from PIL import Image
 from tqdm import tqdm
+from BMAassumptions import removed_classes, BMA_final_classes, differential_group_dict
 
 data_dir = "/media/hdd3/neo/DiffTransformerV1DataMini"
 diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv"
@@ -112,6 +113,18 @@ diff_data = pd.read_csv(diff_data_path)
 nonerror_df = nonerror_df[
     nonerror_df["result_dir_name"].isin(diff_data["result_dir_name"])
 ]
+
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+# Gathering data for the comparable differential groups
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+
+# first remove all the columns named numX where X in removed_classes
+for removed_class in removed_classes:
+    nonerror_df = nonerror_df.drop(columns=[f"num{removed_class}"])
 
 # print how many rows are in the nonerror_df
 print(f"Number of rows in nonerror_df: {len(nonerror_df)}")
