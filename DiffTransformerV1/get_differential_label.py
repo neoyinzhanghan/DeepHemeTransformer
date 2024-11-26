@@ -49,6 +49,7 @@ for i, row in diff.iterrows():
 
     # assign the total to the total column in the diff dataframe
     diff.loc[i, "total"] = total
+    print(f"Accession number: {accession_number}, Total: {total}")
 
 # save the differential data to a csv file
 diff.to_csv("/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv", index=False)
