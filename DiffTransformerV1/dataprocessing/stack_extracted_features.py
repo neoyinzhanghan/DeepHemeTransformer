@@ -1,5 +1,6 @@
 import os
 import torch
+import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from BMAassumptions import (
@@ -40,12 +41,18 @@ def get_stacked_feature_tensor(subdir, feature_name):
 
     for feature_path in list_of_feature_paths:
         feature_tensor = torch.load(feature_path)
+
+        # if the feature tensor is a numpy array, convert it to a tensor
+        if isinstance(feature_tensor, np.ndarray):
+            feature_tensor = torch.from_numpy(feature_tensor)
+
         list_of_feature_tensors.append(feature_tensor)
 
     try:
         print(type(list_of_feature_tensors[0]))
 
         import sys
+
         sys.exit()
         stacked_feature_tensor = torch.stack(list_of_feature_tensors)
     except RuntimeError as e:
