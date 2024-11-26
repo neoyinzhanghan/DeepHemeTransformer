@@ -136,8 +136,11 @@ for cellname in cellnames:
 for removed_class in removed_classes:
     nonerror_df = nonerror_df.drop(columns=[f"{removed_class}"])
 
+# renamed the num_cells column to num_objects
+nonerror_df = nonerror_df.rename(columns={"num_cells": "num_objects"})
+
 # create a new column named total_cells that is the sum of all the cell classes that are not in removed_classes
-nonerror_df["total_cells"] = nonerror_df[non_removed_classes].sum(axis=1)
+nonerror_df["num_cells"] = nonerror_df[non_removed_classes].sum(axis=1)
 
 for differential_group in differential_group_dict:
     # get the list of cell classes in the differential group
@@ -145,7 +148,7 @@ for differential_group in differential_group_dict:
 
     # get the sum of the cell classes in the differential group
     nonerror_df[differential_group] = (
-        nonerror_df[cell_classes].sum(axis=1) / nonerror_df["total_cells"]
+        nonerror_df[cell_classes].sum(axis=1) / nonerror_df["num_cells"]
     )
 
 # now remove the columns in nonremoved_classes
