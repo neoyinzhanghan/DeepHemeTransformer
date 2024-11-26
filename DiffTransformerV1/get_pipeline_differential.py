@@ -4,7 +4,12 @@ import random
 import pandas as pd
 from PIL import Image
 from tqdm import tqdm
-from BMAassumptions import removed_classes, BMA_final_classes, differential_group_dict
+from BMAassumptions import (
+    removed_classes,
+    BMA_final_classes,
+    differential_group_dict,
+    cellnames,
+)
 
 data_dir = "/media/hdd3/neo/DiffTransformerV1DataMini"
 diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv"
@@ -122,9 +127,14 @@ nonerror_df = nonerror_df[
 ########################################################################################################################
 ########################################################################################################################
 
+for cellname in cellnames:
+    # rename the column from numcellname to cellname
+    nonerror_df = nonerror_df.rename(columns={f"num{cellname}": cellname})
+
 # first remove all the columns named numX where X in removed_classes
 for removed_class in removed_classes:
-    nonerror_df = nonerror_df.drop(columns=[f"num{removed_class}"])
+    nonerror_df = nonerror_df.drop(columns=[f"{removed_class}"])
+
 
 # print how many rows are in the nonerror_df
 print(f"Number of rows in nonerror_df: {len(nonerror_df)}")
