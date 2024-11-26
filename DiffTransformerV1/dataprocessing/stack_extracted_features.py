@@ -1,5 +1,6 @@
 import os
 import torch
+import shutil
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -11,6 +12,10 @@ results_dir = "/media/hdd3/neo/DiffTransformerV1DataMini"
 diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv"
 feature_name = "features_v3"
 save_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
+
+# if the save directory already exists, delete it
+if os.path.exists(save_dir):
+    shutil.rmtree(save_dir)
 
 os.makedirs(save_dir, exist_ok=True)
 
@@ -49,8 +54,6 @@ def get_stacked_feature_tensor(subdir, feature_name):
         list_of_feature_tensors.append(feature_tensor)
 
     try:
-        print(type(list_of_feature_tensors[0]))
-
         stacked_feature_tensor = torch.stack(list_of_feature_tensors)
     except RuntimeError as e:
         print(f"Error stacking feature tensors for {subdir}: {str(e)}")
