@@ -40,5 +40,10 @@ for i, row in diff.iterrows():
     # assign the result_dir_name to the result_dir_name column in the diff dataframe
     diff.loc[i, "result_dir_name"] = result_dir_name
 
+    # for each column in the row, if the entry is a number, divide by 100
+    for col in diff.columns:
+        if diff[col].dtype == "float64":
+            diff.loc[i, col] = diff.loc[i, col] / 100
+
 # save the differential data to a csv file
 diff.to_csv("/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv", index=False)
