@@ -206,6 +206,8 @@ cellnames = [
     "U4",
 ]
 
+
+omitted_classes = ["B1", "B2"]
 removed_classes = ["U1", "PL2", "PL3", "ER5", "ER6", "U4"]
 non_removed_classes = [
     cellname
@@ -319,10 +321,6 @@ cellnames_dict = {
 }
 
 supported_extensions = [".svs", ".ndpi"]
-
-
-omitted_classes = ["B1", "B2"]
-removed_classes = ["U1", "PL2", "PL3", "ER5", "ER6", "U4"]
 
 # kept_cellnames are the cellnames that are not in omitted_classes and removed_classes
 kept_cellnames = [
