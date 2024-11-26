@@ -25,7 +25,7 @@ def get_stacked_feature_tensor(subdir, feature_name):
 
     for cell_class in non_removed_classes:
         feature_dir_path = os.path.join(
-            results_dir, subdir, cell_class, f"{feature_name}"
+            results_dir, subdir, "cells", cell_class, f"{feature_name}"
         )
 
         if not os.path.exists(feature_dir_path):
