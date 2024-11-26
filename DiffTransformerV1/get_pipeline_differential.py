@@ -6,6 +6,7 @@ from PIL import Image
 from tqdm import tqdm
 from BMAassumptions import (
     removed_classes,
+    non_removed_classes,
     BMA_final_classes,
     differential_group_dict,
     cellnames,
@@ -135,6 +136,15 @@ for cellname in cellnames:
 for removed_class in removed_classes:
     nonerror_df = nonerror_df.drop(columns=[f"{removed_class}"])
 
+# create a new column named total_cells that is the sum of all the cell classes that are not in removed_classes
+nonerror_df["total_cells"] = nonerror_df[non_removed_classes].sum(axis=1)
+
+for differential_group in differential_group_dict:
+    # get the list of cell classes in the differential group
+    cell_classes = differential_group_dict[differential_group]
+
+    # get the sum of the cell classes in the differential group
+    nonerror_df[differential_group] = nonerror_df[cell_classes].sum(axis=1)
 
 # print how many rows are in the nonerror_df
 print(f"Number of rows in nonerror_df: {len(nonerror_df)}")

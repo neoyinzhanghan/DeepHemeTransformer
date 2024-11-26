@@ -207,6 +207,9 @@ cellnames = [
 ]
 
 removed_classes = ["U1", "PL2", "PL3", "ER5", "ER6", "U4"]
+non_removed_classes = [
+    cellname for cellname in cellnames if cellname not in removed_classes
+]
 
 index_map = {
     0: [14],  # myelocytes
