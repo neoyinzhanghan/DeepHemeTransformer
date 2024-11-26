@@ -9,6 +9,13 @@ pipeline_run_history = pd.read_csv(pipeline_run_history_path)
 # get a list of the result directories
 result_dirs = os.listdir(good_results_dir)
 
+# only keep the directories that are actually directories
+result_dirs = [
+    result_dir
+    for result_dir in result_dirs
+    if os.path.isdir(os.path.join(good_results_dir, result_dir))
+]
+
 metadata = {
     "result_dir_name": [],
     "accession_number": [],
