@@ -51,9 +51,6 @@ def get_stacked_feature_tensor(subdir, feature_name):
     try:
         print(type(list_of_feature_tensors[0]))
 
-        import sys
-
-        sys.exit()
         stacked_feature_tensor = torch.stack(list_of_feature_tensors)
     except RuntimeError as e:
         print(f"Error stacking feature tensors for {subdir}: {str(e)}")
