@@ -45,6 +45,9 @@ for i, row in diff.iterrows():
     for col in diff.columns:
         if diff[col].dtype == "float64":
             diff.loc[i, col] = diff.loc[i, col] / 100
+            # if nan, replace with 0
+            if pd.isna(diff.loc[i, col]):
+                diff.loc[i, col] = 0
             total += diff.loc[i, col]
 
     # assign the total to the total column in the diff dataframe
