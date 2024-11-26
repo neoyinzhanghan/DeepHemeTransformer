@@ -28,11 +28,14 @@ class AggregateConcatenate(pl.LightningModule):
     ):
         super().__init__()
 
+        if agg_method != "normal":
+            raise NotImplementedError(
+                "Only normal aggregation method is implemented for now."
+            )
+
         # This dict will have the num of heads to use for each aggregation method.
         agg_dict = {
             "normal": (4, self.normal_aggregation),
-            "gm": (3, self.gm_aggregation),
-            "lse": (2, self.lse_aggregation),
         }
 
         self.num_heads, self.aggregation = agg_dict[agg_method]

@@ -260,10 +260,10 @@ BMA_reported_classes = [
     # "blasts and blast-equivalents",
 ]
 
-
+# THESE were originally at the beginning of the list
+# "blasts",
+# "blast-equivalents",
 BMA_final_classes = [
-    # "blasts",
-    # "blast-equivalents",
     "myelocytes",
     "metamyelocytes",
     "neutrophils/bands",
