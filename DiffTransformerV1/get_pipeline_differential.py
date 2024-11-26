@@ -6,6 +6,7 @@ from PIL import Image
 from tqdm import tqdm
 
 data_dir = "/media/hdd3/neo/DiffTransformerV1DataMini"
+diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv"
 
 cellnames = [
     "B1",
@@ -103,6 +104,17 @@ for non_error_dir in tqdm(
             nonerror_df_dict[str("num" + cell_name)].append(0)
 
 nonerror_df = pd.DataFrame(nonerror_df_dict)
+
+# open the diff_data.csv file
+diff_data = pd.read_csv(diff_data_path)
+
+# only keeps the rows in nonerror_df that has a result_dir_name that is in diff_data's result_dir_name column
+nonerror_df = nonerror_df[
+    nonerror_df["result_dir_name"].isin(diff_data["result_dir_name"])
+]
+
+# print how many rows are in the nonerror_df
+print(f"Number of rows in nonerror_df: {len(nonerror_df)}")
 
 # save the non-error dataframe to a csv file at /media/hdd3/neo/pipeline_nonerror_aggregate_df.csv
 nonerror_df.to_csv(
