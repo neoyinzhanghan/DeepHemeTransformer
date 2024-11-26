@@ -26,6 +26,9 @@ def get_stacked_feature_tensor(subdir, feature_name):
         feature_dir_path = os.path.join(
             results_dir, subdir, cell_class, f"{feature_name}"
         )
+
+        if not os.path.exists(feature_dir_path):
+            continue
         list_of_feature_paths.extend(
             [
                 os.path.join(feature_dir_path, f)
