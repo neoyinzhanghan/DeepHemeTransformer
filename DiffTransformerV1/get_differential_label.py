@@ -54,5 +54,11 @@ for i, row in diff.iterrows():
     diff.loc[i, "total"] = total
     print(f"Accession number: {accession_number}, Total: {total}")
 
+# remove all rows where total is <0.9 also report how many rows were removed
+good_diff = diff[diff["total"] >= 0.9]
+removed_diff = diff[diff["total"] < 0.9]
+print(f"Number of rows removed: {len(removed_diff)}")
+print(f"Number of rows remaining: {len(good_diff)}")
+
 # save the differential data to a csv file
-diff.to_csv("/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv", index=False)
+good_diff.to_csv("/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv", index=False)
