@@ -144,7 +144,12 @@ for differential_group in differential_group_dict:
     cell_classes = differential_group_dict[differential_group]
 
     # get the sum of the cell classes in the differential group
-    nonerror_df[differential_group] = nonerror_df[cell_classes].sum(axis=1)
+    nonerror_df[differential_group] = (
+        nonerror_df[cell_classes].sum(axis=1) / nonerror_df["total_cells"]
+    )
+
+# now remove the columns in nonremoved_classes
+nonerror_df = nonerror_df.drop(columns=non_removed_classes)
 
 # print how many rows are in the nonerror_df
 print(f"Number of rows in nonerror_df: {len(nonerror_df)}")
