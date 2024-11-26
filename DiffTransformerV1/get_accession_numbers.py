@@ -26,7 +26,7 @@ for result_dir in tqdm(result_dirs, desc="Getting accession numbers"):
     row = row.iloc[0]
 
     wsi_name = row["wsi_name"]
-    accession_number = wsi_name.split("_")[0]
+    accession_number = wsi_name.split(";")[0]
 
     metadata["result_dir_name"].append(result_dir)
     metadata["accession_number"].append(accession_number)
