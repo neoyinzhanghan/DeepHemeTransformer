@@ -263,7 +263,7 @@ class DeepHemeModule(pl.LightningModule):
             logger=True,
             batch_size=len(features_list),
         )
-        return {"loss": loss}
+        return {"train_loss": loss}
 
     def validation_step(self, batch, batch_idx):
         features_list, logits_list, differential_list = batch
