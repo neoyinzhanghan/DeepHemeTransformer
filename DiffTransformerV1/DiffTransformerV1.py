@@ -108,7 +108,10 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         self.save_hyperparameters()
 
         self.model = MultiHeadAttentionClassifier(
-            d_model, num_heads, num_classes, use_flash_attention
+            d_model=d_model,
+            num_heads=num_heads,
+            num_classes=num_classes,
+            use_flash_attention=use_flash_attention,
         )
 
         self.train_accuracy = Accuracy(num_classes=num_classes, task="multiclass")
