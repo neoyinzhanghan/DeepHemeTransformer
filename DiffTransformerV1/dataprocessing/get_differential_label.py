@@ -1,5 +1,6 @@
 import pandas as pd
 from get_copath_data import get_diff, get_path_data
+from BMAassumptions import BMA_final_classes
 
 metadata_path = "/media/hdd3/neo/DiffTransformerV1DataMini/wsi_metadata.csv"
 metadata = pd.read_csv(metadata_path)
@@ -64,6 +65,11 @@ for i, row in diff.iterrows():
 # remove all rows where total is <0.9 also report how many rows were removed
 good_diff = diff[diff["total"] >= 0.9]
 removed_diff = diff[diff["total"] < 0.9]
+
+# renormalize the values of the BMA_final_classes columns to sum to 1 by dividing by the total
+for col in BMA_final_classes:
+    good_diff[col] = good_diff[col] / good_diff["total"]
+
 print(f"Number of rows removed: {len(removed_diff)}")
 print(f"Number of rows remaining: {len(good_diff)}")
 
