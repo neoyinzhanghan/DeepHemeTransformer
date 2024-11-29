@@ -180,7 +180,7 @@ def train_model(feature_stacks_dir, diff_data_path, num_gpus=2, num_epochs=10):
         num_workers=4,
     )
     model = MultiHeadAttentionClassifierPL(
-        d_model=1024,
+        d_model=2048,
         num_heads=8,
         num_classes=9,
         use_flash_attention=True,
