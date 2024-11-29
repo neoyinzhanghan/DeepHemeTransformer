@@ -197,7 +197,7 @@ def train_model(feature_stacks_dir, diff_data_path, num_gpus=2, num_epochs=10):
         accelerator="gpu",
     )
     trainer.fit(model, data_module)
-    trainer.test(model, data_module.test_dataloader())
+    trainer.test(model, data_module.val_dataloader())
 
 
 if __name__ == "__main__":
