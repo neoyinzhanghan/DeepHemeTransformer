@@ -22,6 +22,9 @@ class TensorStackDataset(Dataset):
         self.split = split
         self.diff_data = self.diff_data[self.diff_data["split"] == self.split]
 
+        # make sure to reset the index after filtering
+        self.diff_data = self.diff_data.reset_index(drop=True)
+
         # print the number of rows in the differential data
         print(f"Number of rows in differential data: {len(self.diff_data)}")
         # print the largest index in the differential data
