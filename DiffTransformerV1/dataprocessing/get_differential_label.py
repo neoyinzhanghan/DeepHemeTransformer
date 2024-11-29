@@ -68,7 +68,9 @@ removed_diff = diff[diff["total"] < 0.9]
 
 # renormalize the values of the BMA_final_classes columns to sum to 1 by dividing by the total
 for col in BMA_final_classes:
-    good_diff[col] = good_diff[col] / good_diff["total"]
+    good_diff.iloc[:, good_diff.columns.get_loc(col)] = (
+        good_diff[col] / good_diff["total"]
+    )
 
 # remove the total column
 good_diff = good_diff.drop("total", axis=1)
