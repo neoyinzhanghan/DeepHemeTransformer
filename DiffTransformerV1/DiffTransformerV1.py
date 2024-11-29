@@ -214,6 +214,7 @@ def train_model(feature_stacks_dir, diff_data_path, num_gpus=2, num_epochs=10):
         logger=logger,
         devices=num_gpus,
         accelerator="gpu",
+        log_every_n_steps=1,
     )
     trainer.fit(model, data_module)
     trainer.test(model, data_module.val_dataloader())
