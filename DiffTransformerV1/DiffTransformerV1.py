@@ -141,9 +141,11 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         # print the shape of x and y
         print(x.shape, y.shape)
         
+        logits = self(x)
+        
+        print(logits.shape, y.shape)    
         import sys
         sys.exit()
-        logits = self(x)
         loss = self.loss_fn(logits, y)
         self.log("train_loss", loss)
         # self.log("train_accuracy", self.train_accuracy(logits, y))
