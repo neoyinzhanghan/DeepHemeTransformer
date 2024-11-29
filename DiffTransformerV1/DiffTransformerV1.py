@@ -185,14 +185,14 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         self.log("lr", current_lr)
 
     def configure_optimizers(self):
-        optimizer = torch.optim.AdamW(self.parameters(), lr=0.0001)
+        optimizer = torch.optim.AdamW(self.parameters(), lr=0.00001)
         scheduler = CosineAnnealingLR(
             optimizer, T_max=self.hparams.num_epochs, eta_min=0
         )
         return [optimizer], [scheduler]
 
 
-def train_model(feature_stacks_dir, diff_data_path, num_gpus=2, num_epochs=10):
+def train_model(feature_stacks_dir, diff_data_path, num_gpus=2, num_epochs=20):
     data_module = TensorStackDataModule(
         feature_stacks_dir=feature_stacks_dir,
         diff_data_path=diff_data_path,
