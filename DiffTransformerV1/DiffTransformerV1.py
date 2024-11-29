@@ -139,20 +139,26 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         x, y = batch
 
         # print the shape of x and y
-        print(x.shape, y.shape)
-        
+        # print(x.shape, y.shape)
+
         logits = self(x)
-        
-        print(logits.shape, y.shape)    
+
+        # print(logits.shape, y.shape)
         # import sys
         # sys.exit()
         loss = self.loss_fn(logits, y)
-        self.log("train_loss", loss,
-                 on_step=True, on_epoch=True)
+        self.log(
+            "train_loss",
+            loss,
+            on_step=True,  # Log at each step
+            on_epoch=True,  # Log at the end of each epoch
+            prog_bar=True,  # Display in the progress bar
+            logger=True,  # Send to the logger (e.g., TensorBoard)
+            batch_size=x.size(0),
+        )
         # self.log("train_accuracy", self.train_accuracy(logits, y))
         # self.log("train_f1", self.train_f1(logits, y))
         # self.log("train_auroc", self.train_auroc(logits, y))
-        return loss
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
