@@ -21,6 +21,12 @@ class TensorStackDataset(Dataset):
         self.diff_data = pd.read_csv(diff_data_path)
         self.split = split
         self.diff_data = self.diff_data[self.diff_data["split"] == self.split]
+
+        # print the number of rows in the differential data
+        print(f"Number of rows in differential data: {len(self.diff_data)}")
+        # print the largest index in the differential data
+        print(f"Largest index in differential data: {self.diff_data.index.max()}")
+
         self.result_dir_names = self.diff_data["result_dir_name"].tolist()
 
     def __len__(self):
