@@ -56,7 +56,7 @@ for i, row in diff.iterrows():
     print(diff.columns)
 
     # for each column in the row, if the entry is a number, divide by 100
-    for col in BMA_final_classes:
+    for col in diff.columns:
         if diff[col].dtype == "float64":
             diff.loc[i, col] = diff.loc[i, col] / 100
             # if nan, replace with 0
