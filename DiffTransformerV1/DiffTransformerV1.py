@@ -5,7 +5,8 @@ import torch.nn.functional as F
 import math
 import pytorch_lightning as pl
 from dataset import TensorStackDataModule
-from torchmetrics import Accuracy, F1Score, AUROC
+
+# from torchmetrics import Accuracy, F1Score, AUROC
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from pytorch_lightning.loggers import TensorBoardLogger
 from CELoss import MyCrossEntropyLoss
@@ -114,17 +115,17 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
             use_flash_attention=use_flash_attention,
         )
 
-        self.train_accuracy = Accuracy(num_classes=num_classes, task="multiclass")
-        self.val_accuracy = Accuracy(num_classes=num_classes, task="multiclass")
-        self.test_accuracy = Accuracy(num_classes=num_classes, task="multiclass")
+        # self.train_accuracy = Accuracy(num_classes=num_classes, task="multiclass")
+        # self.val_accuracy = Accuracy(num_classes=num_classes, task="multiclass")
+        # self.test_accuracy = Accuracy(num_classes=num_classes, task="multiclass")
 
-        self.train_f1 = F1Score(num_classes=num_classes, task="multiclass")
-        self.val_f1 = F1Score(num_classes=num_classes, task="multiclass")
-        self.test_f1 = F1Score(num_classes=num_classes, task="multiclass")
+        # self.train_f1 = F1Score(num_classes=num_classes, task="multiclass")
+        # self.val_f1 = F1Score(num_classes=num_classes, task="multiclass")
+        # self.test_f1 = F1Score(num_classes=num_classes, task="multiclass")
 
-        self.train_auroc = AUROC(num_classes=num_classes, task="multiclass")
-        self.val_auroc = AUROC(num_classes=num_classes, task="multiclass")
-        self.test_auroc = AUROC(num_classes=num_classes, task="multiclass")
+        # self.train_auroc = AUROC(num_classes=num_classes, task="multiclass")
+        # self.val_auroc = AUROC(num_classes=num_classes, task="multiclass")
+        # self.test_auroc = AUROC(num_classes=num_classes, task="multiclass")
 
         self.loss_fn = MyCrossEntropyLoss()
 
@@ -136,9 +137,9 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         logits = self(x)
         loss = self.loss_fn(logits, y)
         self.log("train_loss", loss)
-        self.log("train_accuracy", self.train_accuracy(logits, y))
-        self.log("train_f1", self.train_f1(logits, y))
-        self.log("train_auroc", self.train_auroc(logits, y))
+        # self.log("train_accuracy", self.train_accuracy(logits, y))
+        # self.log("train_f1", self.train_f1(logits, y))
+        # self.log("train_auroc", self.train_auroc(logits, y))
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -146,18 +147,18 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         logits = self(x)
         loss = self.loss_fn(logits, y)
         self.log("val_loss", loss)
-        self.log("val_accuracy", self.val_accuracy(logits, y))
-        self.log("val_f1", self.val_f1(logits, y))
-        self.log("val_auroc", self.val_auroc(logits, y))
+        # self.log("val_accuracy", self.val_accuracy(logits, y))
+        # self.log("val_f1", self.val_f1(logits, y))
+        # self.log("val_auroc", self.val_auroc(logits, y))
 
     def test_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
         loss = self.loss_fn(logits, y)
         self.log("test_loss", loss)
-        self.log("test_accuracy", self.test_accuracy(logits, y))
-        self.log("test_f1", self.test_f1(logits, y))
-        self.log("test_auroc", self.test_auroc(logits, y))
+        # self.log("test_accuracy", self.test_accuracy(logits, y))
+        # self.log("test_f1", self.test_f1(logits, y))
+        # self.log("test_auroc", self.test_auroc(logits, y))
 
     def on_train_epoch_end(self):
         scheduler = self.lr_schedulers()
