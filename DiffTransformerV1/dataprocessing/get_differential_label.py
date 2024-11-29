@@ -31,10 +31,12 @@ diff = diff.drop(["text_data_final", "part_description"], axis=1)
 diff = diff.rename(columns={"specnum_formatted": "accession_number"})
 
 # sum together the columns named blasts and blast-equivalents into a new column named "blasts and blast-equivalents"
-diff["blasts and blast-equivalents"] = diff["blasts"] + diff["blast-equivalents"]
+diff["blasts and blast-equivalents"] = (
+    diff["blasts"] + diff["blast-equivalents"] + diff["promyelocytes"]
+)
 
 # remove the columns named blasts and blast-equivalents
-diff = diff.drop(["blasts", "blast-equivalents"], axis=1)
+diff = diff.drop(["blasts", "blast-equivalents", "promyelocytes"], axis=1)
 
 
 # traverse through the rows of diff
@@ -52,9 +54,6 @@ for i, row in diff.iterrows():
 
     # print the name of all the columns in the row
     print(diff.columns)
-
-    import sys
-    sys.exit()
 
     # for each column in the row, if the entry is a number, divide by 100
     for col in BMA_final_classes:
