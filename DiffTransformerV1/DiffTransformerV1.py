@@ -223,4 +223,4 @@ def train_model(feature_stacks_dir, diff_data_path, num_gpus=2, num_epochs=50):
 if __name__ == "__main__":
     feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
     diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
-    train_model(feature_stacks_dir, diff_data_path, num_gpus=1, num_epochs=10)
+    train_model(feature_stacks_dir, diff_data_path, num_gpus=2, num_epochs=50)
