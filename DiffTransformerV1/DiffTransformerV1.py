@@ -8,7 +8,7 @@ from dataset import TensorStackDataModule
 from torchmetrics import Accuracy, F1Score, AUROC
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from pytorch_lightning.loggers import TensorBoardLogger
-from CELoss import custom_cross_entropy_loss
+from CELoss import MyCrossEntropyLoss
 
 
 class Attn(nn.Module):
@@ -123,7 +123,7 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         self.val_auroc = AUROC(num_classes=num_classes, task="multiclass")
         self.test_auroc = AUROC(num_classes=num_classes, task="multiclass")
 
-        self.loss_fn = custom_cross_entropy_loss()
+        self.loss_fn = MyCrossEntropyLoss()
 
     def forward(self, x):
         return self.model(x)
