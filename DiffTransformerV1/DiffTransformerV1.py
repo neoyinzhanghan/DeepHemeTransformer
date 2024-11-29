@@ -187,7 +187,7 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=0.0000005)
         scheduler = CosineAnnealingLR(
-            optimizer, T_max=self.hparams.num_epochs // 10, eta_min=0
+            optimizer, T_max=self.hparams.num_epochs, eta_min=0
         )
         return [optimizer], [scheduler]
 
