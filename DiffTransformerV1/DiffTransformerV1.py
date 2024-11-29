@@ -130,7 +130,10 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         self.loss_fn = MyCrossEntropyLoss()
 
     def forward(self, x):
-        return self.model(x)
+        logits = self.model(x)  # should have shape [batch_size, num_classes]
+
+        # apply a softmax operation to the logits to get probabilities
+        return F.softmax(logits, dim=1)
 
     def training_step(self, batch, batch_idx):
         x, y = batch
