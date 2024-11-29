@@ -159,6 +159,7 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         # self.log("train_accuracy", self.train_accuracy(logits, y))
         # self.log("train_f1", self.train_f1(logits, y))
         # self.log("train_auroc", self.train_auroc(logits, y))
+        return loss
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
