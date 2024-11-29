@@ -144,8 +144,8 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         logits = self(x)
         
         print(logits.shape, y.shape)    
-        import sys
-        sys.exit()
+        # import sys
+        # sys.exit()
         loss = self.loss_fn(logits, y)
         self.log("train_loss", loss,
                  on_step=True, on_epoch=True)
