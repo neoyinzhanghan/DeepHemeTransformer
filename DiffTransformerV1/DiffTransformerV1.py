@@ -137,6 +137,12 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
 
     def training_step(self, batch, batch_idx):
         x, y = batch
+
+        # print the shape of x and y
+        print(x.shape, y.shape)
+        
+        import sys
+        sys.exit()
         logits = self(x)
         loss = self.loss_fn(logits, y)
         self.log("train_loss", loss)
