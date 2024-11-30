@@ -261,4 +261,4 @@ class MILSelfAttention(pl.LightningModule):
         pred_probs = self.classifier(head_out2)
 
         # Return the predictions and the attention weights with shapes B x n_classes and B x n x T_max
-        return pred_probs, head_attn2
+        return pred_probs #, head_attn2
