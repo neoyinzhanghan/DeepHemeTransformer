@@ -96,7 +96,6 @@ class AggregateConcatenate(pl.LightningModule):
         """
         The output of our network will be a tensor of shape B x (n + T) x agg_out_size for wbc cells.
         """
-        print(wbc.shape)
         B = wbc.shape[0]
 
         wbc_agg_embeddings = self.wbc_aggregators(wbc)
@@ -229,7 +228,7 @@ class MILSelfAttention(pl.LightningModule):
             ELU(),
             BatchNorm1d(64),
             Dropout(0.3),
-            Linear(64, 2),
+            Linear(64, 9),
             Softmax(dim=1),
         )
 
