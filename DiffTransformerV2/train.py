@@ -7,7 +7,6 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from torch import manual_seed as set_seed1
 from random import seed as set_seed2
 from numpy.random import seed as set_seed3
-from torch.backends.cudnn import deterministic
 
 if __name__ == "__main__":
 
@@ -47,7 +46,7 @@ if __name__ == "__main__":
     num_gpus = (
         2  # The index of the gpu if in a list, otherwise the number to distribute among
     )
-    num_workers = 10
+    num_workers = 16
 
     data_module = TensorStackDataModule(
         feature_stacks_dir=feature_stacks_dir,
