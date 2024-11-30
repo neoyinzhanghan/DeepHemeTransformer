@@ -61,7 +61,7 @@ class Classifier(pl.LightningModule):
 
     def training_step(self, batch, batch_idx):
         x, y = batch
-        y_hat, _ = self.forward(x)
+        y_hat = self.forward(x)
         loss = self.loss_fn(y_hat, y)
         self.log("train_loss", loss)
         self.update_metrics(self.train_metrics, y_hat, y)
@@ -71,8 +71,8 @@ class Classifier(pl.LightningModule):
         self.log_metrics(self.train_metrics)
 
     def validation_step(self, batch, batch_idx):
-        x, y, _ = batch
-        y_hat, _ = self.forward(x)
+        x, y = batch
+        y_hat = self.forward(x)
         loss = self.loss_fn(y_hat, y)
         self.log("val_loss", loss, on_step=False, on_epoch=True)
         self.update_metrics(self.val_metrics, y_hat, y)
@@ -106,8 +106,8 @@ class Classifier(pl.LightningModule):
         self.labels.clear()
 
     def test_step(self, batch, batch_idx):
-        x, y, _ = batch
-        y_hat, _ = self.forward(x)
+        x, y = batch
+        y_hat = self.forward(x)
         loss = self.loss_fn(y_hat, y)
         self.log("test_loss", loss, on_step=False, on_epoch=True)
         self.update_metrics(self.test_metrics, y_hat, y)
