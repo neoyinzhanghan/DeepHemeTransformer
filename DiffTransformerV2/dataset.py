@@ -94,6 +94,8 @@ class TensorStackDataModule(LightningDataModule):
         self.batch_size = batch_size
         self.num_workers = num_workers
 
+        self.setup()
+
     def setup(self, stage=None):
         """
         Set up the datasets for train, validation, and test splits.
