@@ -70,9 +70,7 @@ if __name__ == "__main__":
         max_epochs=num_epochs,
         logger=logger,
         devices=num_gpus,
-        accelerator=(
-            "ddp" if type(num_gpus) == int and num_gpus > 1 else "gpu"
-        ),  # 'ddp' for DistributedDataParallel
+        accelerator="cuda",
     )
     trainer.fit(model, data_module.train_dataloader(), data_module.val_dataloader())
     trainer.test(
