@@ -1,3 +1,5 @@
+import torch
+import pytorch_lightning as pl
 from torch.nn import (
     Sequential,
     Linear,
@@ -10,8 +12,6 @@ from torch.nn import (
     Flatten,
     MultiheadAttention,
 )
-import torch
-import pytorch_lightning as pl
 
 
 # AggregateConcatenate Network. This will create a aggregator network for all cells and an
@@ -73,7 +73,6 @@ class AggregateConcatenate(pl.LightningModule):
     def generalized_mean(self, inp_tensor, power=1.0):
         # inp_tensor is of shape T x agg_out_size
         # We will take the generalized mean of the tensor along the zeroth dimension.
-        # The generalized mean is defined as (1/n * sum(x_i^p))^(1/p), where p is the power parameter.
         # For p=0, it is the geometric mean, for p=1, it is the arithmetic mean and for p=infinity, it is the max function.
         # Output shape: agg_out_size
 
@@ -84,7 +83,6 @@ class AggregateConcatenate(pl.LightningModule):
     def log_sum_exponentiation(self, inp_tensor, power=1.0):
         # inp_tensor is of shape T x agg_out_size
         # We will take the log sum exponentiation of the tensor along the zeroth dimension.
-        # The log sum exponentiation is defined as (1/p)*log((1/n) * sum(e^(p*x_i)), where p is the power parameter.
         # The output shape is agg_out_size
 
         n = inp_tensor.shape[0]
@@ -93,27 +91,19 @@ class AggregateConcatenate(pl.LightningModule):
         return log_sum_exp
 
     def forward(self, wbc):
-        """
-        The output of our network will be a tensor of shape B x (n + T) x agg_out_size for wbc cells.
-        """
+        """ """
         B = wbc.shape[0]
 
         wbc_agg_embeddings = self.wbc_aggregators(wbc)
-        wbc_agg_embeddings = wbc_agg_embeddings.view(
-            B, wbc.shape[1], -1
-        )  # B x 111 x agg_out_size
-        wbc_aggregations = self.aggregation(wbc_agg_embeddings)  # B x n x agg_out_size
+        wbc_agg_embeddings = wbc_agg_embeddings.view(B, wbc.shape[1], -1)
+        wbc_aggregations = self.aggregation(wbc_agg_embeddings)
 
-        wbc_adj_inputs = self.wbc_adj_input_network(wbc)  # (B x 111) x agg_out_size
-        wbc_adj_inputs = wbc_adj_inputs.view(
-            B, wbc.shape[1], -1
-        )  # B x 111 x agg_out_size
+        wbc_adj_inputs = self.wbc_adj_input_network(wbc)
+        wbc_adj_inputs = wbc_adj_inputs.view(B, wbc.shape[1], -1)
 
         # Concatenate the aggregations and the adjacent inputs which can then be passed to the
         # self attention network.
-        concatenated_all = torch.cat(
-            (wbc_aggregations, wbc_adj_inputs), dim=1
-        )  # B x (n+n+121+111) x agg_out_size
+        concatenated_all = torch.cat((wbc_aggregations, wbc_adj_inputs), dim=1)
 
         return concatenated_all
 
@@ -165,23 +155,17 @@ class MyMultiheadAttention(pl.LightningModule):
 
     def forward(self, input_tensor):
         # input_tensor is of shape B x L x E    where L is the length of the sequence and E is the embedding size.
-        # In our case L = (n+n+121+111) and E = agg_out_size
 
         key = self.key(input_tensor)  # B x L x attn_head_size
         query = self.query(input_tensor)  # B x L x attn_head_size
         value = self.value(input_tensor)  # B x L x attn_head_size
 
         # Use the same input for key, query, and value
-        full_output, attn = self.multihead_attention(
-            query, key, value
-        )  # B x (n+n+121+111+P) x attn_head_size, B x (2n+121+111+P) x (2n+121+111+P)
+        full_output, attn = self.multihead_attention(query, key, value)
 
         # Extract the attn weights from the heads to the T_max cells.
         # We extract the attn values of the first 2n heads to the cell and patch embeddings.
-        head_attn = attn[
-            :, : 2 * self.num_agg_heads, 2 * self.num_agg_heads :
-        ]  # B x 2n x (121+111+P)
-
+        head_attn = attn[:, : 2 * self.num_agg_heads, 2 * self.num_agg_heads :]
         # Extract the head embeddings from the full output.
         head_output = full_output[:, : 2 * self.num_agg_heads, :]  # B x 2n x outsize
 
@@ -193,15 +177,13 @@ class MILSelfAttention(pl.LightningModule):
     def __init__(self, init_mil_embed, mil_head, attn_head_size, agg_method):
         super().__init__()
 
-        # This dict will have the num of heads to use for each aggregation method.
         agg_dict = {"normal": 4, "gm": 3, "lse": 3}
 
-        # The output size of the attention layer will be the same as the attn_head_size.
         self.num_agg_heads = agg_dict[agg_method]  # number of aggregation heads
 
         self.aggregation = AggregateConcatenate(
             init_mil_embed, 256, mil_head, agg_method, dropout=0.2
-        )  # B x (n+T_max) x mil_head
+        )
 
         self.attention1 = MyMultiheadAttention(
             inp_embedding_size=mil_head,
@@ -235,35 +217,15 @@ class MILSelfAttention(pl.LightningModule):
     def forward(self, cells):
         wbc = cells
 
-        # mak
+        concatenated_all = self.aggregation(wbc)
 
-        # concatenated_all has a shape of B x (n+n+121+111+P) x agg_out_size
-        concatenated_all = self.aggregation(
-            wbc
-        )  # B x (n+121) x agg_out_size, B x (n+n+121+111) x agg_out_size
-
-        # Pass the concatenated_all through the attention network
-        # B x 2n x outsize, B x (2n+121+111) x outsize, B x (2n+121+111) x (2n+121+111), B x 2n x (121+111)
         head_out1, full_out1, attn1, head_attn1 = self.attention1(concatenated_all)
 
         head_out2, full_out2, attn2, head_attn2 = self.attention2(full_out1)
-        # print('Full_out2: ', full_out2.shape)   # B x (2n+121+111) x outsize
-        # print('Head Out2: ', head_out2.shape)   # B x 2n x outsize
-        # print('Attn2: ', attn2.shape)           # B x (2n+121+111) x (2n+121+111)
-        # print('Head Attn2: ', head_attn2.shape) # B x 2n x (121+111)
 
-        # Flatten the head_out2 to get a shape of B x (2n*outsize)
         B = head_out2.shape[0]
         head_out2 = torch.flatten(head_out2, start_dim=1)
 
-        # Pass the flattened head_out2 through the classifier
         pred_probs = self.classifier(head_out2)
 
-        # Return the predictions and the attention weights with shapes B x n_classes and B x n x T_max
-
-        print(pred_probs.shape)
-
-        import sys
-
-        sys.exit()
-        return pred_probs  # , head_attn2
+        return pred_probs
