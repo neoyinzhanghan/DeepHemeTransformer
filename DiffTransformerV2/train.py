@@ -28,7 +28,7 @@ if __name__ == "__main__":
     # scheduler = schedulers.CyclicLR
     # config = {'base_lr':lr, 'max_lr':5.5e-4, 'mode':'triangular2', 'step_size_up':100, 'cycle_momentum':False}
 
-    num_classes = 2
+    num_classes = 9
     init_mil_embed = 2048  # The initial embedding size of the MIL cells
     mil_head = 256  # The output size of the aggregation network
     attn_head_size = 128  # The output size of the attention network
