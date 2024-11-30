@@ -36,7 +36,7 @@ class Classifier(pl.LightningModule):
         self.scheduler = scheduler
         self.config = config
 
-        self.loss
+        self.loss_fn = MyCrossEntropyLoss()
 
     def forward(self, x):
         logits = self.model(x)
