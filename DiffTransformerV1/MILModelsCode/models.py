@@ -2,7 +2,7 @@ import torch
 import pytorch_lightning as pl
 from torchmetrics import Accuracy, AUROC, Precision, Recall, F1Score
 import torch.nn.functional as F
-from utils import plot_confusion_matrix, plot_roc_curve
+# from utils import plot_confusion_matrix, plot_roc_curve
 from architectures import selfattnmodel1, selfattnmodel2, selfattnmodel3
 
 class Classifier(pl.LightningModule):

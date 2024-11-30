@@ -1,5 +1,4 @@
 import models
-import utils
 import schedulers
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
