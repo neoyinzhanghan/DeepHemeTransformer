@@ -42,17 +42,17 @@ if __name__ == "__main__":
     name = f"mantle/{seed}"
     feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
     diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
-    batch_size = 32
+    batch_size = 16
     num_epochs = 150
-    num_gpus = [
-        1
-    ]  # The index of the gpu if in a list, otherwise the number to distribute among
+    num_gpus = (
+        2  # The index of the gpu if in a list, otherwise the number to distribute among
+    )
     num_workers = 10
 
     data_module = TensorStackDataModule(
         feature_stacks_dir=feature_stacks_dir,
         diff_data_path=diff_data_path,
-        batch_size=16,
+        batch_size=batch_size,
         num_workers=8,
     )
     # Logger
@@ -78,5 +78,5 @@ if __name__ == "__main__":
     trainer.fit(model, data_module.train_dataloader(), data_module.val_dataloader())
     trainer.test(
         ckpt_path=checkpoint_callback.best_model_path,
-        dataloaders=data_module.test_dataloader(),
+        dataloaders=data_module.val_dataloader(),
     )
