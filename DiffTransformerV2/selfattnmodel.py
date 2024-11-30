@@ -35,27 +35,6 @@ class AggregateConcatenate(pl.LightningModule):
 
         self.num_heads, self.aggregation = agg_dict[agg_method]
 
-        # We will flatten the input first so our final output will be (B x T_max) x agg_out_size
-        self.rbc_aggregators = Sequential(
-            Flatten(start_dim=0, end_dim=1),
-            Linear(init_embed_size, hidden_size),
-            ELU(),
-            BatchNorm1d(hidden_size),
-            Dropout(dropout),
-            Linear(hidden_size, agg_out_size),
-            Tanh(),
-        )
-
-        self.rbc_adj_input_network = Sequential(
-            Flatten(start_dim=0, end_dim=1),
-            Linear(init_embed_size, hidden_size),
-            ELU(),
-            BatchNorm1d(hidden_size),
-            Dropout(dropout),
-            Linear(hidden_size, agg_out_size),
-            Tanh(),
-        )
-
         self.wbc_aggregators = Sequential(
             Flatten(start_dim=0, end_dim=1),
             Linear(init_embed_size, hidden_size),
@@ -113,31 +92,18 @@ class AggregateConcatenate(pl.LightningModule):
         log_sum_exp = (1 / power) * torch.log(sum_exp)
         return log_sum_exp
 
-    def forward(self, rbc, wbc):
+    def forward(self, wbc):
         """
-        The output of our network will be a tensor of shape B x (n + T) x agg_out_size for both rbc and wbc cells.
+        The output of our network will be a tensor of shape B x (n + T) x agg_out_size for wbc cells.
         """
-        print(rbc.shape, wbc.shape)
-        B = rbc.shape[0]
-
-        # Pass the rbc and wbc cells through the aggregator network and concatenate the outputs.
-        rbc_agg_embeddings = self.rbc_aggregators(rbc)
-        rbc_agg_embeddings = rbc_agg_embeddings.view(
-            B, rbc.shape[1], -1
-        )  # B x 121 x agg_out_size
-        rbc_aggregations = self.aggregation(rbc_agg_embeddings)  # B x n x agg_out_size
+        print(wbc.shape)
+        B = wbc.shape[0]
 
         wbc_agg_embeddings = self.wbc_aggregators(wbc)
         wbc_agg_embeddings = wbc_agg_embeddings.view(
             B, wbc.shape[1], -1
         )  # B x 111 x agg_out_size
         wbc_aggregations = self.aggregation(wbc_agg_embeddings)  # B x n x agg_out_size
-
-        # Pass all cell embeddings through the adjacency network to transform its embedding shape.
-        rbc_adj_inputs = self.rbc_adj_input_network(rbc)  # (B x 121) x agg_out_size
-        rbc_adj_inputs = rbc_adj_inputs.view(
-            B, rbc.shape[1], -1
-        )  # B x 121 x agg_out_size
 
         wbc_adj_inputs = self.wbc_adj_input_network(wbc)  # (B x 111) x agg_out_size
         wbc_adj_inputs = wbc_adj_inputs.view(
@@ -147,7 +113,7 @@ class AggregateConcatenate(pl.LightningModule):
         # Concatenate the aggregations and the adjacent inputs which can then be passed to the
         # self attention network.
         concatenated_all = torch.cat(
-            (rbc_aggregations, wbc_aggregations, rbc_adj_inputs, wbc_adj_inputs), dim=1
+            (wbc_aggregations, wbc_adj_inputs), dim=1
         )  # B x (n+n+121+111) x agg_out_size
 
         return concatenated_all
@@ -268,11 +234,13 @@ class MILSelfAttention(pl.LightningModule):
         )
 
     def forward(self, cells):
-        rbc, wbc = cells
+        wbc = cells
+
+        # mak
 
         # concatenated_all has a shape of B x (n+n+121+111+P) x agg_out_size
         concatenated_all = self.aggregation(
-            rbc, wbc
+            wbc
         )  # B x (n+121) x agg_out_size, B x (n+n+121+111) x agg_out_size
 
         # Pass the concatenated_all through the attention network
