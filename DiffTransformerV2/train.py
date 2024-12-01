@@ -43,18 +43,18 @@ if __name__ == "__main__":
     diff_data_path = (
         "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
     )
-    batch_size = 20
+    batch_size = 1
     num_epochs = 300
     num_gpus = (
-        2  # The index of the gpu if in a list, otherwise the number to distribute among
+        1  # The index of the gpu if in a list, otherwise the number to distribute among
     )
-    num_workers = 16
+    num_workers = 8
 
     data_module = TensorStackDataModule(
         feature_stacks_dir=feature_stacks_dir,
         diff_data_path=diff_data_path,
         batch_size=batch_size,
-        num_workers=8,
+        num_workers=num_workers,
     )
     # Logger
     logger = TensorBoardLogger("lightning_logs/wbc_only", name=name)
