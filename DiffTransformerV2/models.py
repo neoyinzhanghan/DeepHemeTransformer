@@ -64,7 +64,7 @@ class Classifier(pl.LightningModule):
         x, y = batch
         y_hat = self.forward(x)
         loss = self.loss_fn(y_hat, y)
-        self.log("train_loss", loss)
+        self.log("train_loss", loss, on_step=True, on_epoch=True)
         self.update_metrics(self.train_metrics, y_hat, y)
         return loss
 
