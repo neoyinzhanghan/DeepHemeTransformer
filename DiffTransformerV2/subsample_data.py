@@ -1,6 +1,6 @@
 import pandas as pd
 
-num_train = 1
+num_train = 5
 diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv"
 diff_data = pd.read_csv(diff_data_path)
 
