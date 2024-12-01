@@ -20,6 +20,8 @@ for index, row in pipeline_diff.iterrows():
     # get the row in diff_data that has the same result_dir_name
     diff_row = diff_data[diff_data["result_dir_name"] == result_dir_name]
 
+    assert len(diff_row) == 1, "There should be exactly one row in diff_data with the same result_dir_name"
+
     diff_tens_list, pipeline_diff_tens_list = [], []
     for final_class in BMA_final_classes:
 
