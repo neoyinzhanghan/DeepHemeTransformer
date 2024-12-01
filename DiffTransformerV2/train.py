@@ -77,5 +77,5 @@ if __name__ == "__main__":
     trainer.fit(model, data_module.train_dataloader(), data_module.train_dataloader())
     trainer.test(
         ckpt_path=checkpoint_callback.best_model_path,
-        dataloaders=data_module.val_dataloader(),
+        dataloaders=data_module.train_dataloader(),
     )
