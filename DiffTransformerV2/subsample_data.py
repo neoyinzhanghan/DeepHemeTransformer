@@ -17,3 +17,5 @@ diff_data.loc[num_train:, "split"] = "val"
 split_diff_data_path = (
     "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
 )
+
+diff_data.to_csv(split_diff_data_path, index=False)
