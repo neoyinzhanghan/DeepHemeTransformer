@@ -22,6 +22,15 @@ for index, row in pipeline_diff.iterrows():
 
     diff_tens_list, pipeline_diff_tens_list = [], []
     for final_class in BMA_final_classes:
+
+        print(final_class)
+        print(diff_row[final_class])
+        print(row[final_class])
+
+        import sys
+
+        sys.exit()
+
         diff_tens_list.append(diff_row[final_class])
         pipeline_diff_tens_list.append(row[final_class])
 
