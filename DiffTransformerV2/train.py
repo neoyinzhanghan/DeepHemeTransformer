@@ -40,9 +40,11 @@ if __name__ == "__main__":
 
     name = f"mantle/{seed}"
     feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
-    diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
+    diff_data_path = (
+        "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
+    )
     batch_size = 20
-    num_epochs = 150
+    num_epochs = 300
     num_gpus = (
         2  # The index of the gpu if in a list, otherwise the number to distribute among
     )
