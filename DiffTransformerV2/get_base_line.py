@@ -27,7 +27,7 @@ for index, row in pipeline_diff.iterrows():
         print(final_class)
 
         print("diff_row[final_class]")
-        print(diff_row[final_class.iloc[0]])
+        print(diff_row[final_class].iloc[0])
 
         print("row[final_class]")
         print(row[final_class])
@@ -36,7 +36,7 @@ for index, row in pipeline_diff.iterrows():
 
         sys.exit()
 
-        diff_tens_list.append(diff_row[final_class.iloc[0]])
+        diff_tens_list.append(diff_row[final_class].iloc[0])
         pipeline_diff_tens_list.append(row[final_class])
 
     diff_tens = torch.tensor(diff_tens_list)
