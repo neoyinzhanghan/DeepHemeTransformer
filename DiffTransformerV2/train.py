@@ -17,7 +17,7 @@ if __name__ == "__main__":
     set_seed3(seed)
     deterministic = True
 
-    lr = 1e-5
+    lr = 1e-4
     scheduler = schedulers.LinearLR
     config = {"start_factor": 1, "end_factor": 0.5, "total_iters": 100}
     # scheduler = schedulers.MyCosineLR
