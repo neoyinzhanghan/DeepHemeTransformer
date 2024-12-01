@@ -22,7 +22,7 @@ for index, row in pipeline_diff.iterrows():
 
     diff_tens_list, pipeline_diff_tens_list = [], []
     for final_class in BMA_final_classes:
-        diff_tens_list.append(diff_row[final_class].values[0])
+        diff_tens_list.append(diff_row[final_class])
         pipeline_diff_tens_list.append(row[final_class])
 
     diff_tens = torch.tensor(diff_tens_list)
@@ -36,4 +36,4 @@ for index, row in pipeline_diff.iterrows():
 
     loss_list.append(loss_item)
 
-print(f"Average loss: {sum(loss_list) / len(loss_list)}")
+print(f"Average baseline loss: {sum(loss_list) / len(loss_list)}")
