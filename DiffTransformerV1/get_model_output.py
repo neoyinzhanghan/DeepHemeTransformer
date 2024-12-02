@@ -10,7 +10,7 @@ diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
 data_module = TensorStackDataModule(
     feature_stacks_dir=feature_stacks_dir,
     diff_data_path=diff_data_path,
-    batch_size=5,
+    batch_size=16,
     num_workers=5,
 )
 
