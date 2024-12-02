@@ -196,3 +196,58 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
             optimizer, T_max=self.hparams.num_epochs, eta_min=0
         )
         return [optimizer], [scheduler]
+
+
+def train_model(
+    feature_stacks_dir,
+    diff_data_path,
+    num_gpus=2,
+    num_epochs=50,
+    batch_size=16,
+    lr=0.0005,
+    num_workers=8,
+    num_heads=1,
+    num_classes=9,
+    use_flash_attention=True,
+):
+    data_module = TensorStackDataModule(
+        feature_stacks_dir=feature_stacks_dir,
+        diff_data_path=diff_data_path,
+        batch_size=batch_size,
+        num_workers=num_workers,
+        lr=lr,
+    )
+    model = MultiHeadAttentionClassifierPL(
+        d_model=2048,
+        num_heads=num_heads,
+        num_classes=num_classes,
+        use_flash_attention=use_flash_attention,
+        num_epochs=num_epochs,
+    )
+
+    logger = TensorBoardLogger("lightning_logs", name="multihead_attention")
+
+    trainer = pl.Trainer(
+        max_epochs=num_epochs,
+        logger=logger,
+        devices=num_gpus,
+        accelerator="gpu",
+        log_every_n_steps=1,
+    )
+    trainer.fit(model, data_module)
+    trainer.test(model, data_module.val_dataloader())
+
+
+if __name__ == "__main__":
+    feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
+    diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
+    train_model(
+        feature_stacks_dir,
+        diff_data_path,
+        num_gpus=2,
+        num_epochs=50,
+        lr=0.0005,
+        num_heads=1,
+        num_classes=9,
+        use_flash_attention=True,
+    )
