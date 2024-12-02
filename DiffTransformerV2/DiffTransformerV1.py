@@ -161,6 +161,26 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         # self.log("train_auroc", self.train_auroc(logits, y))
         return {"loss": loss}
 
+    def on_train_epoch_end(self):
+        # Log the learning rate
+        scheduler = self.lr_schedulers()
+        current_lr = scheduler.get_last_lr()[0]
+        self.log("lr", current_lr)
+
+        # Measure and log the absolute value of gradients
+        total_abs_grad = 0.0
+        total_params = 0
+        for param in self.model.parameters():
+            if param.grad is not None:
+                total_abs_grad += torch.sum(torch.abs(param.grad)).item()
+                total_params += param.grad.numel()
+
+        # Compute the average absolute gradient
+        avg_abs_grad = total_abs_grad / total_params if total_params > 0 else 0.0
+        self.log(
+            "avg_abs_gradient", avg_abs_grad, on_epoch=True, prog_bar=True, logger=True
+        )
+
     def validation_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
