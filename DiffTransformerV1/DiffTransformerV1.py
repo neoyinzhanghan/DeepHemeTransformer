@@ -103,7 +103,13 @@ class MultiHeadAttentionClassifier(nn.Module):
 
 class MultiHeadAttentionClassifierPL(pl.LightningModule):
     def __init__(
-        self, d_model, num_heads, num_classes, use_flash_attention=True, num_epochs=10
+        self,
+        d_model,
+        num_heads,
+        num_classes,
+        use_flash_attention=True,
+        num_epochs=50,
+        lr=0.0005,
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -185,7 +191,7 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         self.log("lr", current_lr)
 
     def configure_optimizers(self):
-        optimizer = torch.optim.AdamW(self.parameters(), lr=0.0005)
+        optimizer = torch.optim.AdamW(self.parameters(), lr=self.hparams.lr)
         scheduler = CosineAnnealingLR(
             optimizer, T_max=self.hparams.num_epochs, eta_min=0
         )
@@ -235,10 +241,21 @@ if __name__ == "__main__":
     diff_data_path = (
         "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
     )
+
+    for lr in [5, 0.5, 0.05, 0.005, 0.0005, 0.00005, 0.000005, 0.0000005, 0.00000005]:
+        train_model(
+            feature_stacks_dir=feature_stacks_dir,
+            diff_data_path=diff_data_path,
+            num_gpus=2,
+            num_epochs=500,
+            lr=lr,
+        )
+
     train_model(
         feature_stacks_dir=feature_stacks_dir,
         diff_data_path=diff_data_path,
         batch_size=5,
         num_gpus=2,
         num_epochs=500,
+        lr=0.0005,
     )
