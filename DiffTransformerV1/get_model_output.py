@@ -46,3 +46,27 @@ for i in range(len(logits)):
     print(f"Example {i}")
     print(f"Logits: {logit_list}")
     print(f"Labels: {y_list}")
+    # Creating the bar plot
+    x_labels = [
+        f"Item {i+1}" for i in range(len(logit_list))
+    ]  # Create labels for the x-axis
+    x = range(len(logit_list))  # x-axis positions
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    # Plotting the bars
+    width = 0.4  # Width of the bars
+    ax.bar([pos - width / 2 for pos in x], logit_list, width, label="Logits")
+    ax.bar([pos + width / 2 for pos in x], y_list, width, label="Y Values")
+
+    # Adding labels and title
+    ax.set_xlabel("Items", fontsize=12)
+    ax.set_ylabel("Values", fontsize=12)
+    ax.set_title("Comparison of Logit and Y Values", fontsize=14)
+    ax.set_xticks(x)
+    ax.set_xticklabels(x_labels)
+    ax.legend()
+
+    plt.tight_layout()
+    plt.show()
+    plt.savefig(f"{save_dir}/example_{i}.png")
