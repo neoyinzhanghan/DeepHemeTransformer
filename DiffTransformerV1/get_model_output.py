@@ -1,4 +1,4 @@
-from DiffTransformerV1.DiffTransformerV1 import MultiHeadAttentionClassifierPL
+from DiffTransformerV1 import MultiHeadAttentionClassifierPL
 from dataset import TensorStackDataModule
 
 model_ckpt_path = "/home/greg/Documents/neo/DeepHemeTransformer/DiffTransformerV1/lightning_logs/multihead_attention/version_5/checkpoints/epoch=499-step=500.ckpt"
