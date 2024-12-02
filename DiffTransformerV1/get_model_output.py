@@ -43,9 +43,6 @@ for i in range(len(logits)):
     logit_list = logits[i].tolist()
     y_list = y[i].tolist()
 
-    print(len(logit_list), len(y_list))
-
-    # make a bar plot of logit_list against y_list and save it to save_dir as i.png
-    plt.bar(range(len(logit_list)), logit_list, color="blue", alpha=0.5)
-    plt.bar(range(len(y_list)), y_list, color="red", alpha=0.5)
-    plt.savefig(f"{save_dir}/{i}.png")
+    print(f"Example {i}")
+    print(f"Logits: {logit_list}")
+    print(f"Labels: {y_list}")
