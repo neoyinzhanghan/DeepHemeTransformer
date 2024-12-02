@@ -237,14 +237,12 @@ def train_model(
         log_every_n_steps=1,
     )
     trainer.fit(model, data_module)
-    trainer.test(model, data_module.train_dataloader())
+    trainer.test(model, data_module.val_dataloader())
 
 
 if __name__ == "__main__":
     feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
-    diff_data_path = (
-        "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
-    )
+    diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
 
     for lr in [
         0.00005
@@ -254,6 +252,6 @@ if __name__ == "__main__":
             diff_data_path=diff_data_path,
             batch_size=5,
             num_gpus=2,
-            num_epochs=500,
+            num_epochs=50,
             lr=lr,
         )
