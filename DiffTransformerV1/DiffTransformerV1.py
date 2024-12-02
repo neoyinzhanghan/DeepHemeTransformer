@@ -11,7 +11,8 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 from pytorch_lightning.loggers import TensorBoardLogger
 
 # from CELoss import MyCrossEntropyLoss
-from L2Loss import MyL2Loss
+# from L2Loss import MyL2Loss
+from TRL2Loss import MyTRL2Loss 
 from AR_acc import AR_acc
 
 
@@ -127,7 +128,7 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         )
 
         # Custom loss and accuracy metric
-        self.loss_fn = MyL2Loss()
+        self.loss_fn = MyTRL2Loss()
         self.metric_fn = AR_acc()
 
         # Parameters for AR_acc
