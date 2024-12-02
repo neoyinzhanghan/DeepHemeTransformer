@@ -215,7 +215,6 @@ def train_model(
         diff_data_path=diff_data_path,
         batch_size=batch_size,
         num_workers=num_workers,
-        lr=lr,
     )
     model = MultiHeadAttentionClassifierPL(
         d_model=2048,
@@ -223,6 +222,7 @@ def train_model(
         num_classes=num_classes,
         use_flash_attention=use_flash_attention,
         num_epochs=num_epochs,
+        lr=lr,
     )
 
     logger = TensorBoardLogger("lightning_logs", name="multihead_attention")
