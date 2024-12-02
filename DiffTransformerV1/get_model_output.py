@@ -1,3 +1,5 @@
+import os
+import matplotlib.pyplot as plt
 from DiffTransformerV1 import MultiHeadAttentionClassifierPL
 from dataset import TensorStackDataModule
 
@@ -14,7 +16,9 @@ data_module = TensorStackDataModule(
     num_workers=5,
 )
 
-model = MultiHeadAttentionClassifierPL.load_from_checkpoint(model_ckpt_path, map_location="cuda")
+model = MultiHeadAttentionClassifierPL.load_from_checkpoint(
+    model_ckpt_path, map_location="cuda"
+)
 data_module.setup()
 train_loader = data_module.train_dataloader()
 
@@ -32,8 +36,16 @@ for batch in train_loader:
 
     break
 
+save_dir = "tmp_plots"
+os.makedirs(save_dir, exist_ok=True)
+
 for i in range(len(logits)):
     logit_list = logits[i].tolist()
     y_list = y[i].tolist()
 
     print(len(logit_list), len(y_list))
+
+    # make a bar plot of logit_list against y_list and save it to save_dir as i.png
+    plt.bar(range(len(logit_list)), logit_list, color="blue", alpha=0.5)
+    plt.bar(range(len(y_list)), y_list, color="red", alpha=0.5)
+    plt.savefig(f"{save_dir}/{i}.png")
