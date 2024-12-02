@@ -36,7 +36,7 @@ class MultiHeadAttentionClassifier(nn.Module):
         d_model=2048,
         num_heads=8,
         num_classes=9,
-        num_tokens=100,
+        num_tokens=200,
         use_flash_attention=True,
     ):
         super().__init__()
