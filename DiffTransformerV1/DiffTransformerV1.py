@@ -192,17 +192,27 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         return [optimizer], [scheduler]
 
 
-def train_model(feature_stacks_dir, diff_data_path, num_gpus=2, num_epochs=50):
+def train_model(
+    feature_stacks_dir,
+    diff_data_path,
+    num_heads=1,
+    d_model=2048,
+    num_classes=9,
+    batch_size=16,
+    num_workers=8,
+    num_gpus=2,
+    num_epochs=50,
+):
     data_module = TensorStackDataModule(
         feature_stacks_dir=feature_stacks_dir,
         diff_data_path=diff_data_path,
-        batch_size=16,
-        num_workers=8,
+        batch_size=batch_size,
+        num_workers=num_workers,
     )
     model = MultiHeadAttentionClassifierPL(
-        d_model=2048,
-        num_heads=1,
-        num_classes=9,
+        d_model=d_model,
+        num_heads=num_heads,
+        num_classes=num_classes,
         use_flash_attention=True,
         num_epochs=num_epochs,
     )
@@ -222,5 +232,9 @@ def train_model(feature_stacks_dir, diff_data_path, num_gpus=2, num_epochs=50):
 
 if __name__ == "__main__":
     feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
-    diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
-    train_model(feature_stacks_dir, diff_data_path, num_gpus=2, num_epochs=50)
+    diff_data_path = (
+        "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
+    )
+    train_model(
+        feature_stacks_dir, diff_data_path, batch_size=5, num_gpus=2, num_epochs=50
+    )
