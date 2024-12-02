@@ -30,6 +30,10 @@ for batch in train_loader:
 
     logits = model(x)
 
-    print(logits.shape)
-    print(y.shape)
     break
+
+for i in range(len(logits)):
+    logit_list = logits[i].tolist()
+    y_list = y[i].tolist()
+
+    print(len(logit_list), len(y_list))
