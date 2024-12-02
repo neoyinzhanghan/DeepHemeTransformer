@@ -141,7 +141,7 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
-        loss = self.loss_fn(logits, y)
+        loss = self.loss_fn(y, logits)
 
         # Custom accuracy metric
         accuracy = self.metric_fn(y, logits, d=self.d, D=self.D)
@@ -246,7 +246,8 @@ if __name__ == "__main__":
         diff_data_path,
         num_gpus=2,
         num_epochs=50,
-        lr=0.0005,
+        batch_size=16,
+        lr=0.00005,
         num_heads=1,
         num_classes=9,
         use_flash_attention=True,
