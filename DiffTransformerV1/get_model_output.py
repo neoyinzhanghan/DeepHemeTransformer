@@ -15,7 +15,7 @@ data_module = TensorStackDataModule(
 )
 
 model = MultiHeadAttentionClassifierPL.load_from_checkpoint(model_ckpt_path, map_location="cuda")
-
+data_module.setup()
 train_loader = data_module.train_dataloader()
 
 model.eval()
