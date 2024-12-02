@@ -253,3 +253,5 @@ if __name__ == "__main__":
             num_epochs=500,
             lr=lr,
         )
+
+    model_ckpt_path = "/home/greg/Documents/neo/DeepHemeTransformer/DiffTransformerV1/lightning_logs/multihead_attention/version_5/checkpoints/epoch=499-step=500.ckpt"
