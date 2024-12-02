@@ -47,25 +47,25 @@ class TensorStackDataset(Dataset):
         feature_stack = torch.load(feature_stack_path)  # this has shape [N, d]
 
         # take the first num_cells samples without any shuffling or random sampling
-        assert (
-            feature_stack.shape[0] > self.num_cells
-        ), "Feature stack has fewer than num_cells samples"
-        if feature_stack.shape[0] > self.num_cells:
-            feature_stack = feature_stack[: self.num_cells]
-
-        # # randomly sample num_cells to get shape [num_cells, d]
-
+        # assert (
+        #     feature_stack.shape[0] > self.num_cells
+        # ), "Feature stack has fewer than num_cells samples"
         # if feature_stack.shape[0] > self.num_cells:
-        #     idxs = np.random.choice(
-        #         feature_stack.shape[0], self.num_cells, replace=False
-        #     )
-        #     feature_stack = feature_stack[idxs]
+        #     feature_stack = feature_stack[: self.num_cells]
 
-        # else:  # bootstrap if less than num_cells
-        #     idxs = np.random.choice(
-        #         feature_stack.shape[0], self.num_cells, replace=True
-        #     )
-        #     feature_stack = feature_stack[idxs]
+        # randomly sample num_cells to get shape [num_cells, d]
+
+        if feature_stack.shape[0] > self.num_cells:
+            idxs = np.random.choice(
+                feature_stack.shape[0], self.num_cells, replace=False
+            )
+            feature_stack = feature_stack[idxs]
+
+        else:  # bootstrap if less than num_cells
+            idxs = np.random.choice(
+                feature_stack.shape[0], self.num_cells, replace=True
+            )
+            feature_stack = feature_stack[idxs]
 
         diff_list = []
 
