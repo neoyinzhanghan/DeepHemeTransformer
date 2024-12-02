@@ -240,5 +240,5 @@ if __name__ == "__main__":
         diff_data_path=diff_data_path,
         batch_size=5,
         num_gpus=2,
-        num_epochs=50,
+        num_epochs=500,
     )
