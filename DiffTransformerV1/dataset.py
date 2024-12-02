@@ -14,12 +14,15 @@ class TensorStackDataset(Dataset):
     split: str (train, val, test)
     """
 
-    def __init__(self, feature_stacks_dir, diff_data_path, split="train"):
+    def __init__(
+        self, feature_stacks_dir, diff_data_path, split="train", num_cells=200
+    ):
         super().__init__()
 
         self.feature_stacks_dir = feature_stacks_dir
         self.diff_data = pd.read_csv(diff_data_path)
         self.split = split
+        self.num_cells = num_cells
         self.diff_data = self.diff_data[self.diff_data["split"] == self.split]
 
         # make sure to reset the index after filtering
@@ -43,11 +46,18 @@ class TensorStackDataset(Dataset):
 
         feature_stack = torch.load(feature_stack_path)  # this has shape [N, d]
 
-        # randomly sample 100 to get shape [100, d]
+        # randomly sample num_cells to get shape [num_cells, d]
 
-        assert feature_stack.shape[0] > 100, "Feature stack has fewer than 100 samples"
-        if feature_stack.shape[0] > 100:
-            idxs = np.random.choice(feature_stack.shape[0], 100, replace=False)
+        if feature_stack.shape[0] > self.num_cells:
+            idxs = np.random.choice(
+                feature_stack.shape[0], self.num_cells, replace=False
+            )
+            feature_stack = feature_stack[idxs]
+
+        else:  # bootstrap if less than num_cells
+            idxs = np.random.choice(
+                feature_stack.shape[0], self.num_cells, replace=True
+            )
             feature_stack = feature_stack[idxs]
 
         diff_list = []
