@@ -10,6 +10,7 @@ from dataset import TensorStackDataModule
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from pytorch_lightning.loggers import TensorBoardLogger
 from CELoss import MyCrossEntropyLoss
+from L2Loss import MyL2Loss
 
 
 class Attn(nn.Module):
@@ -133,7 +134,7 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         # self.val_auroc = AUROC(num_classes=num_classes, task="multiclass")
         # self.test_auroc = AUROC(num_classes=num_classes, task="multiclass")
 
-        self.loss_fn = MyCrossEntropyLoss()
+        self.loss_fn = MyL2Loss()
 
     def forward(self, x):
         logits = self.model(x)  # should have shape [batch_size, num_classes]
@@ -254,4 +255,4 @@ if __name__ == "__main__":
             lr=lr,
         )
 
-    model_ckpt_path = "/home/greg/Documents/neo/DeepHemeTransformer/DiffTransformerV1/lightning_logs/multihead_attention/version_5/checkpoints/epoch=499-step=500.ckpt"
+ 
