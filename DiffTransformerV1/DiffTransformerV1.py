@@ -9,6 +9,7 @@ from dataset import TensorStackDataModule
 # from torchmetrics import Accuracy, F1Score, AUROC
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from pytorch_lightning.loggers import TensorBoardLogger
+
 # from CELoss import MyCrossEntropyLoss
 from L2Loss import MyL2Loss
 
@@ -245,7 +246,9 @@ if __name__ == "__main__":
         "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
     )
 
-    for lr in [5, 0.5, 0.05, 0.005, 0.0005, 0.00005, 0.000005, 0.0000005, 0.00000005]:
+    for lr in [
+        0.00005
+    ]:  # [5, 0.5, 0.05, 0.005, 0.0005, 0.00005, 0.000005, 0.0000005, 0.00000005]:
         train_model(
             feature_stacks_dir=feature_stacks_dir,
             diff_data_path=diff_data_path,
@@ -254,5 +257,3 @@ if __name__ == "__main__":
             num_epochs=500,
             lr=lr,
         )
-
- 
