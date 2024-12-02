@@ -25,7 +25,9 @@ class MyTRL2Loss(nn.Module):
         # Compute the element-wise squared error: (g - logits)^2
         loss = (g - logits) ** 2
 
-        r = torch.minimum(1 / (torch.abs(g) + eps), t)
+        r = torch.minimum(
+            1 / (torch.abs(g) + eps), torch.tensor(t, dtype=g.dtype, device=g.device)
+        )
 
         loss = loss * r
 
@@ -50,7 +52,9 @@ def custom_trl2_loss(g, logits, t=2, eps=1e-8):
     # Compute the element-wise squared error: (g - logits)^2
     loss = (g - logits) ** 2
 
-    r = torch.minimum(1 / (torch.abs(g) + eps), t)
+    r = torch.minimum(
+        1 / (torch.abs(g) + eps), torch.tensor(t, dtype=g.dtype, device=g.device)
+    )
 
     loss = loss * r
 
