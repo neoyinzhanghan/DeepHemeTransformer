@@ -9,7 +9,7 @@ from dataset import TensorStackDataModule
 # from torchmetrics import Accuracy, F1Score, AUROC
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from pytorch_lightning.loggers import TensorBoardLogger
-from CELoss import MyCrossEntropyLoss
+# from CELoss import MyCrossEntropyLoss
 from L2Loss import MyL2Loss
 
 
