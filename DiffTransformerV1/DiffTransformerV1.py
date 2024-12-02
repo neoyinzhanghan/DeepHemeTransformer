@@ -12,7 +12,7 @@ from pytorch_lightning.loggers import TensorBoardLogger
 
 # from CELoss import MyCrossEntropyLoss
 # from L2Loss import MyL2Loss
-from TRL2Loss import MyTRL2Loss 
+from TRL2Loss import MyTRL2Loss
 from AR_acc import AR_acc
 
 
