@@ -208,6 +208,7 @@ def train_model(
     num_workers=8,
     num_gpus=2,
     num_epochs=50,
+    lr=0.0005,
 ):
     data_module = TensorStackDataModule(
         feature_stacks_dir=feature_stacks_dir,
@@ -221,6 +222,7 @@ def train_model(
         num_classes=num_classes,
         use_flash_attention=True,
         num_epochs=num_epochs,
+        lr=lr,
     )
 
     logger = TensorBoardLogger("lightning_logs", name="multihead_attention")
@@ -246,16 +248,8 @@ if __name__ == "__main__":
         train_model(
             feature_stacks_dir=feature_stacks_dir,
             diff_data_path=diff_data_path,
+            batch_size=5,
             num_gpus=2,
             num_epochs=500,
             lr=lr,
         )
-
-    train_model(
-        feature_stacks_dir=feature_stacks_dir,
-        diff_data_path=diff_data_path,
-        batch_size=5,
-        num_gpus=2,
-        num_epochs=500,
-        lr=0.0005,
-    )
