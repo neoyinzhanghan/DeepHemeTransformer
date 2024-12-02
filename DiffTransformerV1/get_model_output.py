@@ -1,4 +1,4 @@
-from DiffTransformerV1 import DiffTransformerV1
+from DiffTransformerV1.DiffTransformerV1 import MultiHeadAttentionClassifierPL
 from dataset import TensorStackDataModule
 
 model_ckpt_path = "/home/greg/Documents/neo/DeepHemeTransformer/DiffTransformerV1/lightning_logs/multihead_attention/version_5/checkpoints/epoch=499-step=500.ckpt"
@@ -14,7 +14,7 @@ data_module = TensorStackDataModule(
     num_workers=5,
 )
 
-model = DiffTransformerV1.load_from_checkpoint(model_ckpt_path, map_location="cuda")
+model = MultiHeadAttentionClassifierPL.load_from_checkpoint(model_ckpt_path, map_location="cuda")
 
 train_loader = data_module.train_dataloader()
 
