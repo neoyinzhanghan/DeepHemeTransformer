@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from DiffTransformerV1 import MultiHeadAttentionClassifierPL
 from dataset import TensorStackDataModule
 
-model_ckpt_path = "/home/greg/Documents/neo/DeepHemeTransformer/DiffTransformerV1/lightning_logs/multihead_attention/version_5/checkpoints/epoch=499-step=500.ckpt"
+model_ckpt_path = "/home/greg/Documents/neo/DeepHemeTransformer/DiffTransformerV1/lightning_logs/multihead_attention/version_0/checkpoints/epoch=499-step=500.ckpt"
 feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
 diff_data_path = (
     "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
