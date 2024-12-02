@@ -12,6 +12,7 @@ from pytorch_lightning.loggers import TensorBoardLogger
 
 # from CELoss import MyCrossEntropyLoss
 from L2Loss import MyL2Loss
+from AR_acc import AR_acc
 
 
 class Attn(nn.Module):
@@ -112,6 +113,8 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         use_flash_attention=True,
         num_epochs=50,
         lr=0.0005,
+        d=0.2,
+        D=0.02,
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -123,74 +126,69 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
             use_flash_attention=use_flash_attention,
         )
 
-        # self.train_accuracy = Accuracy(num_classes=num_classes, task="multiclass")
-        # self.val_accuracy = Accuracy(num_classes=num_classes, task="multiclass")
-        # self.test_accuracy = Accuracy(num_classes=num_classes, task="multiclass")
-
-        # self.train_f1 = F1Score(num_classes=num_classes, task="multiclass")
-        # self.val_f1 = F1Score(num_classes=num_classes, task="multiclass")
-        # self.test_f1 = F1Score(num_classes=num_classes, task="multiclass")
-
-        # self.train_auroc = AUROC(num_classes=num_classes, task="multiclass")
-        # self.val_auroc = AUROC(num_classes=num_classes, task="multiclass")
-        # self.test_auroc = AUROC(num_classes=num_classes, task="multiclass")
-
+        # Custom loss and accuracy metric
         self.loss_fn = MyL2Loss()
+        self.metric_fn = AR_acc()
+
+        # Parameters for AR_acc
+        self.d = d
+        self.D = D
 
     def forward(self, x):
-        logits = self.model(x)  # should have shape [batch_size, num_classes]
-
-        # apply a softmax operation to the logits to get probabilities
+        logits = self.model(x)
         return F.softmax(logits, dim=1)
 
     def training_step(self, batch, batch_idx):
         x, y = batch
-
-        # print the shape of x and y
-        # print(x.shape, y.shape)
-
         logits = self(x)
-
-        # print(logits.shape, y.shape)
-        # import sys
-        # sys.exit()
         loss = self.loss_fn(logits, y)
+
+        # Custom accuracy metric
+        accuracy = self.metric_fn(y, logits, d=self.d, D=self.D)
+
+        # Log training loss and accuracy
         self.log(
             "train_loss",
             loss,
-            on_step=True,  # Log at each step
-            on_epoch=True,  # Log at the end of each epoch
-            prog_bar=True,  # Display in the progress bar
-            logger=True,  # Send to the logger (e.g., TensorBoard)
+            on_step=True,
+            on_epoch=True,
+            prog_bar=True,
+            logger=True,
             batch_size=x.size(0),
         )
-        # self.log("train_accuracy", self.train_accuracy(logits, y))
-        # self.log("train_f1", self.train_f1(logits, y))
-        # self.log("train_auroc", self.train_auroc(logits, y))
+        self.log("train_accuracy", accuracy, on_epoch=True, prog_bar=True, logger=True)
+
         return {"loss": loss}
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
         loss = self.loss_fn(logits, y)
-        self.log("val_loss", loss)
-        # self.log("val_accuracy", self.val_accuracy(logits, y))
-        # self.log("val_f1", self.val_f1(logits, y))
-        # self.log("val_auroc", self.val_auroc(logits, y))
+
+        # Custom accuracy metric
+        accuracy = self.metric_fn(y, logits, d=self.d, D=self.D)
+
+        # Log validation loss and accuracy
+        self.log("val_loss", loss, on_epoch=True, prog_bar=True, logger=True)
+        self.log("val_accuracy", accuracy, on_epoch=True, prog_bar=True, logger=True)
 
     def test_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
         loss = self.loss_fn(logits, y)
-        self.log("test_loss", loss)
-        # self.log("test_accuracy", self.test_accuracy(logits, y))
-        # self.log("test_f1", self.test_f1(logits, y))
-        # self.log("test_auroc", self.test_auroc(logits, y))
+
+        # Custom accuracy metric
+        accuracy = self.metric_fn(y, logits, d=self.d, D=self.D)
+
+        # Log test loss and accuracy
+        self.log("test_loss", loss, on_epoch=True, logger=True)
+        self.log("test_accuracy", accuracy, on_epoch=True, logger=True)
 
     def on_train_epoch_end(self):
         scheduler = self.lr_schedulers()
-        current_lr = scheduler.get_last_lr()[0]
-        self.log("lr", current_lr)
+        if scheduler:
+            current_lr = scheduler.get_last_lr()[0]
+            self.log("lr", current_lr, on_epoch=True, prog_bar=True)
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.hparams.lr)
@@ -198,60 +196,3 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
             optimizer, T_max=self.hparams.num_epochs, eta_min=0
         )
         return [optimizer], [scheduler]
-
-
-def train_model(
-    feature_stacks_dir,
-    diff_data_path,
-    num_heads=1,
-    d_model=2048,
-    num_classes=9,
-    batch_size=16,
-    num_workers=8,
-    num_gpus=2,
-    num_epochs=50,
-    lr=0.0005,
-):
-    data_module = TensorStackDataModule(
-        feature_stacks_dir=feature_stacks_dir,
-        diff_data_path=diff_data_path,
-        batch_size=batch_size,
-        num_workers=num_workers,
-    )
-    model = MultiHeadAttentionClassifierPL(
-        d_model=d_model,
-        num_heads=num_heads,
-        num_classes=num_classes,
-        use_flash_attention=True,
-        num_epochs=num_epochs,
-        lr=lr,
-    )
-
-    logger = TensorBoardLogger("lightning_logs", name="multihead_attention")
-
-    trainer = pl.Trainer(
-        max_epochs=num_epochs,
-        logger=logger,
-        devices=num_gpus,
-        accelerator="gpu",
-        log_every_n_steps=1,
-    )
-    trainer.fit(model, data_module)
-    trainer.test(model, data_module.val_dataloader())
-
-
-if __name__ == "__main__":
-    feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
-    diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
-
-    for lr in [
-        0.00005
-    ]:  # [5, 0.5, 0.05, 0.005, 0.0005, 0.00005, 0.000005, 0.0000005, 0.00000005]:
-        train_model(
-            feature_stacks_dir=feature_stacks_dir,
-            diff_data_path=diff_data_path,
-            batch_size=16,
-            num_gpus=2,
-            num_epochs=100,
-            lr=lr,
-        )
