@@ -69,6 +69,9 @@ class TensorStackDataset(Dataset):
             feature_stack = np.concatenate((feature_stack, padding), axis=0)
 
             feature_stack = torch.from_numpy(feature_stack)
+            
+            # make sure that the feature stack is float
+            feature_stack = feature_stack.float()
 
         diff_list = []
 
