@@ -70,8 +70,8 @@ class TensorStackDataset(Dataset):
 
             feature_stack = torch.from_numpy(feature_stack)
 
-            # make sure that the feature stack is float
-            feature_stack = feature_stack.float()
+            # make sure that the feature stack is Double
+            feature_stack = feature_stack.double()
 
         diff_list = []
 

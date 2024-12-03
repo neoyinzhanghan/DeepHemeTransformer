@@ -78,14 +78,6 @@ class MultiHeadAttentionClassifier(nn.Module):
         class_tokens = self.class_token.expand(batch_size, -1, -1)
         x = torch.cat([class_tokens, x], dim=1)
 
-        # print the tensor shapes and types of x
-        print("x shape: ", x.shape)
-        print("x type: ", x.dtype)
-
-        import sys
-
-        sys.exit()
-
         q = (
             self.q_proj(x)
             .view(batch_size, -1, self.num_heads, self.head_dim)
