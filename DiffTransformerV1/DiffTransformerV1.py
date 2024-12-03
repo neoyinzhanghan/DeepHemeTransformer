@@ -243,7 +243,7 @@ def train_model(
 if __name__ == "__main__":
     feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
     diff_data_path = (
-        "/media/hdd3/neo/DiffTransformerV1DataMini/downsampled_split_diff_data.csv"
+        "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
     )
     train_model(
         feature_stacks_dir,
