@@ -112,7 +112,7 @@ def get_stacked_feature_tensor(subdir, feature_name):
     print(type(logits))
     print(len(logits))
     print(type(logits[0]))
-    print(logits[0].shape)
+    print(len(logits[0]))
 
     import sys
 
