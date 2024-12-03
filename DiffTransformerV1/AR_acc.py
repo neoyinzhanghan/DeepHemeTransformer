@@ -33,11 +33,11 @@ class AR_acc(nn.Module):
         err = torch.abs(g - logits)
 
         # one of the error allowance must be satisfied
-        err_max = torch.max(err - rel_error_allowance, err - abs_error_allowance)
+        err_max = torch.min(err - rel_error_allowance, err - abs_error_allowance)
 
         # loss should be 1 if the err_max is greater than 0 and 0 otherwise
         loss = torch.where(
-            err_max > 0, torch.ones_like(err_max), torch.zeros_like(err_max)
+            err_max < 0, torch.ones_like(err_max), torch.zeros_like(err_max)
         )
 
         # Reduce across dimensions: sum over logits and average over the batch
