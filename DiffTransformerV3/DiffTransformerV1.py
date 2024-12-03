@@ -256,8 +256,8 @@ if __name__ == "__main__":
         train_model(
             feature_stacks_dir,
             diff_data_path,
-            num_gpus=1,
-            num_epochs=500,
+            num_gpus=2,
+            num_epochs=100,
             batch_size=16,  # 16,
             lr=lr,
             num_heads=1,
