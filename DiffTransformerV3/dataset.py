@@ -68,6 +68,8 @@ class TensorStackDataset(Dataset):
 
             feature_stack = np.concatenate((feature_stack, padding), axis=0)
 
+            feature_stack = torch.from_numpy(feature_stack)
+
         diff_list = []
 
         for cell_class in BMA_final_classes:
