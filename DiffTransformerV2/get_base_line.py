@@ -55,4 +55,4 @@ for index, row in pipeline_diff.iterrows():
 
     loss_list.append(loss_item)
 
-print(f"Average baseline loss: {sum(loss_list) / len(loss_list)}")
+print(f"Average baseline accuracy: {sum(loss_list) / len(loss_list)}")
