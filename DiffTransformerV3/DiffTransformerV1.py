@@ -204,7 +204,7 @@ def train_model(
     feature_stacks_dir,
     diff_data_path,
     num_gpus=2,
-    num_epochs=50,
+    num_epochs=100,
     batch_size=16,
     lr=0.0005,
     num_workers=8,
