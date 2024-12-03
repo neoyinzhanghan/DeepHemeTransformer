@@ -109,10 +109,17 @@ def get_stacked_feature_tensor(subdir, feature_name):
 
     logits = predict_batch(cell_pil_images, model)
 
-    print(type(logits))
-    print(len(logits))
-    print(type(logits[0]))
-    print(len(logits[0]))
+    list_of_list = []
+
+    for tup in logits:
+        list_of_list.append(list(tup))
+
+    # turn the list of list into a tensor
+    logits_tensor = torch.tensor(list_of_list)
+
+    # print the shape of the logits tensor and the stacked feature tensor
+    print(f"Logits tensor shape: {logits_tensor.shape}")
+    print(f"Stacked feature tensor shape: {stacked_feature_tensor.shape}")
 
     import sys
 
