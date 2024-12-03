@@ -54,9 +54,9 @@ class MultiHeadAttentionClassifier(nn.Module):
 
         assert d_model % num_heads == 0, "d_model must be divisible by num_heads"
 
-        self.q_proj = nn.Linear(d_model, d_model)
-        self.k_proj = nn.Linear(d_model, d_model)
-        self.v_proj = nn.Linear(d_model, d_model)
+        self.q_proj = nn.Linear(d_model, d_model, bias=False)
+        self.k_proj = nn.Linear(d_model, d_model, bias=False)
+        self.v_proj = nn.Linear(d_model, d_model, bias=False)
         self.out_proj = nn.Linear(d_model, d_model)
 
         head_dim = d_model // num_heads
@@ -77,6 +77,14 @@ class MultiHeadAttentionClassifier(nn.Module):
 
         class_tokens = self.class_token.expand(batch_size, -1, -1)
         x = torch.cat([class_tokens, x], dim=1)
+
+        # print the tensor shapes and types of x
+        print("x shape: ", x.shape)
+        print("x type: ", x.dtype)
+
+        import sys
+
+        sys.exit()
 
         q = (
             self.q_proj(x)
