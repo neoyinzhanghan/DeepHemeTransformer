@@ -43,11 +43,11 @@ def get_cell_path(feature_path):
 
     root_dir = "/".join(feature_path_split[:-3])
 
-    cell_image_path = os.path.join(cell_dir, cell_image_name)
+    cell_image_path = os.path.join(root_dir, cell_dir, cell_image_name)
 
-    print(f"Cell image path: {cell_image_name}")
-    print(f"Cell dir: {cell_dir}")
-    print(f"Root dir: {root_dir}")
+    # print(f"Cell image path: {cell_image_name}")
+    # print(f"Cell dir: {cell_dir}")
+    # print(f"Root dir: {root_dir}")
 
     return cell_image_path
 
