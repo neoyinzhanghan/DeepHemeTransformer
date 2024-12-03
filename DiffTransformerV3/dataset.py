@@ -21,6 +21,7 @@ class TensorStackDataset(Dataset):
         split="train",
         min_num_cells=100,
         max_num_cells=3000,
+        N=3000,
     ):
         super().__init__()
 
@@ -29,6 +30,7 @@ class TensorStackDataset(Dataset):
         self.split = split
         self.min_num_cells = min_num_cells
         self.max_num_cells = max_num_cells
+        self.N = N
         self.diff_data = self.diff_data[self.diff_data["split"] == self.split]
 
         # make sure to reset the index after filtering
@@ -46,16 +48,18 @@ class TensorStackDataset(Dataset):
 
     def __getitem__(self, idx):
 
-        num_cells = np.random.randint(
-            self.min_num_cells, self.max_num_cells
-        )  # randomly sample num_cells
-
         result_dir_name = self.result_dir_names[idx]
         feature_stack_path = os.path.join(
             self.feature_stacks_dir, f"{result_dir_name}.pt"
         )
 
         feature_stack = torch.load(feature_stack_path)  # this has shape [N, d]
+
+        num_cells = np.random.randint(self.min_num_cells, self.max_num_cells)
+
+        if feature_stack.shape[0] > num_cells:
+            idxs = np.random.choice(feature_stack.shape[0], num_cells, replace=False)
+            feature_stack = feature_stack[idxs]
 
         # take the first num_cells samples without any shuffling or random sampling
         # assert (
@@ -66,13 +70,13 @@ class TensorStackDataset(Dataset):
 
         # randomly sample num_cells to get shape [num_cells, d]
 
-        if feature_stack.shape[0] > num_cells:
-            idxs = np.random.choice(feature_stack.shape[0], num_cells, replace=False)
+        if feature_stack.shape[0] > self.N:
+            idxs = np.random.choice(feature_stack.shape[0], self.N, replace=False)
             feature_stack = feature_stack[idxs]
 
         else:  # take all the data and padding with zeros
             padding = np.zeros(
-                (num_cells - feature_stack.shape[0], feature_stack.shape[1])
+                (self.N - feature_stack.shape[0], feature_stack.shape[1])
             )
 
             feature_stack = np.concatenate((feature_stack, padding), axis=0)
