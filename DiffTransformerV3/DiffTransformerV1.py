@@ -211,6 +211,9 @@ def train_model(
     num_heads=1,
     num_classes=9,
     use_flash_attention=True,
+    log_dir="lightning_logs",
+    experiment_name="multihead_attention_classifier",
+    message="No message",
 ):
     data_module = TensorStackDataModule(
         feature_stacks_dir=feature_stacks_dir,
@@ -226,8 +229,7 @@ def train_model(
         num_epochs=num_epochs,
         lr=lr,
     )
-
-    logger = TensorBoardLogger("lightning_logs", name="multihead_attention")
+    logger = TensorBoardLogger(log_dir, name=experiment_name)
 
     trainer = pl.Trainer(
         max_epochs=num_epochs,
@@ -239,12 +241,16 @@ def train_model(
     trainer.fit(model, data_module)
     trainer.test(model, data_module.train_dataloader())
 
+    # save the message as txt file in the experiment directory
+    with open(os.path.join(logger.log_dir, "message.txt"), "w") as f:
+        f.write(message)
+
 
 if __name__ == "__main__":
     feature_stacks_dir = "/media/hdd3/neo/DiffTransformerVx1DataMini/feature_stacks"
-    diff_data_path = (
-        "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
-    )
+    diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
+
+    message = "Testing different learning rates for the simple transformer model using the full mini dataset with the random subsample data augmentation, using simple L2 loss and the AR_acc metric."
 
     for lr in [5, 0.5, 0.005, 0.0005, 0.00005, 0.000005, 0.0000005, 0.00000005]:
         train_model(
@@ -252,9 +258,12 @@ if __name__ == "__main__":
             diff_data_path,
             num_gpus=1,
             num_epochs=500,
-            batch_size=5,  # 16,
+            batch_size=16,  # 16,
             lr=lr,
             num_heads=1,
             num_classes=9,
             use_flash_attention=True,
+            log_dir="2024-12-03_11:48",
+            experiment_name=f"{lr}",
+            message=message,
         )
