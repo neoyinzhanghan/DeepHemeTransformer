@@ -2,7 +2,8 @@ import os
 import torch
 import pandas as pd
 from BMAassumptions import BMA_final_classes
-from CELoss import custom_cross_entropy_loss
+# from CELoss import custom_cross_entropy_loss
+from AR_acc import custom_ar_acc
 
 diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
 pipeline_diff_path = "/media/hdd3/neo/DiffTransformerV1DataMini/pipeline_diff.csv"
@@ -50,7 +51,7 @@ for index, row in pipeline_diff.iterrows():
     diff_tens = diff_tens.unsqueeze(0)
     pipeline_diff_tens = pipeline_diff_tens.unsqueeze(0)
 
-    loss_item = custom_cross_entropy_loss(diff_tens, pipeline_diff_tens)
+    loss_item = custom_ar_acc(diff_tens, pipeline_diff_tens)
 
     loss_list.append(loss_item)
 

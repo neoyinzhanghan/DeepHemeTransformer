@@ -10,6 +10,7 @@ from dataset import TensorStackDataModule
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from pytorch_lightning.loggers import TensorBoardLogger
 from CELoss import MyCrossEntropyLoss
+from AR_acc import custom_ar_acc
 
 
 class Attn(nn.Module):
