@@ -1,0 +1,1 @@
+This version uses Siddharth's MIL model instead of my single layer transformer cross attention.
