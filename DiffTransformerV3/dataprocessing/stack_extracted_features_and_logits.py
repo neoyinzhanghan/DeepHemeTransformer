@@ -47,6 +47,7 @@ def get_cell_path(feature_path):
 
     print(f"Cell image path: {cell_image_name}")
     print(f"Cell dir: {cell_dir}")
+    print(f"Root dir: {root_dir}")
 
     return cell_image_path
 
