@@ -3,7 +3,9 @@ import pytorch_lightning as pl
 import selfattnmodel
 from torch.nn import functional as F
 from torchmetrics import Accuracy, AUROC, Precision, Recall, F1Score
-from CELoss import MyCrossEntropyLoss
+
+# from CELoss import MyCrossEntropyLoss
+from L2Loss import MyL2Loss
 
 # from utils import plot_confusion_matrix, plot_roc_curve
 
@@ -37,7 +39,7 @@ class Classifier(pl.LightningModule):
         self.scheduler = scheduler
         self.config = config
 
-        self.loss_fn = MyCrossEntropyLoss()
+        self.loss_fn = MyL2Loss()
 
     def forward(self, x):
         logits = self.model(x)
