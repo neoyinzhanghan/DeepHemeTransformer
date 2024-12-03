@@ -245,14 +245,16 @@ if __name__ == "__main__":
     diff_data_path = (
         "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
     )
-    train_model(
-        feature_stacks_dir,
-        diff_data_path,
-        num_gpus=1,
-        num_epochs=500,
-        batch_size=5,  # 16,
-        lr=0.0005,
-        num_heads=1,
-        num_classes=9,
-        use_flash_attention=True,
-    )
+
+    for lr in [5, 0.5, 0.005, 0.0005, 0.00005, 0.000005, 0.0000005, 0.00000005]:
+        train_model(
+            feature_stacks_dir,
+            diff_data_path,
+            num_gpus=1,
+            num_epochs=500,
+            batch_size=5,  # 16,
+            lr=lr,
+            num_heads=1,
+            num_classes=9,
+            use_flash_attention=True,
+        )
