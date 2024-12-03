@@ -26,8 +26,8 @@ from PIL import Image
 results_dir = "/media/hdd3/neo/DiffTransformerV1DataMini"
 diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv"
 feature_name = "features_v3"
-save_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
-
+feature_stack_save_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
+logit_stack_save_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
 
 model = model_create(HemeLabel_ckpt_path)
 
@@ -53,10 +53,15 @@ def get_cell_path(feature_path):
 
 
 # if the save directory already exists, delete it
-if os.path.exists(save_dir):
-    shutil.rmtree(save_dir)
+if os.path.exists(feature_stack_save_dir):
+    shutil.rmtree(feature_stack_save_dir)
 
-os.makedirs(save_dir, exist_ok=True)
+os.makedirs(feature_stack_save_dir, exist_ok=True)
+
+if os.path.exists(logit_stack_save_dir):
+    shutil.rmtree(logit_stack_save_dir)
+
+os.makedirs(logit_stack_save_dir, exist_ok=True)
 
 # get the column named result_dir_name from the diff_data.csv file as a list of strings
 diff_data = pd.read_csv(diff_data_path)
@@ -117,21 +122,17 @@ def get_stacked_feature_tensor(subdir, feature_name):
     # turn the list of list into a tensor
     logits_tensor = torch.tensor(list_of_list)
 
-    # print the shape of the logits tensor and the stacked feature tensor
-    print(f"Logits tensor shape: {logits_tensor.shape}")
-    print(f"Stacked feature tensor shape: {stacked_feature_tensor.shape}")
-
-    import sys
-
-    sys.exit()
-
-    return stacked_feature_tensor
+    return stacked_feature_tensor, logits_tensor
 
 
 for subdir in tqdm(result_dir_names, desc="Extracting features:"):
-    stacked_feature_tensor = get_stacked_feature_tensor(subdir, feature_name)
+    stacked_feature_tensor, logits_tensor = get_stacked_feature_tensor(
+        subdir, feature_name
+    )
 
-    save_path = os.path.join(save_dir, f"{subdir}.pt")
-    torch.save(stacked_feature_tensor, save_path)
+    feature_stack_save_path = os.path.join(feature_stack_save_dir, f"{subdir}.pt")
+    logit_stack_save_path = os.path.join(logit_stack_save_dir, f"{subdir}.pt")
+    torch.save(stacked_feature_tensor, feature_stack_save_path)
+    torch.save(logits_tensor, logit_stack_save_path)
 
 print("Done extracting features.")
