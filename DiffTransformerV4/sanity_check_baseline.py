@@ -9,7 +9,9 @@ logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
 diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
 
 # initialize a difftransformer model
-model = MultiHeadAttentionClassifierPL()
+model = MultiHeadAttentionClassifierPL(
+    d_model=2048, num_heads=1, num_classes=9, use_flash_attention=True
+)
 
 
 data_module = TensorStackDataModuleV4(
