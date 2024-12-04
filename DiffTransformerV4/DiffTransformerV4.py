@@ -213,6 +213,7 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
 
 def train_model(
     feature_stacks_dir,
+    logit_stacks_dir,
     diff_data_path,
     num_gpus=2,
     num_epochs=100,
@@ -228,6 +229,7 @@ def train_model(
 ):
     data_module = TensorStackDataModuleV4(
         feature_stacks_dir=feature_stacks_dir,
+        logit_stacks_dir=logit_stacks_dir,
         diff_data_path=diff_data_path,
         batch_size=batch_size,
         num_workers=num_workers,
@@ -259,14 +261,16 @@ def train_model(
 
 if __name__ == "__main__":
     feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
+    logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
     diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
 
     message = "Testing different learning rates for the simple transformer model using the full mini dataset with the random subsample data augmentation, using simple L2 loss and the AR_acc metric."
 
     for lr in [5, 0.5, 0.005, 0.0005, 0.00005, 0.000005, 0.0000005, 0.00000005]:
         train_model(
-            feature_stacks_dir,
-            diff_data_path,
+            feature_stacks_dir=feature_stacks_dir,
+            logit_stacks_dir=logit_stacks_dir,
+            diff_data_path=diff_data_path,
             num_gpus=2,
             num_epochs=100,
             batch_size=16,  # 16,
