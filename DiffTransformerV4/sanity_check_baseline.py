@@ -26,7 +26,8 @@ print(f"Number of training datapoints: {num_train}")
 print(f"Number of validation datapoints: {num_val}")
 
 
-for idx, (feature_stack, logit_stack, diff_tensor) in enumerate(train_dataloader):
+for idx, (feature_stack, logit_stack, NPM, diff_tensor) in enumerate(train_dataloader):
     print(f"Feature stack shape: {feature_stack.shape}")
     print(f"Logit stack shape: {logit_stack.shape}")
+    print(f"NPM shape: {NPM.shape}")
     print(f"Diff tensor shape: {diff_tensor.shape}")
