@@ -302,7 +302,7 @@ if __name__ == "__main__":
             logit_stacks_dir=logit_stacks_dir,
             diff_data_path=diff_data_path,
             num_gpus=2,
-            num_epochs=100,
+            num_epochs=50,
             batch_size=5,  # 16,
             lr=lr,
             num_heads=1,
