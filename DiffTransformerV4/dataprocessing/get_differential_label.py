@@ -72,11 +72,11 @@ for i, row in diff.iterrows():
 good_diff = diff[diff["total"] >= 0.9]
 removed_diff = diff[diff["total"] < 0.9]
 
-# renormalize the values of the BMA_final_classes columns to sum to 1 by dividing by the total
-for col in BMA_final_classes:
-    good_diff.iloc[:, good_diff.columns.get_loc(col)] = (
-        good_diff[col] / good_diff["total"]
-    )
+# # renormalize the values of the BMA_final_classes columns to sum to 1 by dividing by the total
+# for col in BMA_final_classes:
+#     good_diff.iloc[:, good_diff.columns.get_loc(col)] = (
+#         good_diff[col] / good_diff["total"]
+#     ) # TODO DEPRECATED WE WILL NO LONGER RENORMALIZE THE BMA_final_classes columns
 
 # remove the total column
 good_diff = good_diff.drop("total", axis=1)
