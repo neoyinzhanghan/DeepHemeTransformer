@@ -54,10 +54,22 @@ class MultiHeadAttentionClassifier(nn.Module):
 
         assert d_model % num_heads == 0, "d_model must be divisible by num_heads"
 
-        self.q_proj = nn.Linear(d_model, d_model, bias=False)
-        self.k_proj = nn.Linear(d_model, d_model, bias=False)
-        self.v_proj = nn.Linear(d_model, d_model, bias=False)
+        self.q_proj = nn.Linear(d_model, d_model)
+        self.k_proj = nn.Linear(d_model, d_model)
+        self.v_proj = nn.Linear(d_model, d_model)
         self.out_proj = nn.Linear(d_model, d_model)
+
+        # Initialize the projection layers to zero
+        self.q_proj.weight.data.zero_()
+        self.k_proj.weight.data.zero_()
+        self.v_proj.weight.data.zero_()
+        self.out_proj.weight.data.zero_()
+
+        # Optionally, you can also set the biases to zero if needed
+        self.q_proj.bias.data.zero_()
+        self.k_proj.bias.data.zero_()
+        self.v_proj.bias.data.zero_()
+        self.out_proj.bias.data.zero_()
 
         head_dim = d_model // num_heads
 
