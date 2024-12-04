@@ -2,7 +2,7 @@ from dataset import TensorStackDataModuleV4
 from L2Loss import MyL2Loss, custom_l2_loss
 from TRL2Loss import MyTRL2Loss, custom_trl2_loss
 from AR_acc import AR_acc, custom_ar_acc
-from DiffTransformerV4.DiffTransformerV4 import MultiHeadAttentionClassifierPL
+from DiffTransformerV4 import MultiHeadAttentionClassifierPL
 
 feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
 logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
