@@ -74,5 +74,8 @@ for idx, (feature_stack, logit_stack, NPM, diff_tensor) in enumerate(train_datal
     print(f"Predicted TR L2 Loss: {predicted_trl2_loss}")
     print(f"Predicted AR Accuracy: {predicted_ar_acc}")
 
+    print(predicted_diff[0, :])
+    print(diff_tensor[0, :])
+
     import sys
     sys.exit()
