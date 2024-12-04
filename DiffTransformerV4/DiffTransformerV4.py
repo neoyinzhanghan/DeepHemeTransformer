@@ -129,12 +129,6 @@ class MultiHeadAttentionClassifier(nn.Module):
         # then divide by the sum of the non_padding_mask to get the average
         logits = logits / non_padding_mask.sum(dim=1).unsqueeze(1)
 
-        print(logits.shape)
-
-        import sys
-
-        sys.exit()
-
         return logits
 
 
