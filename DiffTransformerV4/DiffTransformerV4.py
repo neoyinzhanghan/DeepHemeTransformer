@@ -133,13 +133,9 @@ class MultiHeadAttentionClassifier(nn.Module):
         # print(f"logit_stack shape: {logit_stack.shape}")
         # print(logit_stack[0, 0, :])
         # print(f"Sum of logit_stack: {logit_stack[0, 0, :].sum()}")
-        print(f"logits_offsets shape: {logits_offsets.shape}")
-        print(logits_offsets[0, 0, :] - 1 / self.num_classes)
-        print(f"Sum of logits_offsets: {logits_offsets[0, 0, :].sum()}")
-
-        import sys
-
-        sys.exit()
+        # print(f"logits_offsets shape: {logits_offsets.shape}")
+        # print(logits_offsets[0, 0, :] - 1 / self.num_classes)
+        # print(f"Sum of logits_offsets: {logits_offsets[0, 0, :].sum()}")
 
         # logits have shape [batch_size, N, num_classes], non_padding_mask has shape [batch_size, N]
         # multiply the logits by the non_padding_mask to zero out the padding tokens
@@ -150,6 +146,15 @@ class MultiHeadAttentionClassifier(nn.Module):
 
         # then divide by the sum of the non_padding_mask to get the average
         logits = logits / non_padding_mask.sum(dim=1).unsqueeze(1)
+
+        logit_stack_avg = logit_stack.sum(dim=1) / non_padding_mask.sum(
+            dim=1
+        ).unsqueeze(1)
+
+        print(f"logits shape: {logits.shape}")
+        print(logits[0, :])
+        print(f"logit_stack_avg shape: {logit_stack_avg.shape}")
+        print(logit_stack_avg[0, :])
 
         return logits
 
