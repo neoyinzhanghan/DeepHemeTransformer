@@ -5,6 +5,7 @@ import torch.nn.functional as F
 import math
 import pytorch_lightning as pl
 from dataset import TensorStackDataModule
+from BMAassumptions import BMA_final_classes
 
 # from torchmetrics import Accuracy, F1Score, AUROC
 from torch.optim.lr_scheduler import CosineAnnealingLR

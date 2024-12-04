@@ -15,7 +15,8 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from TRL2Loss import MyTRL2Loss
 
 # from TRL2Loss import MyTRL2Loss
-from AR_acc import AR_acc
+from AR_acc import AR_acc, A_acc, R_acc, Class_AR_acc, Class_A_acc, Class_R_acc
+from BMAassumptions import BMA_final_classes
 
 
 class Attn(nn.Module):
@@ -132,6 +133,17 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         # Custom loss and accuracy metric
         self.loss_fn = MyTRL2Loss()
         self.metric_fn = AR_acc()
+        self.a_metric_fn = A_acc()
+        self.r_metric_fn = R_acc()
+
+        self.class_metric_fns = {}
+        self.a_class_metric_fns = {}
+        self.r_class_metric_fns = {}
+
+        for bma_class in BMA_final_classes:
+            self.class_metric_fns[bma_class] = Class_AR_acc(class_name=bma_class)
+            self.a_class_metric_fns[bma_class] = Class_A_acc(class_name=bma_class)
+            self.r_class_metric_fns[bma_class] = Class_R_acc(class_name=bma_class)
 
         # Parameters for AR_acc
         self.d = d
@@ -148,6 +160,8 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
 
         # Custom accuracy metric
         accuracy = self.metric_fn(y, logits, d=self.d, D=self.D)
+        a_accuracy = self.a_metric_fn(y, logits, d=self.d, D=self.D)
+        r_accuracy = self.r_metric_fn(y, logits, d=self.d, D=self.D)
 
         # Log training loss and accuracy
         self.log(
@@ -160,6 +174,42 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
             batch_size=x.size(0),
         )
         self.log("train_accuracy", accuracy, on_epoch=True, prog_bar=True, logger=True)
+        self.log(
+            "train_a_accuracy", a_accuracy, on_epoch=True, prog_bar=True, logger=True
+        )
+        self.log(
+            "train_r_accuracy", r_accuracy, on_epoch=True, prog_bar=True, logger=True
+        )
+
+        for bma_class in BMA_final_classes:
+            class_accuracy = self.class_metric_fns[bma_class](y, logits)
+            self.log(
+                f"train_{bma_class}_accuracy",
+                class_accuracy,
+                on_epoch=True,
+                prog_bar=True,
+                logger=True,
+            )
+
+        for bma_class in BMA_final_classes:
+            a_class_accuracy = self.a_class_metric_fns[bma_class](y, logits)
+            self.log(
+                f"train_{bma_class}_a_accuracy",
+                a_class_accuracy,
+                on_epoch=True,
+                prog_bar=True,
+                logger=True,
+            )
+
+        for bma_class in BMA_final_classes:
+            r_class_accuracy = self.r_class_metric_fns[bma_class](y, logits)
+            self.log(
+                f"train_{bma_class}_r_accuracy",
+                r_class_accuracy,
+                on_epoch=True,
+                prog_bar=True,
+                logger=True,
+            )
 
         return {"loss": loss}
 
@@ -170,10 +220,48 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
 
         # Custom accuracy metric
         accuracy = self.metric_fn(y, logits, d=self.d, D=self.D)
+        a_accuracy = self.a_metric_fn(y, logits, d=self.d, D=self.D)
+        r_accuracy = self.r_metric_fn(y, logits, d=self.d, D=self.D)
 
         # Log validation loss and accuracy
         self.log("val_loss", loss, on_epoch=True, prog_bar=True, logger=True)
         self.log("val_accuracy", accuracy, on_epoch=True, prog_bar=True, logger=True)
+        self.log(
+            "val_a_accuracy", a_accuracy, on_epoch=True, prog_bar=True, logger=True
+        )
+        self.log(
+            "val_r_accuracy", r_accuracy, on_epoch=True, prog_bar=True, logger=True
+        )
+
+        for bma_class in BMA_final_classes:
+            class_accuracy = self.class_metric_fns[bma_class](y, logits)
+            self.log(
+                f"val_{bma_class}_accuracy",
+                class_accuracy,
+                on_epoch=True,
+                prog_bar=True,
+                logger=True,
+            )
+
+        for bma_class in BMA_final_classes:
+            a_class_accuracy = self.a_class_metric_fns[bma_class](y, logits)
+            self.log(
+                f"val_{bma_class}_a_accuracy",
+                a_class_accuracy,
+                on_epoch=True,
+                prog_bar=True,
+                logger=True,
+            )
+
+        for bma_class in BMA_final_classes:
+            r_class_accuracy = self.r_class_metric_fns[bma_class](y, logits)
+            self.log(
+                f"val_{bma_class}_r_accuracy",
+                r_class_accuracy,
+                on_epoch=True,
+                prog_bar=True,
+                logger=True,
+            )
 
     def test_step(self, batch, batch_idx):
         x, y = batch
@@ -182,10 +270,41 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
 
         # Custom accuracy metric
         accuracy = self.metric_fn(y, logits, d=self.d, D=self.D)
+        a_accuracy = self.a_metric_fn(y, logits, d=self.d, D=self.D)
+        r_accuracy = self.r_metric_fn(y, logits, d=self.d, D=self.D)
 
         # Log test loss and accuracy
         self.log("test_loss", loss, on_epoch=True, logger=True)
         self.log("test_accuracy", accuracy, on_epoch=True, logger=True)
+        self.log("test_a_accuracy", a_accuracy, on_epoch=True, logger=True)
+        self.log("test_r_accuracy", r_accuracy, on_epoch=True, logger=True)
+
+        for bma_class in BMA_final_classes:
+            class_accuracy = self.class_metric_fns[bma_class](y, logits)
+            self.log(
+                f"test_{bma_class}_accuracy",
+                class_accuracy,
+                on_epoch=True,
+                logger=True,
+            )
+
+        for bma_class in BMA_final_classes:
+            a_class_accuracy = self.a_class_metric_fns[bma_class](y, logits)
+            self.log(
+                f"test_{bma_class}_a_accuracy",
+                a_class_accuracy,
+                on_epoch=True,
+                logger=True,
+            )
+
+        for bma_class in BMA_final_classes:
+            r_class_accuracy = self.r_class_metric_fns[bma_class](y, logits)
+            self.log(
+                f"test_{bma_class}_r_accuracy",
+                r_class_accuracy,
+                on_epoch=True,
+                logger=True,
+            )
 
     def on_train_epoch_end(self):
         scheduler = self.lr_schedulers()

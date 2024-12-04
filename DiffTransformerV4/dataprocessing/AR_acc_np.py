@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def custom_ar_acc_np(g, logits, d=0.2, D=0.02):
     """
     Custom L2 loss function using NumPy: computes the mean squared error between
@@ -18,7 +19,7 @@ def custom_ar_acc_np(g, logits, d=0.2, D=0.02):
     """
     assert 0 < d < 1, "Relative allowable error proportion must be between 0 and 1"
     assert 0 < D < 1, "Absolute allowable error must be between 0 and 1"
-    
+
     # Relative error allowance
     rel_error_allowance = d * np.abs(g)
 
@@ -29,12 +30,12 @@ def custom_ar_acc_np(g, logits, d=0.2, D=0.02):
     err = np.abs(g - logits)
 
     # Compute the max allowance violation
-    err_max = np.maximum(err - rel_error_allowance, err - abs_error_allowance)
+    err_max = np.minimum(err - rel_error_allowance, err - abs_error_allowance)
 
     # Loss is 1 if err_max > 0, else 0
-    loss = np.where(err_max > 0, np.ones_like(err_max), np.zeros_like(err_max))
+    indicator = np.where(err_max < 0, np.ones_like(err_max), np.zeros_like(err_max))
 
     # Reduce across dimensions: sum over logits and average over the batch
-    loss = loss.mean(axis=1).mean()
+    acc = indicator.mean(axis=1).mean()
 
-    return loss
+    return acc
