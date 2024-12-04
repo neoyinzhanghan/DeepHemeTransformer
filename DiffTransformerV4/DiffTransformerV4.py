@@ -147,13 +147,13 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         self.d = d
         self.D = D
 
-    def forward(self, x):
-        logits = self.model(x)
+    def forward(self, feature_stack, logit_stack, non_padding_mask):
+        logits = self.model(feature_stack, logit_stack, non_padding_mask)
         return F.softmax(logits, dim=1)
 
     def training_step(self, batch, batch_idx):
-        feature_stacl, logit_stack, non_padding_mask, y = batch
-        logits = self(feature_stacl, logit_stack, non_padding_mask)
+        feature_stack, logit_stack, non_padding_mask, y = batch
+        logits = self(feature_stack, logit_stack, non_padding_mask)
         loss = self.loss_fn(y, logits)
 
         # Custom accuracy metric
