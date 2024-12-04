@@ -120,6 +120,7 @@ class MultiHeadAttentionClassifier(nn.Module):
         logits = F.softmax(logits, dim=2)
 
         print(f"Logits shape: {logits.shape}")
+        print(f"NPM shape: {non_padding_mask.shape}")
 
         import sys
 
