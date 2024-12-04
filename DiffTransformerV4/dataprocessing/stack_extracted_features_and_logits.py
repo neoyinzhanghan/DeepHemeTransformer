@@ -13,6 +13,7 @@ from LLBMA.brain.labeller.HemeLabelLightningManager import (
     HemeLabelLightningManager,
     model_create,
     predict_batch,
+    predict_batch_pre_softmax,
 )
 from LLBMA.brain.utils import create_list_of_batches_from_list
 from ray.exceptions import RayTaskError

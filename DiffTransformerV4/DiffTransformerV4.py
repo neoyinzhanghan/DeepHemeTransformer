@@ -110,14 +110,20 @@ class MultiHeadAttentionClassifier(nn.Module):
 
         logits_offsets = self.classifier(attn_output)
 
-        # take a log of the logits
-        logit_stack = torch.log(logit_stack)
+        logit_offsets = F.softmax(logits_offsets, dim=-1)
 
         # add the logits and the offsets
         logits = logit_stack + logits_offsets
 
-        # apply a softmax to the logits at dim=2
-        logits = F.softmax(logits, dim=-1)
+        print(f"logits shape: {logits.shape}")
+        print(logits[0, 0, :])
+        print(f"logit_stack shape: {logit_stack.shape}")
+        print(logit_stack[0, 0, :])
+        print(f"logits_offsets shape: {logits_offsets.shape}")
+        print(logits_offsets[0, 0, :])
+
+        import sys
+        sys.exit()
 
         # logits have shape [batch_size, N, num_classes], non_padding_mask has shape [batch_size, N]
         # multiply the logits by the non_padding_mask to zero out the padding tokens
