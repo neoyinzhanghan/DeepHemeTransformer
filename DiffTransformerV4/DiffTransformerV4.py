@@ -116,6 +116,10 @@ class MultiHeadAttentionClassifier(nn.Module):
         # add the logits and the offsets
         logits = logit_stack + logits_offsets
 
+        print(logits.shape)
+        import sys
+        sys.exit()
+
         # apply a softmax to the logits at dim=2
         logits = F.softmax(logits, dim=2)
 
