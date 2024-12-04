@@ -110,12 +110,20 @@ class MultiHeadAttentionClassifier(nn.Module):
 
         logits_offsets = self.classifier(attn_output)
 
-        print(f"Logits offset shape: {logits_offsets.shape}")
-        print(f"Original logits shape: {logit_stack.shape}")
+        # take a log of the logits
+        logit_stack = torch.log(logit_stack)
+
+        # add the logits and the offsets
+        logits = logit_stack + logits_offsets
+
+        print(f"Logits shape: {logits.shape}")
 
         import sys
 
         sys.exit()
+
+        # apply a softmax to the logits
+        logits = F.softmax(logits, dim=2)
 
         return logits
 
