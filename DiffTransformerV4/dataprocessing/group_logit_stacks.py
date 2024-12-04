@@ -12,9 +12,7 @@ save_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
 
 # get a list of all the pt files in the ungrouped_logit_stack_dir
 ungrouped_logit_stack_files = [
-    f
-    for f in os.listdir(ungrouped_logit_stack_dir)
-    if f.endswith(".pt") and "logits" in f
+    f for f in os.listdir(ungrouped_logit_stack_dir) if f.endswith(".pt")
 ]
 
 
@@ -49,6 +47,7 @@ for ungrouped_logit_stack_file in tqdm(ungrouped_logit_stack_files):
     print(f"Shape of grouped_logit_stack: {grouped_logit_stack.shape}")
 
     import sys
+
     sys.exit()
 
     # save the grouped_logit_stack to the save_dir
