@@ -1,0 +1,2 @@
+December 3rd 2024
+This is the first version of the model that actually takes the transformer and predict a cell pre-softmax logit offset.
