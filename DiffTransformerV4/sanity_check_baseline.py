@@ -1,4 +1,7 @@
 from dataset import TensorStackDataModuleV4
+from L2Loss import MyL2Loss, custom_l2_loss
+from TRL2Loss import MyTRL2Loss, custom_trl2_loss
+from AR_acc import AR_acc, custom_ar_acc
 
 feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
 logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
@@ -45,5 +48,14 @@ for idx, (feature_stack, logit_stack, NPM, diff_tensor) in enumerate(train_datal
     print(f"Sum NPM shape: {sum_NPM.shape}")
     print(f"Normalized logits shape: {normalized_logits.shape}")
 
+    l2_loss = custom_l2_loss(diff_tensor, normalized_logits)
+    trl2_loss = custom_trl2_loss(diff_tensor, normalized_logits)
+    ar_acc = custom_ar_acc(diff_tensor, normalized_logits)
+
+    print(f"L2 Loss: {l2_loss}")
+    print(f"TR L2 Loss: {trl2_loss}")
+    print(f"AR Accuracy: {ar_acc}")
+
     import sys
+
     sys.exit()
