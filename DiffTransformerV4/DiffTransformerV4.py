@@ -110,7 +110,7 @@ class MultiHeadAttentionClassifier(nn.Module):
 
         logits_offsets = self.classifier(attn_output)
 
-        logit_offsets = F.softmax(logits_offsets, dim=-1)
+        logits_offsets = F.softmax(logits_offsets, dim=-1)
 
         # add the logits and the offsets
         logits = logit_stack + logits_offsets
@@ -123,6 +123,7 @@ class MultiHeadAttentionClassifier(nn.Module):
         print(logits_offsets[0, 0, :])
 
         import sys
+
         sys.exit()
 
         # logits have shape [batch_size, N, num_classes], non_padding_mask has shape [batch_size, N]
