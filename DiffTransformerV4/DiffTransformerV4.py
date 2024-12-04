@@ -265,6 +265,7 @@ def train_model(
         devices=num_gpus,
         accelerator="gpu",
         log_every_n_steps=1,
+        strategy="ddp_find_unused_parameters_true",
     )
 
     trainer.fit(model, data_module)
