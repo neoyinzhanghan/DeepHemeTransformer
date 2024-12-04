@@ -151,10 +151,10 @@ class MultiHeadAttentionClassifier(nn.Module):
             dim=1
         ).unsqueeze(1)
 
-        print(f"logits shape: {logits.shape}")
-        print(logits[0, :])
-        print(f"logit_stack_avg shape: {logit_stack_avg.shape}")
-        print(logit_stack_avg[0, :])
+        # print(f"logits shape: {logits.shape}")
+        # print(logits[0, :])
+        # print(f"logit_stack_avg shape: {logit_stack_avg.shape}")
+        # print(logit_stack_avg[0, :])
 
         return logits
 
