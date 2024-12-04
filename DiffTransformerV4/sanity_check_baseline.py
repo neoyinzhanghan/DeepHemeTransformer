@@ -76,6 +76,7 @@ for idx, (feature_stack, logit_stack, NPM, diff_tensor) in enumerate(train_datal
 
     print(predicted_diff[0, :])
     print(normalized_logits[0, :])
+    print(diff_tensor[0, :])
 
     import sys
 
