@@ -101,15 +101,15 @@ class MultiHeadAttentionClassifier(nn.Module):
 
         attn_output = self.attn(q, k, v)
 
+        attn_output = (
+            attn_output.transpose(1, 2).contiguous().view(batch_size, -1, self.d_model)
+        )
+
         print(attn_output.shape)
 
         import sys
 
         sys.exit()
-
-        attn_output = (
-            attn_output.transpose(1, 2).contiguous().view(batch_size, -1, self.d_model)
-        )
 
         output = self.out_proj(attn_output)
 
@@ -167,7 +167,7 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
             on_epoch=True,
             prog_bar=True,
             logger=True,
-            batch_size=x.size(0),
+            batch_size=feature_stack.size(0),
         )
         self.log("train_accuracy", accuracy, on_epoch=True, prog_bar=True, logger=True)
 
