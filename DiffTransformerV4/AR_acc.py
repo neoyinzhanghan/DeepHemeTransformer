@@ -423,7 +423,7 @@ class Class_A_acc(nn.Module):
     """
 
     def __init__(self, class_name):
-        super(A_acc, self).__init__()
+        super(Class_A_acc, self).__init__()
         self.class_name = class_name
 
         assert (
@@ -577,7 +577,7 @@ class Class_R_acc(nn.Module):
     """
 
     def __init__(self, class_name):
-        super(R_acc, self).__init__()
+        super(Class_R_acc, self).__init__()
         self.class_name = class_name
 
         assert (
