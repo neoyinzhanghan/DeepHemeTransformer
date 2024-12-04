@@ -265,7 +265,5 @@ if __name__ == "__main__":
             num_heads=1,
             num_classes=9,
             use_flash_attention=True,
-            log_dir="2024-12-03_11:48",
-            experiment_name=f"{lr}",
             message=message,
         )
