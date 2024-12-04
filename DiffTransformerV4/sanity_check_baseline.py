@@ -2,9 +2,7 @@ from dataset import TensorStackDataModuleV4
 
 feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
 logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
-diff_data_path = (
-    "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
-)
+diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
 
 
 data_module = TensorStackDataModuleV4(
