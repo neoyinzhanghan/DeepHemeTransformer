@@ -281,10 +281,6 @@ def train_model(
     trainer.fit(model, data_module)
     trainer.test(model, data_module.train_dataloader())
 
-    # save the message as txt file in the experiment directory
-    with open(os.path.join(logger.log_dir, "message.txt"), "w") as f:
-        f.write(message)
-
 
 if __name__ == "__main__":
     feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
@@ -308,7 +304,5 @@ if __name__ == "__main__":
             num_heads=1,
             num_classes=9,
             use_flash_attention=True,
-            log_dir="test_training",
-            experiment_name=f"{lr}",
             message=message,
         )
