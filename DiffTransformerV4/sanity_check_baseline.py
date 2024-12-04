@@ -31,3 +31,19 @@ for idx, (feature_stack, logit_stack, NPM, diff_tensor) in enumerate(train_datal
     print(f"Logit stack shape: {logit_stack.shape}")
     print(f"NPM shape: {NPM.shape}")
     print(f"Diff tensor shape: {diff_tensor.shape}")
+
+    # take the sum of the logit stack. It has dimension [batch_size, num_cells, num_classes]
+    sum_logits = logit_stack.sum(dim=1)
+
+    # then divide by the sum of the NPM, the NPM has shape [batch_size, num_cells] and the sum output should have shape [batch_size, 1]
+    sum_NPM = NPM.sum(dim=1).unsqueeze(1)
+
+    # divide the sum_logits by the sum_NPM
+    normalized_logits = sum_logits / sum_NPM
+
+    print(f"Sum logits shape: {sum_logits.shape}")
+    print(f"Sum NPM shape: {sum_NPM.shape}")
+    print(f"Normalized logits shape: {normalized_logits.shape}")
+
+    import sys
+    sys.exit()
