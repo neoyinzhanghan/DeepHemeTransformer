@@ -132,6 +132,11 @@ class MultiHeadAttentionClassifier(nn.Module):
         # apply a softmax to the logits
         logits = F.softmax(logits, dim=2)
 
+        print(logits.shape) 
+
+        import sys
+        sys.exit()
+
         return logits
 
 
@@ -269,6 +274,7 @@ def train_model(
         accelerator="gpu",
         log_every_n_steps=1,
     )
+
     trainer.fit(model, data_module)
     trainer.test(model, data_module.train_dataloader())
 
