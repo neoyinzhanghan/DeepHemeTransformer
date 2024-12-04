@@ -122,6 +122,12 @@ class MultiHeadAttentionClassifier(nn.Module):
         print(f"Logits shape: {logits.shape}")
         print(f"NPM shape: {non_padding_mask.shape}")
 
+        # logits have shape [batch_size, N, num_classes], non_padding_mask has shape [batch_size, N]
+        # multiply the logits by the non_padding_mask to zero out the padding tokens
+        logits = logits * non_padding_mask.unsqueeze(2)
+
+        print(f"Logits shape after mask: {logits.shape}")
+
         import sys
 
         sys.exit()
