@@ -112,8 +112,8 @@ class MultiHeadAttentionClassifier(nn.Module):
 
         logits_offsets = F.softmax(logits_offsets, dim=-1)
 
-        # add the logits and the offsets
-        logits = logit_stack + logits_offsets
+        # add the logits and the offsets then we need to uniformly subtract 1/num_classes from the logits to make sure the sum is 1
+        logits = logit_stack + logits_offsets - 1 / self.num_classes
 
         print(f"logits shape: {logits.shape}")
         print(logits[0, 0, :])
