@@ -268,7 +268,7 @@ class Class_AR_acc(nn.Module):
     """
 
     def __init__(self, class_name):
-        super(AR_acc, self).__init__()
+        super(Class_AR_acc, self).__init__()
         self.class_name = class_name
 
         assert (
