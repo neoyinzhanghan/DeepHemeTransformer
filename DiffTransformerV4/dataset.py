@@ -193,10 +193,12 @@ if __name__ == "__main__":
     # Example paths
     feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"  # Replace with your directory
     logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"  # Replace with your directory
-    diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv"  # Replace with your CSV file
+    diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"  # Replace with your CSV file
 
     # Instantiate the dataset
-    dataset = TensorStackDatasetV4(feature_stacks_dir, logit_stacks_dir, diff_data_path)
+    dataset = TensorStackDatasetV4(
+        feature_stacks_dir, logit_stacks_dir, diff_data_path, split="train"
+    )
 
     # Test shapes of feature_stack and diff_tensor
     for idx in range(min(len(dataset), 5)):  # Test first 5 items or fewer
