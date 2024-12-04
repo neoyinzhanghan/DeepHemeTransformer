@@ -191,7 +191,7 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
 
     def forward(self, feature_stack, logit_stack, non_padding_mask):
         logits = self.model(feature_stack, logit_stack, non_padding_mask)
-        return F.softmax(logits, dim=1)
+        return logits
 
     def training_step(self, batch, batch_idx):
         feature_stack, logit_stack, non_padding_mask, y = batch
