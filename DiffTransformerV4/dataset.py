@@ -83,6 +83,9 @@ class TensorStackDatasetV4(Dataset):
             feature_stack = feature_stack[idxs]
             logit_stack = logit_stack[idxs]
 
+            non_padding_mask = torch.ones(self.N)
+            non_padding_mask[feature_stack.shape[0] :] = 0
+
         else:  # take all the data and padding with zeros
             feature_padding = np.zeros(
                 (self.N - feature_stack.shape[0], feature_stack.shape[1])
@@ -90,6 +93,9 @@ class TensorStackDatasetV4(Dataset):
             logit_padding = np.zeros(
                 (self.N - logit_stack.shape[0], logit_stack.shape[1])
             )
+
+            non_padding_mask = torch.ones(self.N)
+            non_padding_mask[feature_stack.shape[0] :] = 0
 
             feature_stack = np.concatenate((feature_stack, feature_padding), axis=0)
             logit_stack = np.concatenate((logit_stack, logit_padding), axis=0)
@@ -100,6 +106,7 @@ class TensorStackDatasetV4(Dataset):
             # make sure that the feature stack is Double
         feature_stack = feature_stack.float()
         logit_stack = logit_stack.float()
+        non_padding_mask = non_padding_mask.float()
 
         diff_list = []
 
@@ -115,7 +122,7 @@ class TensorStackDatasetV4(Dataset):
 
         diff_tensor = torch.tensor(diff_list)
 
-        return feature_stack, logit_stack, diff_tensor
+        return feature_stack, logit_stack, non_padding_mask, diff_tensor
 
 
 class TensorStackDataModuleV4(LightningDataModule):
@@ -202,8 +209,9 @@ if __name__ == "__main__":
 
     # Test shapes of feature_stack and diff_tensor
     for idx in range(min(len(dataset), 5)):  # Test first 5 items or fewer
-        feature_stack, logit_stack, diff_tensor = dataset[idx]
+        feature_stack, logit_stack, non_padding_mask, diff_tensor = dataset[idx]
         print(f"Index {idx}:")
         print(f"Feature stack shape: {feature_stack.shape}")
         print(f"Logit stack shape: {logit_stack.shape}")
+        print(f"Non-padding mask shape: {non_padding_mask.shape}")
         print(f"Diff tensor shape: {diff_tensor.shape}")
