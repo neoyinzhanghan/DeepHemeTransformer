@@ -128,6 +128,14 @@ class MultiHeadAttentionClassifier(nn.Module):
 
         print(f"Logits shape after mask: {logits.shape}")
 
+        # sum the logits across the N dimension
+        logits = logits.sum(dim=1)
+
+        # then divide by the sum of the non_padding_mask to get the average
+        logits = logits / non_padding_mask.sum(dim=1).unsqueeze(1)
+
+        print(f"Logits shape after sum: {logits.shape}")
+
         import sys
 
         sys.exit()
