@@ -59,8 +59,6 @@ class MultiHeadAttentionClassifier(nn.Module):
         self.v_proj = nn.Linear(d_model, d_model, bias=False)
         self.out_proj = nn.Linear(d_model, d_model)
 
-        self.last_linear = nn.Linear(d_model, num_classes)
-
         head_dim = d_model // num_heads
 
         self.attn = Attn(head_dim=head_dim, use_flash_attention=use_flash_attention)
@@ -105,15 +103,20 @@ class MultiHeadAttentionClassifier(nn.Module):
             attn_output.transpose(1, 2).contiguous().view(batch_size, -1, self.d_model)
         )
 
-        print(attn_output.shape)
+        # right now the attn_output should have the shape [batch_size, N, d_model]
+        # apply linear to the last dimension
+
+        attn_output = self.out_proj(attn_output)
+
+        logits_offsets = self.classifier(attn_output)
+
+        print(f"Logits offset shape: {logits_offsets.shape}")
+        print(f"Original logits shape: {logit_stack.shape}")
 
         import sys
 
         sys.exit()
 
-        output = self.out_proj(attn_output)
-
-        logits = self.classifier(class_token_output)
         return logits
 
 
