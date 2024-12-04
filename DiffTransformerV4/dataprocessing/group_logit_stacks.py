@@ -46,10 +46,6 @@ for ungrouped_logit_stack_file in tqdm(ungrouped_logit_stack_files):
     # print the shape of the grouped_logit_stack
     print(f"Shape of grouped_logit_stack: {grouped_logit_stack.shape}")
 
-    import sys
-
-    sys.exit()
-
     # save the grouped_logit_stack to the save_dir
     torch.save(
         grouped_logit_stack,
