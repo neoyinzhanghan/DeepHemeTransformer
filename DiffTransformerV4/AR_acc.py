@@ -163,6 +163,12 @@ def myelocytes_ar_acc(g, logits):
     g = g[:, 0]
     logits = logits[:, 0]
 
+    # print the shape of g and logits
+    print(g.shape)
+
+    import sys
+    sys.exit()
+
     return custom_ar_acc(g, logits)
 
 
