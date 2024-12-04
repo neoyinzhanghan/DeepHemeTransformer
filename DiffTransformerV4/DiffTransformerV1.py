@@ -160,9 +160,9 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         loss = self.loss_fn(y, logits)
 
         # Custom accuracy metric
-        accuracy = self.metric_fn(y, logits, d=self.d, D=self.D)
-        a_accuracy = self.a_metric_fn(y, logits, d=self.d, D=self.D)
-        r_accuracy = self.r_metric_fn(y, logits, d=self.d, D=self.D)
+        accuracy = self.metric_fn(y, logits)
+        a_accuracy = self.a_metric_fn(y, logits)
+        r_accuracy = self.r_metric_fn(y, logits)
 
         # Log training loss and accuracy
         self.log(
@@ -220,9 +220,9 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         loss = self.loss_fn(logits, y)
 
         # Custom accuracy metric
-        accuracy = self.metric_fn(y, logits, d=self.d, D=self.D)
-        a_accuracy = self.a_metric_fn(y, logits, d=self.d, D=self.D)
-        r_accuracy = self.r_metric_fn(y, logits, d=self.d, D=self.D)
+        accuracy = self.metric_fn(y, logits)
+        a_accuracy = self.a_metric_fn(y, logits)
+        r_accuracy = self.r_metric_fn(y, logits)
 
         # Log validation loss and accuracy
         self.log("val_loss", loss, on_epoch=True, prog_bar=True, logger=True)
@@ -270,9 +270,9 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         loss = self.loss_fn(logits, y)
 
         # Custom accuracy metric
-        accuracy = self.metric_fn(y, logits, d=self.d, D=self.D)
-        a_accuracy = self.a_metric_fn(y, logits, d=self.d, D=self.D)
-        r_accuracy = self.r_metric_fn(y, logits, d=self.d, D=self.D)
+        accuracy = self.metric_fn(y, logits)
+        a_accuracy = self.a_metric_fn(y, logits)
+        r_accuracy = self.r_metric_fn(y, logits)
 
         # Log test loss and accuracy
         self.log("test_loss", loss, on_epoch=True, logger=True)
