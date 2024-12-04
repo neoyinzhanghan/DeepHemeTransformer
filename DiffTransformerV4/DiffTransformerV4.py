@@ -119,6 +119,11 @@ class MultiHeadAttentionClassifier(nn.Module):
         # apply a softmax to the logits at dim=2
         logits = F.softmax(logits, dim=-1)
 
+        print(logits.shape)
+
+        import sys
+        sys.exit()
+
         # logits have shape [batch_size, N, num_classes], non_padding_mask has shape [batch_size, N]
         # multiply the logits by the non_padding_mask to zero out the padding tokens
         logits = logits * non_padding_mask.unsqueeze(2)
