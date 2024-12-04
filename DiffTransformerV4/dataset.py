@@ -140,12 +140,14 @@ class TensorStackDataModuleV4(LightningDataModule):
     def __init__(
         self,
         feature_stacks_dir,
+        logit_stacks_dir,
         diff_data_path,
         batch_size=32,
         num_workers=4,
     ):
         super().__init__()
         self.feature_stacks_dir = feature_stacks_dir
+        self.logit_stacks_dir = logit_stacks_dir
         self.diff_data_path = diff_data_path
         self.bma_final_classes = BMA_final_classes
         self.batch_size = batch_size
@@ -157,16 +159,19 @@ class TensorStackDataModuleV4(LightningDataModule):
         """
         self.train_dataset = TensorStackDatasetV4(
             feature_stacks_dir=self.feature_stacks_dir,
+            logit_stacks_dir=self.logit_stacks_dir,
             diff_data_path=self.diff_data_path,
             split="train",
         )
         self.val_dataset = TensorStackDatasetV4(
             feature_stacks_dir=self.feature_stacks_dir,
+            logit_stacks_dir=self.logit_stacks_dir,
             diff_data_path=self.diff_data_path,
             split="val",
         )
         self.test_dataset = TensorStackDatasetV4(
             feature_stacks_dir=self.feature_stacks_dir,
+            logit_stacks_dir=self.logit_stacks_dir,
             diff_data_path=self.diff_data_path,
             split="test",
         )
