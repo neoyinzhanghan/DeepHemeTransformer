@@ -2,10 +2,14 @@ from dataset import TensorStackDataModuleV4
 from L2Loss import MyL2Loss, custom_l2_loss
 from TRL2Loss import MyTRL2Loss, custom_trl2_loss
 from AR_acc import AR_acc, custom_ar_acc
+from DiffTransformerV4 import DiffTransformerV4
 
 feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
 logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
 diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
+
+# initialize a difftransformer model
+model = DiffTransformerV4()
 
 
 data_module = TensorStackDataModuleV4(
@@ -55,6 +59,18 @@ for idx, (feature_stack, logit_stack, NPM, diff_tensor) in enumerate(train_datal
     print(f"L2 Loss: {l2_loss}")
     print(f"TR L2 Loss: {trl2_loss}")
     print(f"AR Accuracy: {ar_acc}")
+
+    predicted_diff = model(feature_stack, logit_stack, NPM)
+
+    print(f"Predicted diff shape: {predicted_diff.shape}")
+
+    predicted_l2_loss = custom_l2_loss(diff_tensor, predicted_diff)
+    predicted_trl2_loss = custom_trl2_loss(diff_tensor, predicted_diff)
+    predicted_ar_acc = custom_ar_acc(diff_tensor, predicted_diff)
+
+    print(f"Predicted L2 Loss: {predicted_l2_loss}")
+    print(f"Predicted TR L2 Loss: {predicted_trl2_loss}")
+    print(f"Predicted AR Accuracy: {predicted_ar_acc}")
 
     import sys
 
