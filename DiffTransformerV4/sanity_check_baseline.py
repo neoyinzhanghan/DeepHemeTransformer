@@ -17,16 +17,13 @@ data_module.setup()
 
 train_dataloader = data_module.train_dataloader()
 val_dataloader = data_module.val_dataloader()
-test_dataloader = data_module.test_dataloader()
 
 # how many datapoints are in each split
 num_train = len(train_dataloader.dataset)
 num_val = len(val_dataloader.dataset)
-num_test = len(test_dataloader.dataset)
 
 print(f"Number of training datapoints: {num_train}")
 print(f"Number of validation datapoints: {num_val}")
-print(f"Number of test datapoints: {num_test}")
 
 
 for idx, (feature_stack, logit_stack, diff_tensor) in enumerate(train_dataloader):
