@@ -134,7 +134,7 @@ class MultiHeadAttentionClassifier(nn.Module):
         # print(logit_stack[0, 0, :])
         # print(f"Sum of logit_stack: {logit_stack[0, 0, :].sum()}")
         print(f"logits_offsets shape: {logits_offsets.shape}")
-        print(logits_offsets[0, 0, :])
+        print(logits_offsets[0, 0, :] - 1 / self.num_classes)
         print(f"Sum of logits_offsets: {logits_offsets[0, 0, :].sum()}")
 
         import sys
