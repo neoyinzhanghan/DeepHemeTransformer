@@ -1,7 +1,7 @@
 from dataset import TensorStackDataModuleV4
-from L2Loss import MyL2Loss, custom_l2_loss
-from TRL2Loss import MyTRL2Loss, custom_trl2_loss
-from AR_acc import AR_acc, custom_ar_acc
+from L2Loss import MyL2Loss
+from TRL2Loss import MyTRL2Loss
+from AR_acc import AR_acc
 from DiffTransformerV4 import MultiHeadAttentionClassifierPL
 
 feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
@@ -26,6 +26,10 @@ data_module.setup()
 
 train_dataloader = data_module.train_dataloader()
 val_dataloader = data_module.val_dataloader()
+
+l2_loss_fn = MyL2Loss()
+trl2_loss_fn = MyTRL2Loss()
+ar_acc_fn = AR_acc()
 
 # how many datapoints are in each split
 num_train = len(train_dataloader.dataset)
@@ -54,9 +58,9 @@ for idx, (feature_stack, logit_stack, NPM, diff_tensor) in enumerate(train_datal
     print(f"Sum NPM shape: {sum_NPM.shape}")
     print(f"Normalized logits shape: {normalized_logits.shape}")
 
-    l2_loss = custom_l2_loss(diff_tensor, normalized_logits)
-    trl2_loss = custom_trl2_loss(diff_tensor, normalized_logits)
-    ar_acc = custom_ar_acc(diff_tensor, normalized_logits)
+    l2_loss = l2_loss_fn(diff_tensor, normalized_logits)
+    trl2_loss = trl2_loss_fn(diff_tensor, normalized_logits)
+    ar_acc = ar_acc_fn(diff_tensor, normalized_logits)
 
     print(f"L2 Loss: {l2_loss}")
     print(f"TR L2 Loss: {trl2_loss}")
@@ -66,9 +70,9 @@ for idx, (feature_stack, logit_stack, NPM, diff_tensor) in enumerate(train_datal
 
     print(f"Predicted diff shape: {predicted_diff.shape}")
 
-    predicted_l2_loss = custom_l2_loss(diff_tensor, predicted_diff)
-    predicted_trl2_loss = custom_trl2_loss(diff_tensor, predicted_diff)
-    predicted_ar_acc = custom_ar_acc(diff_tensor, predicted_diff)
+    predicted_l2_loss = l2_loss_fn(diff_tensor, predicted_diff)
+    predicted_trl2_loss = trl2_loss_fn(diff_tensor, predicted_diff)
+    predicted_ar_acc = ar_acc_fn(diff_tensor, predicted_diff)
 
     print(f"Predicted L2 Loss: {predicted_l2_loss}")
     print(f"Predicted TR L2 Loss: {predicted_trl2_loss}")
