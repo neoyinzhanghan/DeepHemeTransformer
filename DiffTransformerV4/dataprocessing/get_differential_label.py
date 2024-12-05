@@ -35,6 +35,9 @@ diff["blasts and blast-equivalents"] = (
     diff["blasts"] + diff["blast-equivalents"] + diff["promyelocytes"]
 )
 
+# replace all nan values with 0 in diff
+diff = diff.fillna(0)
+
 # print the top 5 rows of the diff dataframe at the blasts column
 print("Blasts")
 print(diff["blasts"].head())
@@ -46,6 +49,7 @@ print("Blasts and Blast Equivalents")
 print(diff["blasts and blast-equivalents"].head())
 
 import sys
+
 sys.exit()
 
 
