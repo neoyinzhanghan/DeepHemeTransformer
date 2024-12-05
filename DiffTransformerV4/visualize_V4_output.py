@@ -2,7 +2,7 @@ from DiffTransformerV4 import MultiHeadAttentionClassifierPL
 from dataset import TensorStackDataModuleV4
 
 
-model_checkpoint_path = ""
+model_checkpoint_path = "/home/greg/Documents/neo/DeepHemeTransformer/DiffTransformerV4/lightning_logs_V4/multihead_attention_classifier/version_0/checkpoints/epoch=49-step=50.ckpt"
 model = MultiHeadAttentionClassifierPL.load_from_checkpoint(model_checkpoint_path)
 feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
 logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
