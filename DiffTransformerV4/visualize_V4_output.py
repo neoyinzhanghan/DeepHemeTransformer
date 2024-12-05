@@ -27,6 +27,14 @@ for batch in train_loader:
     y_hat = model(feature_stack, logit_stack, NPM)
     y_hat_baseline = model.baseline_forward(logit_stack)
 
+    model.eval()
+    # move the model to cuda
+    model = model.to("cuda")
+    # move everything to the cuda
+    feature_stack = feature_stack.to(model.device)
+    logit_stack = logit_stack.to(model.device)
+    NPM = NPM.to(model.device)
+
     print(f"Shape of y_hat: {y_hat.shape}")
     print(f"Shape of y_hat_baseline: {y_hat_baseline.shape}")
     print(f"Shape of y: {y.shape}")
