@@ -142,21 +142,17 @@ class MultiHeadAttentionClassifier(nn.Module):
         logits = logits * non_padding_mask.unsqueeze(2)
 
         # sum the logits across the N dimension
-        logits = logits.sum(dim=1)
+        logits_sum = logits.sum(dim=1)
 
         # then divide by the sum of the non_padding_mask to get the average
-        logits = logits / non_padding_mask.sum(dim=1).unsqueeze(1)
-
-        logit_stack_avg = logit_stack.sum(dim=1) / non_padding_mask.sum(
-            dim=1
-        ).unsqueeze(1)
+        diff = logits_sum / non_padding_mask.sum(dim=1).unsqueeze(1)
 
         # print(f"logits shape: {logits.shape}")
         # print(logits[0, :])
         # print(f"logit_stack_avg shape: {logit_stack_avg.shape}")
         # print(logit_stack_avg[0, :])
 
-        return logits
+        return diff
 
 
 class MultiHeadAttentionClassifierPL(pl.LightningModule):
