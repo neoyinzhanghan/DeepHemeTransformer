@@ -30,13 +30,13 @@ diff = diff.drop(["text_data_final", "part_description"], axis=1)
 # rename specnum_formatted to accession_number
 diff = diff.rename(columns={"specnum_formatted": "accession_number"})
 
+# replace all nan values with 0 in diff
+diff = diff.fillna(0)
+
 # sum together the columns named blasts and blast-equivalents into a new column named "blasts and blast-equivalents"
 diff["blasts and blast-equivalents"] = (
     diff["blasts"] + diff["blast-equivalents"] + diff["promyelocytes"]
 )
-
-# replace all nan values with 0 in diff
-diff = diff.fillna(0)
 
 # print the top 5 rows of the diff dataframe at the blasts column
 print("Blasts")
