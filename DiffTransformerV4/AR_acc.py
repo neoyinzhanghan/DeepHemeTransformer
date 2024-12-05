@@ -318,7 +318,7 @@ class Class_AR_acc(nn.Module):
             return lymphocytes_ar_acc(g, logits)
         elif self.class_name == "plasma cells":
             return plasma_cells_ar_acc(g, logits)
-        elif self.class_name == "blast and blast-equivalents":
+        elif self.class_name == "blasts and blast-equivalents":
             return blasts_and_blast_equivalents_ar_acc(g, logits)
         else:
             raise ValueError(
@@ -472,7 +472,7 @@ class Class_A_acc(nn.Module):
             return lymphocytes_a_acc(g, logits)
         elif self.class_name == "plasma cells":
             return plasma_cells_a_acc(g, logits)
-        elif self.class_name == "blast and blast-equivalents":
+        elif self.class_name == "blasts and blast-equivalents":
             return blasts_and_blast_equivalents_a_acc(g, logits)
         else:
             raise ValueError(
@@ -626,7 +626,7 @@ class Class_R_acc(nn.Module):
             return lymphocytes_r_acc(g, logits)
         elif self.class_name == "plasma cells":
             return plasma_cells_r_acc(g, logits)
-        elif self.class_name == "blast and blast-equivalents":
+        elif self.class_name == "blasts and blast-equivalents":
             return blasts_and_blast_equivalents_r_acc(g, logits)
         else:
             raise ValueError(
