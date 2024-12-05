@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from tqdm import tqdm
 from DiffTransformerV1 import MultiHeadAttentionClassifierPL
 from dataset import TensorStackDataModuleV4
 from BMAassumptions import BMA_final_classes
@@ -62,7 +63,7 @@ data_module.setup()
 
 train_loader = data_module.train_dataloader()
 
-for batch_idx, batch in enumerate(train_loader):
+for batch_idx, batch in tqdm(enumerate(train_loader), desc="Visualizing Results"):
     feature_stack, logit_stack, NPM, y = batch
 
     model.eval()
