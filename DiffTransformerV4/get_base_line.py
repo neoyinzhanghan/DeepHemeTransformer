@@ -8,11 +8,11 @@ from AR_acc import AR_acc, A_acc, R_acc, Class_AR_acc, Class_A_acc, Class_R_acc
 from L2Loss import MyL2Loss
 from TRL2Loss import MyTRL2Loss
 
-ar_acc = AR_acc()
-a_acc = A_acc()
-r_acc = R_acc()
-l2_loss = MyL2Loss()
-tr_l2_loss = MyTRL2Loss()
+ar_acc_fn = AR_acc()
+a_acc_fn = A_acc()
+r_acc_fn = R_acc()
+l2_loss_fn = MyL2Loss()
+tr_l2_loss_fn = MyTRL2Loss()
 
 diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
 pipeline_diff_path = "/media/hdd3/neo/DiffTransformerV1DataMini/pipeline_diff.csv"
@@ -77,16 +77,16 @@ for index, row in pipeline_diff.iterrows():
     diff_tens = diff_tens.unsqueeze(0)
     pipeline_diff_tens = pipeline_diff_tens.unsqueeze(0)
 
-    ar_acc = AR_acc(diff_tens, pipeline_diff_tens)
-    a_acc = A_acc(diff_tens, pipeline_diff_tens)
-    r_acc = R_acc(diff_tens, pipeline_diff_tens)
+    ar_acc = ar_acc_fn(diff_tens, pipeline_diff_tens)
+    a_acc = a_acc_fn(diff_tens, pipeline_diff_tens)
+    r_acc = r_acc_fn(diff_tens, pipeline_diff_tens)
 
     ar_acc_sum += ar_acc
     a_acc_sum += a_acc
     r_acc_sum += r_acc
 
-    l2_loss_sum += l2_loss(diff_tens, pipeline_diff_tens)
-    trl2_loss_sum += tr_l2_loss(diff_tens, pipeline_diff_tens)
+    l2_loss_sum += l2_loss_fn(diff_tens, pipeline_diff_tens)
+    trl2_loss_sum += tr_l2_loss_fn(diff_tens, pipeline_diff_tens)
 
     for final_class in BMA_final_classes:
         class_ar_acc = Class_AR_acc(final_class, diff_tens, pipeline_diff_tens)
