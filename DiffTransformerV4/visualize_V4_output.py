@@ -35,10 +35,14 @@ for batch in train_loader:
     y_hat = model(feature_stack, logit_stack, NPM)
     y_hat_baseline = model.baseline_forward(logit_stack)
 
+    # the shape is [1, 9], reshape to [9] and turn to a np array
+    y_hat = y_hat[0].detach().cpu().numpy()
+    y_hat_baseline = y_hat_baseline[0].detach().cpu().numpy()
+    y = y[0].detach().cpu().numpy()
+
     print(f"Shape of y_hat: {y_hat.shape}")
     print(f"Shape of y_hat_baseline: {y_hat_baseline.shape}")
     print(f"Shape of y: {y.shape}")
 
     import sys
-
     sys.exit()
