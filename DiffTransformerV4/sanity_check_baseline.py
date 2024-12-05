@@ -6,7 +6,9 @@ from DiffTransformerV4 import MultiHeadAttentionClassifierPL
 
 feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
 logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
-diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
+diff_data_path = (
+    "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
+)
 
 # initialize a difftransformer model
 model = MultiHeadAttentionClassifierPL(
@@ -18,7 +20,7 @@ data_module = TensorStackDataModuleV4(
     feature_stacks_dir=feature_stacks_dir,
     logit_stacks_dir=logit_stacks_dir,
     diff_data_path=diff_data_path,
-    batch_size=16,
+    batch_size=5,  # 16,
     num_workers=8,
 )
 
