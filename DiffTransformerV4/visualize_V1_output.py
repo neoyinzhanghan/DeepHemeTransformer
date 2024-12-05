@@ -73,7 +73,7 @@ for batch_idx, batch in enumerate(train_loader):
     logit_stack = logit_stack.to(model.device)
     NPM = NPM.to(model.device)
 
-    y_hat = model(feature_stack, logit_stack, NPM)
+    y_hat = model(feature_stack)
     y_hat_baseline = model.baseline_forward(logit_stack)
 
     # the shape is [1, 9], reshape to [9] and turn to a np array
