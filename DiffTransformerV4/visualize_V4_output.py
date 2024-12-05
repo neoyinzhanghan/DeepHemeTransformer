@@ -1,5 +1,8 @@
+import numpy as np
+import matplotlib.pyplot as plt
 from DiffTransformerV4 import MultiHeadAttentionClassifierPL
 from dataset import TensorStackDataModuleV4
+from BMAassumptions import BMA_final_classes
 
 
 model_checkpoint_path = "/home/greg/Documents/neo/DeepHemeTransformer/DiffTransformerV4/lightning_logs_V4/multihead_attention_classifier/version_0/checkpoints/epoch=49-step=50.ckpt"
@@ -9,6 +12,42 @@ logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
 diff_data_path = (
     "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
 )
+
+plot_save_dir = "tmp_plots_V4"
+
+
+def make_barplot(y_hat, y_hat_baseline, y, save_path):
+    """
+    Creates a bar plot comparing y_hat, y_hat_baseline, and y values for 9 classes.
+
+    Args:
+        y_hat (np.ndarray): Array of predicted values for a model.
+        y_hat_baseline (np.ndarray): Array of predicted values for a baseline model.
+        y (np.ndarray): Array of ground truth values.
+        save_path (str): Path to save the plot.
+    """
+    x = np.arange(len(BMA_final_classes))  # x positions
+
+    width = 0.25  # Width of each bar
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    # Plot bars
+    ax.bar(x - width, y_hat, width, label="y_hat", color="blue")
+    ax.bar(x, y_hat_baseline, width, label="y_hat_baseline", color="orange")
+    ax.bar(x + width, y, width, label="y", color="green")
+
+    # Add labels and legend
+    ax.set_xticks(x)
+    ax.set_xticklabels(BMA_final_classes, rotation=45, ha="right")
+    ax.set_ylabel("Values")
+    ax.set_title("Comparison of y_hat, y_hat_baseline, and y")
+    ax.legend()
+
+    # Save the plot
+    plt.tight_layout()
+    plt.savefig(save_path)
+    plt.close()
+
 
 data_module = TensorStackDataModuleV4(
     feature_stacks_dir=feature_stacks_dir,
@@ -21,7 +60,7 @@ data_module.setup()
 
 train_loader = data_module.train_dataloader()
 
-for batch in train_loader:
+for batch_idx, batch in enumerate(train_loader):
     feature_stack, logit_stack, NPM, y = batch
 
     model.eval()
@@ -44,5 +83,10 @@ for batch in train_loader:
     print(f"Shape of y_hat_baseline: {y_hat_baseline.shape}")
     print(f"Shape of y: {y.shape}")
 
+    save_path = f"{plot_save_dir}/example_{batch_idx}.png"
+
+    make_barplot(y_hat, y_hat_baseline, y, save_path)
+
     import sys
+
     sys.exit()
