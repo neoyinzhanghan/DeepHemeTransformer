@@ -35,6 +35,20 @@ diff["blasts and blast-equivalents"] = (
     diff["blasts"] + diff["blast-equivalents"] + diff["promyelocytes"]
 )
 
+# print the top 5 rows of the diff dataframe at the blasts column
+print("Blasts")
+print(diff["blasts"].head())
+print("Blast Equivalents")
+print(diff["blast-equivalents"].head())
+print("Promyelocytes")
+print(diff["promyelocytes"].head())
+print("Blasts and Blast Equivalents")
+print(diff["blasts and blast-equivalents"].head())
+
+import sys
+sys.exit()
+
+
 # # remove the columns named blasts and blast-equivalents
 # diff = diff.drop(["blasts", "blast-equivalents", "promyelocytes"], axis=1)
 
