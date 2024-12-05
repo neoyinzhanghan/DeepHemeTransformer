@@ -320,6 +320,7 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
 
 def train_model(
     feature_stacks_dir,
+    logit_stacks_dir,
     diff_data_path,
     num_gpus=2,
     num_epochs=100,
