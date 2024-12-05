@@ -201,8 +201,9 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         return logits
 
     def training_step(self, batch, batch_idx):
-        x, y = batch
-        logits = self(x)
+        feature_stack, logit_stack, non_padding_mask, diff_tensor = batch
+        logits = self(feature_stack, logit_stack, non_padding_mask)
+        y = diff_tensor
         loss = self.loss_fn(y, logits)
 
         # Custom accuracy metric
@@ -218,7 +219,7 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
             on_epoch=True,
             prog_bar=True,
             logger=True,
-            batch_size=x.size(0),
+            batch_size=feature_stack.size(0),
         )
         self.log("train_accuracy", accuracy, on_epoch=True, prog_bar=True, logger=True)
         self.log(
@@ -261,8 +262,9 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         return {"loss": loss}
 
     def validation_step(self, batch, batch_idx):
-        x, y = batch
-        logits = self(x)
+        feature_stack, logit_stack, non_padding_mask, diff_tensor = batch
+        y = diff_tensor
+        logits = self(feature_stack, logit_stack, non_padding_mask)
         loss = self.loss_fn(logits, y)
 
         # Custom accuracy metric
@@ -311,8 +313,9 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
             )
 
     def test_step(self, batch, batch_idx):
-        x, y = batch
-        logits = self(x)
+        feature_stack, logit_stack, non_padding_mask, diff_tensor = batch
+        logits = self(feature_stack, logit_stack, non_padding_mask)
+        y = diff_tensor
         loss = self.loss_fn(logits, y)
 
         # Custom accuracy metric
