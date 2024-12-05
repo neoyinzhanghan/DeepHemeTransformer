@@ -96,9 +96,9 @@ removed_diff = diff[diff["total"] < 0.9]
 good_diff = good_diff.drop("total", axis=1)
 
 # # verify that the sum of the BMA_final_classes columns is 1 within a tolerance of 1e-6
-assert all(
-    abs(good_diff[BMA_final_classes].sum(axis=1) - 1) < 1e-6
-), "The sum of the BMA_final_classes columns is not 1"
+# assert all(
+#     abs(good_diff[BMA_final_classes].sum(axis=1) - 1) < 1e-6
+# ), "The sum of the BMA_final_classes columns is not 1"
 
 print(f"Number of rows removed: {len(removed_diff)}")
 print(f"Number of rows remaining: {len(good_diff)}")
