@@ -391,7 +391,7 @@ if __name__ == "__main__":
             num_epochs=100,
             batch_size=16,  # 16,
             lr=lr,
-            num_heads=1,
+            num_heads=8,
             num_classes=9,
             use_flash_attention=True,
             message=message,
