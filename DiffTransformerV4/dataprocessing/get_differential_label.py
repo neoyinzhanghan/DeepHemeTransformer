@@ -39,18 +39,14 @@ diff["blasts and blast-equivalents"] = (
 )
 
 # print the top 5 rows of the diff dataframe at the blasts column
-print("Blasts")
-print(diff["blasts"].head())
-print("Blast Equivalents")
-print(diff["blast-equivalents"].head())
-print("Promyelocytes")
-print(diff["promyelocytes"].head())
-print("Blasts and Blast Equivalents")
-print(diff["blasts and blast-equivalents"].head())
-
-import sys
-
-sys.exit()
+# print("Blasts")
+# print(diff["blasts"].head())
+# print("Blast Equivalents")
+# print(diff["blast-equivalents"].head())
+# print("Promyelocytes")
+# print(diff["promyelocytes"].head())
+# print("Blasts and Blast Equivalents")
+# print(diff["blasts and blast-equivalents"].head()) # TODO REMOVE. this is for debugging only
 
 
 # # remove the columns named blasts and blast-equivalents
