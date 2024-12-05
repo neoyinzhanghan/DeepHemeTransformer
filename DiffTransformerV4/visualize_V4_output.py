@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 from DiffTransformerV4 import MultiHeadAttentionClassifierPL
@@ -14,6 +15,7 @@ diff_data_path = (
 )
 
 plot_save_dir = "tmp_plots_V4"
+os.makedirs(plot_save_dir, exist_ok=True)
 
 
 def make_barplot(y_hat, y_hat_baseline, y, save_path):
