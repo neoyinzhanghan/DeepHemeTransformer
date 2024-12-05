@@ -57,7 +57,7 @@ class MultiHeadAttentionClassifier(nn.Module):
         self.q_proj = nn.Linear(d_model, d_model)
         self.k_proj = nn.Linear(d_model, d_model)
         self.v_proj = nn.Linear(d_model, d_model)
-        self.out_proj = nn.Linear(d_model, d_model)
+        self.out_proj = nn.Linear(d_model, 1024)
 
         # Initialize the projection layers to zero
         self.q_proj.weight.data.zero_()
@@ -74,9 +74,7 @@ class MultiHeadAttentionClassifier(nn.Module):
         head_dim = d_model // num_heads
 
         self.attn = Attn(head_dim=head_dim, use_flash_attention=use_flash_attention)
-
-        self.class_token = nn.Parameter(torch.randn(1, 1, d_model))
-        self.classifier = nn.Linear(d_model, num_classes)
+        self.classifier = nn.Linear(1024, num_classes)
 
     def forward(self, feature_stack, logit_stack, non_padding_mask):
 
@@ -409,7 +407,7 @@ def train_model(
         devices=num_gpus,
         accelerator="gpu",
         log_every_n_steps=1,
-        strategy="ddp_find_unused_parameters_true",
+        # strategy="ddp_find_unused_parameters_true",
     )
 
     trainer.fit(model, data_module)
