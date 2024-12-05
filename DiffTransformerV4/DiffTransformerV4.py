@@ -76,6 +76,11 @@ class MultiHeadAttentionClassifier(nn.Module):
         self.attn = Attn(head_dim=head_dim, use_flash_attention=use_flash_attention)
         self.classifier = nn.Linear(2048, num_classes)
 
+    def baseline_forward(self, logit_stack):
+        logit_stack_avg = logit_stack.mean(dim=1)
+
+        return logit_stack_avg
+
     def forward(self, feature_stack, logit_stack, non_padding_mask):
 
         x = feature_stack
@@ -203,6 +208,10 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
     def forward(self, feature_stack, logit_stack, non_padding_mask):
         logits = self.model(feature_stack, logit_stack, non_padding_mask)
         return logits
+
+    def baseline_forward(self, logit_stack):
+        logit_stack_avg = self.model.baseline_forward(logit_stack)
+        return logit_stack_avg
 
     def training_step(self, batch, batch_idx):
         feature_stack, logit_stack, non_padding_mask, diff_tensor = batch
