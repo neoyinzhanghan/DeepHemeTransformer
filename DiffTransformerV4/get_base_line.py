@@ -89,9 +89,12 @@ for index, row in pipeline_diff.iterrows():
     trl2_loss_sum += tr_l2_loss_fn(diff_tens, pipeline_diff_tens)
 
     for final_class in BMA_final_classes:
-        class_ar_acc = Class_AR_acc(final_class, diff_tens, pipeline_diff_tens)
-        class_a_acc = Class_A_acc(final_class, diff_tens, pipeline_diff_tens)
-        class_r_acc = Class_R_acc(final_class, diff_tens, pipeline_diff_tens)
+        class_ar_acc_fn = Class_AR_acc(final_class)
+        class_a_acc_fn = Class_A_acc(final_class)
+        class_r_acc_fn = Class_R_acc(final_class)
+        class_ar_acc = class_ar_acc_fn(diff_tens, pipeline_diff_tens)
+        class_a_acc = class_a_acc_fn(diff_tens, pipeline_diff_tens)
+        class_r_acc = class_r_acc_fn(diff_tens, pipeline_diff_tens)
 
         class_ar_acc_dct[final_class] += class_ar_acc
         class_a_acc_dct[final_class] += class_a_acc
