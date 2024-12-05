@@ -57,7 +57,7 @@ class MultiHeadAttentionClassifier(nn.Module):
         self.q_proj = nn.Linear(d_model, d_model)
         self.k_proj = nn.Linear(d_model, d_model)
         self.v_proj = nn.Linear(d_model, d_model)
-        self.out_proj = nn.Linear(d_model, 1024)
+        self.out_proj = nn.Linear(d_model, 2048)
 
         # Initialize the projection layers to zero
         self.q_proj.weight.data.zero_()
@@ -74,7 +74,7 @@ class MultiHeadAttentionClassifier(nn.Module):
         head_dim = d_model // num_heads
 
         self.attn = Attn(head_dim=head_dim, use_flash_attention=use_flash_attention)
-        self.classifier = nn.Linear(1024, num_classes)
+        self.classifier = nn.Linear(2048, num_classes)
 
     def forward(self, feature_stack, logit_stack, non_padding_mask):
 
@@ -120,10 +120,16 @@ class MultiHeadAttentionClassifier(nn.Module):
 
         logits_offsets = self.classifier(attn_output)
 
-        logits_offsets = F.softmax(logits_offsets, dim=-1)
+        # log the logit_stack
+        # print(f"logit_stack shape: {logit_stack.shape}")
+        logged_logit_stack = torch.log(logit_stack + 1e-8)
+
+        # logits_offsets = F.softmax(logits_offsets, dim=-1)
 
         # add the logits and the offsets then we need to uniformly subtract 1/num_classes from the logits to make sure the sum is 1
-        logits = logit_stack + logits_offsets - 1 / self.num_classes
+        logits = logit_stack + logits_offsets  # - (1 / self.num_classes)
+
+        logits = F.softmax(logits, dim=-1)
 
         # print(f"logits shape: {logits.shape}")
         # print(logits[0, 0, :])
