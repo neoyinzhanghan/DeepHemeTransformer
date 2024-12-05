@@ -5,10 +5,14 @@ from BMAassumptions import BMA_final_classes
 
 # from CELoss import custom_cross_entropy_loss
 from AR_acc import AR_acc, A_acc, R_acc, Class_AR_acc, Class_A_acc, Class_R_acc
+from L2Loss import MyL2Loss
+from TRL2Loss import MyTRL2Loss
 
 ar_acc = AR_acc()
 a_acc = A_acc()
 r_acc = R_acc()
+l2_loss = MyL2Loss()
+tr_l2_loss = MyTRL2Loss()
 
 diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
 pipeline_diff_path = "/media/hdd3/neo/DiffTransformerV1DataMini/pipeline_diff.csv"
@@ -23,6 +27,8 @@ loss_list = []
 ar_acc_sum = 0
 a_acc_sum = 0
 r_acc_sum = 0
+l2_loss_sum = 0
+trl2_loss_sum = 0
 
 class_ar_acc_dct = {}
 class_a_acc_dct = {}
@@ -79,6 +85,9 @@ for index, row in pipeline_diff.iterrows():
     a_acc_sum += a_acc
     r_acc_sum += r_acc
 
+    l2_loss_sum += l2_loss(diff_tens, pipeline_diff_tens)
+    trl2_loss_sum += tr_l2_loss(diff_tens, pipeline_diff_tens)
+
     for final_class in BMA_final_classes:
         class_ar_acc = Class_AR_acc(final_class, diff_tens, pipeline_diff_tens)
         class_a_acc = Class_A_acc(final_class, diff_tens, pipeline_diff_tens)
@@ -93,6 +102,8 @@ for index, row in pipeline_diff.iterrows():
 ar_acc_avg = ar_acc_sum / tot_num
 a_acc_avg = a_acc_sum / tot_num
 r_acc_avg = r_acc_sum / tot_num
+l2_loss_avg = l2_loss_sum / tot_num
+trl2_loss_avg = trl2_loss_sum / tot_num
 
 for final_class in BMA_final_classes:
     class_ar_acc_dct[final_class] = class_ar_acc_dct[final_class] / tot_num
@@ -102,6 +113,8 @@ for final_class in BMA_final_classes:
 print(f"AR acc: {ar_acc_avg}")
 print(f"A acc: {a_acc_avg}")
 print(f"R acc: {r_acc_avg}")
+print(f"L2 loss: {l2_loss_avg}")
+print(f"TRL2 loss: {trl2_loss_avg}")
 
 for final_class in BMA_final_classes:
     print(
