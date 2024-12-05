@@ -12,6 +12,12 @@ def custom_ar_acc(g, logits, d=0.2, D=0.02):
     Returns:
         torch.Tensor: Scalar tensor representing the average L2 loss.
     """
+
+    # if the shape of g and logits are just [batch_size], then we need to reshape them to [batch_size, 1]
+    if len(g.shape) == 1:
+        g = g.unsqueeze(1)
+        logits = logits.unsqueeze(1)
+
     assert (
         d > 0 and d < 1
     ), "Relative allowable error proportion must be between 0 and 1"
@@ -45,6 +51,11 @@ def custom_a_acc(g, logits, D=0.02):
         torch.Tensor: Scalar tensor representing the average L2 loss.
     """
 
+    # if the shape of g and logits are just [batch_size], then we need to reshape them to [batch_size, 1]
+    if len(g.shape) == 1:
+        g = g.unsqueeze(1)
+        logits = logits.unsqueeze(1)
+
     assert D > 0 and D < 1, "Absolute allowable error must be between 0 and 1"
     # relative error allowance
     abs_error_allowance = D * torch.ones_like(g)
@@ -72,6 +83,12 @@ def custom_r_acc(g, logits, d=0.2):
     Returns:
         torch.Tensor: Scalar tensor representing the average L2 loss.
     """
+
+    # if the shape of g and logits are just [batch_size], then we need to reshape them to [batch_size, 1]
+    if len(g.shape) == 1:
+        g = g.unsqueeze(1)
+        logits = logits.unsqueeze(1)
+
     assert (
         d > 0 and d < 1
     ), "Relative allowable error proportion must be between 0 and 1"
@@ -162,12 +179,6 @@ def myelocytes_ar_acc(g, logits):
     # take the first column of g and logits
     g = g[:, 0]
     logits = logits[:, 0]
-
-    # print the shape of g and logits
-    print(g.shape)
-
-    import sys
-    sys.exit()
 
     return custom_ar_acc(g, logits)
 
