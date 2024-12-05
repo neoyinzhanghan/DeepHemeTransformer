@@ -314,7 +314,7 @@ if __name__ == "__main__":
             num_epochs=50,
             batch_size=5,  # 16,
             lr=lr,
-            num_heads=12,
+            num_heads=8,
             num_classes=9,
             use_flash_attention=True,
             message=message,
