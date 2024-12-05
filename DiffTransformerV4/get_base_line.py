@@ -2,8 +2,13 @@ import os
 import torch
 import pandas as pd
 from BMAassumptions import BMA_final_classes
+
 # from CELoss import custom_cross_entropy_loss
-from AR_acc import custom_ar_acc
+from AR_acc import AR_acc, A_acc, R_acc, Class_AR_acc, Class_A_acc, Class_R_acc
+
+ar_acc = AR_acc()
+a_acc = A_acc()
+r_acc = R_acc()
 
 diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
 pipeline_diff_path = "/media/hdd3/neo/DiffTransformerV1DataMini/pipeline_diff.csv"
@@ -14,6 +19,21 @@ pipeline_diff = pd.read_csv(pipeline_diff_path)
 # iterate over the rows of the pipeline_diff dataframe
 
 loss_list = []
+
+ar_acc_sum = 0
+a_acc_sum = 0
+r_acc_sum = 0
+
+class_ar_acc_dct = {}
+class_a_acc_dct = {}
+class_r_acc_dct = {}
+
+for final_class in BMA_final_classes:
+    class_ar_acc_dct[final_class] = 0
+    class_a_acc_dct[final_class] = 0
+    class_r_acc_dct[final_class] = 0
+
+tot_num = 0
 
 for index, row in pipeline_diff.iterrows():
     # get the result_dir_name
@@ -51,8 +71,48 @@ for index, row in pipeline_diff.iterrows():
     diff_tens = diff_tens.unsqueeze(0)
     pipeline_diff_tens = pipeline_diff_tens.unsqueeze(0)
 
-    loss_item = custom_ar_acc(diff_tens, pipeline_diff_tens)
+    ar_acc = AR_acc(diff_tens, pipeline_diff_tens)
+    a_acc = A_acc(diff_tens, pipeline_diff_tens)
+    r_acc = R_acc(diff_tens, pipeline_diff_tens)
 
-    loss_list.append(loss_item)
+    ar_acc_sum += ar_acc
+    a_acc_sum += a_acc
+    r_acc_sum += r_acc
 
-print(f"Average baseline accuracy: {sum(loss_list) / len(loss_list)}")
+    for final_class in BMA_final_classes:
+        class_ar_acc = Class_AR_acc(final_class, diff_tens, pipeline_diff_tens)
+        class_a_acc = Class_A_acc(final_class, diff_tens, pipeline_diff_tens)
+        class_r_acc = Class_R_acc(final_class, diff_tens, pipeline_diff_tens)
+
+        class_ar_acc_dct[final_class] += class_ar_acc
+        class_a_acc_dct[final_class] += class_a_acc
+        class_r_acc_dct[final_class] += class_r_acc
+
+    tot_num += 1
+
+ar_acc_avg = ar_acc_sum / tot_num
+a_acc_avg = a_acc_sum / tot_num
+r_acc_avg = r_acc_sum / tot_num
+
+for final_class in BMA_final_classes:
+    class_ar_acc_dct[final_class] = class_ar_acc_dct[final_class] / tot_num
+    class_a_acc_dct[final_class] = class_a_acc_dct[final_class] / tot_num
+    class_r_acc_dct[final_class] = class_r_acc_dct[final_class] / tot_num
+
+print(f"AR acc: {ar_acc_avg}")
+print(f"A acc: {a_acc_avg}")
+print(f"R acc: {r_acc_avg}")
+
+for final_class in BMA_final_classes:
+    print(
+        f"Class {final_class} AR acc: {class_ar_acc_dct[
+        final_class]}"
+    )
+    print(
+        f"Class {final_class} A acc: {class_a_acc_dct[
+        final_class]}"
+    )
+    print(
+        f"Class {final_class} R acc: {class_r_acc_dct[
+        final_class]}"
+    )
