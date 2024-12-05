@@ -6,7 +6,7 @@ from dataset import TensorStackDataModuleV4
 from BMAassumptions import BMA_final_classes
 
 
-model_checkpoint_path = "/home/greg/Documents/neo/DeepHemeTransformer/DiffTransformerV4/lightning_logs_V4/multihead_attention_classifier/version_0/checkpoints/epoch=49-step=50.ckpt"
+model_checkpoint_path = "/home/greg/Documents/neo/DeepHemeTransformer/DiffTransformerV4/lightning_logs_test/multihead_attention_classifier/version_1/checkpoints/epoch=99-step=900.ckpt"
 model = MultiHeadAttentionClassifierPL.load_from_checkpoint(model_checkpoint_path)
 feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
 logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
@@ -14,7 +14,7 @@ diff_data_path = (
     "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
 )
 
-plot_save_dir = "tmp_plots_V4"
+plot_save_dir = "tmp_plots_V1"
 os.makedirs(plot_save_dir, exist_ok=True)
 
 
