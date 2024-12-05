@@ -35,8 +35,8 @@ diff["blasts and blast-equivalents"] = (
     diff["blasts"] + diff["blast-equivalents"] + diff["promyelocytes"]
 )
 
-# remove the columns named blasts and blast-equivalents
-diff = diff.drop(["blasts", "blast-equivalents", "promyelocytes"], axis=1)
+# # remove the columns named blasts and blast-equivalents
+# diff = diff.drop(["blasts", "blast-equivalents", "promyelocytes"], axis=1)
 
 
 # traverse through the rows of diff
