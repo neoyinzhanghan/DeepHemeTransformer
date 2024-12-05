@@ -382,13 +382,13 @@ if __name__ == "__main__":
 
     message = "Testing different learning rates for the simple transformer model using the full mini dataset with the random subsample data augmentation, using simple L2 loss and the AR_acc metric."
 
-    for lr in [0.00005]:
+    for lr in [0.00001]:
         train_model(
             feature_stacks_dir,
             logit_stacks_dir,
             diff_data_path,
             num_gpus=2,
-            num_epochs=100,
+            num_epochs=150,
             batch_size=16,  # 16,
             lr=lr,
             num_heads=8,
