@@ -63,7 +63,9 @@ data_module.setup()
 
 train_loader = data_module.train_dataloader()
 
-for batch_idx, batch in tqdm(enumerate(train_loader), desc="Visualizing Results"):
+for batch_idx, batch in tqdm(
+    enumerate(train_loader), desc="Visualizing Results", total=len(train_loader)
+):
     feature_stack, logit_stack, NPM, y = batch
 
     model.eval()
@@ -89,7 +91,3 @@ for batch_idx, batch in tqdm(enumerate(train_loader), desc="Visualizing Results"
     save_path = f"{plot_save_dir}/example_{batch_idx}.png"
 
     make_barplot(y_hat, y_hat_baseline, y, save_path)
-
-    import sys
-
-    sys.exit()
