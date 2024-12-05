@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import math
 import pytorch_lightning as pl
-from dataset import TensorStackDataModule
+from dataset import TensorStackDataModuleV4
 
 # from torchmetrics import Accuracy, F1Score, AUROC
 from torch.optim.lr_scheduler import CosineAnnealingLR
@@ -152,7 +152,7 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         return F.softmax(logits, dim=1)
 
     def training_step(self, batch, batch_idx):
-        x, y = batch
+        x, _, _, y = batch
         logits = self(x)
         loss = self.loss_fn(y, logits)
 
@@ -212,7 +212,7 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         return {"loss": loss}
 
     def validation_step(self, batch, batch_idx):
-        x, y = batch
+        x, _, _, y = batch
         logits = self(x)
         loss = self.loss_fn(logits, y)
 
@@ -262,7 +262,7 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
             )
 
     def test_step(self, batch, batch_idx):
-        x, y = batch
+        x, _, _, y = batch
         logits = self(x)
         loss = self.loss_fn(logits, y)
 
@@ -333,8 +333,9 @@ def train_model(
     experiment_name="multihead_attention_classifier",
     message="No message",
 ):
-    data_module = TensorStackDataModule(
+    data_module = TensorStackDataModuleV4(
         feature_stacks_dir=feature_stacks_dir,
+        logit_stacks_dir=logit_stacks_dir,
         diff_data_path=diff_data_path,
         batch_size=batch_size,
         num_workers=num_workers,
@@ -366,6 +367,7 @@ def train_model(
 
 if __name__ == "__main__":
     feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
+    logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
     diff_data_path = (
         "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
     )
@@ -375,6 +377,7 @@ if __name__ == "__main__":
     for lr in [0.00005]:
         train_model(
             feature_stacks_dir,
+            logit_stacks_dir,
             diff_data_path,
             num_gpus=2,
             num_epochs=100,
