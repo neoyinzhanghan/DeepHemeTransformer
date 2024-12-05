@@ -11,9 +11,7 @@ model_checkpoint_path = "/home/greg/Documents/neo/DeepHemeTransformer/DiffTransf
 model = MultiHeadAttentionClassifierPL.load_from_checkpoint(model_checkpoint_path)
 feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
 logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
-diff_data_path = (
-    "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
-)
+diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
 
 plot_save_dir = "tmp_plots_V1"
 os.makedirs(plot_save_dir, exist_ok=True)
@@ -61,10 +59,10 @@ data_module = TensorStackDataModuleV4(
 )
 data_module.setup()
 
-train_loader = data_module.train_dataloader()
+val_dataloader = data_module.val_dataloader()
 
 for batch_idx, batch in tqdm(
-    enumerate(train_loader), desc="Visualizing Results", total=len(train_loader)
+    enumerate(val_dataloader), desc="Visualizing Results", total=len(val_dataloader)
 ):
     feature_stack, logit_stack, NPM, y = batch
 
