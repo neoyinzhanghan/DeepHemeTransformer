@@ -6,9 +6,9 @@ from BMAassumptions import BMA_final_classes
 from tqdm import tqdm
 
 ungrouped_logit_stack_dir = (
-    "/media/hdd3/neo/DiffTransformerV1Data3000/ungrouped_logit_stacks"
+    "/media/hdd3/neo/DiffTransformerDataV13000/ungrouped_logit_stacks"
 )
-save_dir = "/media/hdd3/neo/DiffTransformerV1Data3000/logit_stacks"
+save_dir = "/media/hdd3/neo/DiffTransformerDataV13000/logit_stacks"
 
 assert os.path.exists(
     ungrouped_logit_stack_dir

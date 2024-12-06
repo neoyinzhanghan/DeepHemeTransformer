@@ -13,8 +13,8 @@ from BMAassumptions import (
     cellnames,
 )
 
-data_dir = "/media/hdd3/neo/DiffTransformerV1Data3000"
-diff_data_path = "/media/hdd3/neo/DiffTransformerV1Data3000/diff_data.csv"
+data_dir = "/media/hdd3/neo/DiffTransformerDataV13000"
+diff_data_path = "/media/hdd3/neo/DiffTransformerDataV13000/diff_data.csv"
 
 cellnames = [
     "B1",

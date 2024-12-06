@@ -23,12 +23,12 @@ from BMAassumptions import (
 )
 from PIL import Image
 
-results_dir = "/media/hdd3/neo/DiffTransformerV1Data3000"
-diff_data_path = "/media/hdd3/neo/DiffTransformerV1Data3000/diff_data.csv"
+results_dir = "/media/hdd3/neo/DiffTransformerDataV13000"
+diff_data_path = "/media/hdd3/neo/DiffTransformerDataV13000/diff_data.csv"
 feature_name = "features_v3"
-feature_stack_save_dir = "/media/hdd3/neo/DiffTransformerV1Data3000/feature_stacks"
+feature_stack_save_dir = "/media/hdd3/neo/DiffTransformerDataV13000/feature_stacks"
 logit_stack_save_dir = (
-    "/media/hdd3/neo/DiffTransformerV1Data3000/ungrouped_logit_stacks"
+    "/media/hdd3/neo/DiffTransformerDataV1s3000/ungrouped_logit_stacks"
 )
 
 model = model_create(HemeLabel_ckpt_path)
