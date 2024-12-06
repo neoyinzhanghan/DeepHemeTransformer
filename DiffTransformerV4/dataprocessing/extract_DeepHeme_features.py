@@ -36,7 +36,7 @@ for subdir in subdirs:
 
 cell_image_paths = []
 
-for wsi_folder in tqdm(os.listdir(all_subsubdirs), desc="Gathering cell image paths"):
+for wsi_folder in tqdm(all_subsubdirs, desc="Gathering cell image paths"):
     if not "ERROR" in wsi_folder and os.path.isdir(wsi_folder):
         cells_folder = os.path.join(wsi_folder, "cells")
         if os.path.isdir(cells_folder):
