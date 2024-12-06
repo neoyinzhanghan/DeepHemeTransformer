@@ -23,15 +23,22 @@ from BMAassumptions import (
 )
 from PIL import Image
 
-results_dir = "/media/hdd3/neo/DiffTransformerV1DataMini"
-diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv"
+results_dir = "/media/hdd3/neo/DiffTransformerV1Data3000"
+diff_data_path = "/media/hdd3/neo/DiffTransformerV1Data3000/diff_data.csv"
 feature_name = "features_v3"
-feature_stack_save_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
+feature_stack_save_dir = "/media/hdd3/neo/DiffTransformerV1Data3000/feature_stacks"
 logit_stack_save_dir = (
-    "/media/hdd3/neo/DiffTransformerV1DataMini/ungrouped_logit_stacks"
+    "/media/hdd3/neo/DiffTransformerV1Data3000/ungrouped_logit_stacks"
 )
 
 model = model_create(HemeLabel_ckpt_path)
+
+# assert that the feature_stack_save_dir and logit_stack_save_dir do not exist
+assert not os.path.exists(feature_stack_save_dir), f"{feature_stack_save_dir} exists."
+assert not os.path.exists(logit_stack_save_dir), f"{logit_stack_save_dir} exists."
+
+os.makedirs(feature_stack_save_dir, exist_ok=True)
+os.makedirs(logit_stack_save_dir, exist_ok=True)
 
 
 def get_cell_path(feature_path):

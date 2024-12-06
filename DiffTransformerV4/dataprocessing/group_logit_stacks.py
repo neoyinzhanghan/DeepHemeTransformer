@@ -6,9 +6,16 @@ from BMAassumptions import BMA_final_classes
 from tqdm import tqdm
 
 ungrouped_logit_stack_dir = (
-    "/media/hdd3/neo/DiffTransformerV1DataMini/ungrouped_logit_stacks"
+    "/media/hdd3/neo/DiffTransformerV1Data3000/ungrouped_logit_stacks"
 )
-save_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
+save_dir = "/media/hdd3/neo/DiffTransformerV1Data3000/logit_stacks"
+
+assert os.path.exists(
+    ungrouped_logit_stack_dir
+), f"{ungrouped_logit_stack_dir} does not exist."
+
+# create the save_dir if it does not exist
+os.makedirs(save_dir, exist_ok=True)
 
 # get a list of all the pt files in the ungrouped_logit_stack_dir
 ungrouped_logit_stack_files = [
@@ -51,7 +58,7 @@ for ungrouped_logit_stack_file in tqdm(ungrouped_logit_stack_files):
     assert torch.allclose(
         grouped_logit_stack.sum(dim=1), torch.ones_like(grouped_logit_stack.sum(dim=1))
     )
-    
+
     # print the shape of the grouped_logit_stack
     print(f"Shape of grouped_logit_stack: {grouped_logit_stack.shape}")
 

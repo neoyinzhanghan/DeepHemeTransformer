@@ -2,7 +2,7 @@ import pandas as pd
 from get_copath_data import get_diff, get_path_data
 from BMAassumptions import BMA_final_classes
 
-metadata_path = "/media/hdd3/neo/DiffTransformerV1DataMini/wsi_metadata.csv"
+metadata_path = "/media/hdd3/neo/DiffTransformerV1Data3000/wsi_metadata.csv"
 metadata = pd.read_csv(metadata_path)
 
 # get the accession_numbers as a list of strings
