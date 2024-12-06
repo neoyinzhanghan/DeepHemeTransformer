@@ -2,9 +2,11 @@ import os
 import pandas as pd
 from tqdm import tqdm
 
-good_results_dir = "/media/hdd3/neo/DiffTransformerV1DataMini"
-# pipeline_run_history_path = "/media/hdd3/neo/glv3_results_dir_batched/pipeline_run_history.csv"
-pipeline_run_history_path = "/media/hdd3/neo/results_dir/pipeline_run_history.csv"
+good_results_dir = "/media/hdd3/neo/DiffTransformerDataV13000"
+pipeline_run_history_path = (
+    "/media/hdd3/neo/glv3_results_dir_batched/pipeline_run_history.csv"
+)
+# pipeline_run_history_path = "/media/hdd3/neo/results_dir/pipeline_run_history.csv"
 pipeline_run_history = pd.read_csv(pipeline_run_history_path)
 
 # get a list of the result directories
@@ -43,5 +45,5 @@ for result_dir in tqdm(result_dirs, desc="Getting accession numbers"):
 
 metadata_df = pd.DataFrame(metadata)
 metadata_df.to_csv(
-    "/media/hdd3/neo/DiffTransformerV1DataMini/wsi_metadata.csv", index=False
+    "/media/hdd3/neo/DiffTransformerDataV13000/wsi_metadata.csv", index=False
 )
