@@ -7,7 +7,7 @@ from dataset import TensorStackDataModuleV4
 from BMAassumptions import BMA_final_classes
 
 
-model_checkpoint_path = "/home/greg/Documents/neo/DeepHemeTransformer/DiffTransformerV4/lightning_logs_V1/multihead_attention_classifier/version_0/checkpoints/epoch=149-step=1350.ckpt"
+model_checkpoint_path = "/home/greg/Documents/neo/DeepHemeTransformer/DiffTransformerV4/lightning_logs_V1/multihead_attention_classifier/version_0/checkpoints/epoch=149-step=1800.ckpt"
 model = MultiHeadAttentionClassifierPL.load_from_checkpoint(model_checkpoint_path)
 feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
 logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
