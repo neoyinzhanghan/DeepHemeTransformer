@@ -2,7 +2,7 @@ import os
 from tqdm import tqdm
 
 tmp_batched_results_dir = "/media/hdd3/neo/glv3_results_dir_batched"
-save_dir = "/media/hdd3/neo/DeepHemeTransformerData3000"
+save_dir = "/media/hdd3/neo/DeepHemeTransformerDataV13000"
 
 os.makedirs(save_dir, exist_ok=True)
 
