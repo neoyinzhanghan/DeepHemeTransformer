@@ -104,4 +104,4 @@ print(f"Number of rows removed: {len(removed_diff)}")
 print(f"Number of rows remaining: {len(good_diff)}")
 
 # save the differential data to a csv file
-good_diff.to_csv("/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv", index=False)
+good_diff.to_csv("/media/hdd3/neo/DiffTransformerDataV13000/diff_data.csv", index=False)
