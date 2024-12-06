@@ -433,13 +433,11 @@ def train_model(
 if __name__ == "__main__":
     feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
     logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
-    diff_data_path = (
-        "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
-    )
+    diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
 
     message = "Testing different learning rates for the simple transformer model using the full mini dataset with the random subsample data augmentation, using simple L2 loss and the AR_acc metric."
 
-    for lr in [0.00001]:  # 0.00000001]:
+    for lr in [0.001]:  # 0.00000001]:
 
         train_model(
             feature_stacks_dir=feature_stacks_dir,
@@ -447,7 +445,7 @@ if __name__ == "__main__":
             diff_data_path=diff_data_path,
             num_gpus=2,
             num_epochs=50,
-            batch_size=5,  # 16,
+            batch_size=16,  # 16,
             lr=lr,
             num_heads=8,
             num_classes=9,
