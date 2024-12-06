@@ -11,9 +11,7 @@ model_checkpoint_path = "/home/greg/Documents/neo/DeepHemeTransformer/DiffTransf
 model = MultiHeadAttentionClassifierPL.load_from_checkpoint(model_checkpoint_path)
 feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
 logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
-diff_data_path = (
-    "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
-)
+diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
 
 plot_save_dir = "tmp_plots_V4"
 os.makedirs(plot_save_dir, exist_ok=True)
