@@ -12,7 +12,7 @@ model = MultiHeadAttentionClassifierPL.load_from_checkpoint(model_checkpoint_pat
 feature_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/feature_stacks"
 logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"
 diff_data_path = (
-    "/media/hdd3/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
+    "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
 )
 
 plot_save_dir = "tmp_plots_V4"
