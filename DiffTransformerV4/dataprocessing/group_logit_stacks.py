@@ -47,9 +47,16 @@ for ungrouped_logit_stack_file in tqdm(ungrouped_logit_stack_files):
     # check if the grouped_logit_stack
     assert grouped_logit_stack.shape[1] == len(BMA_final_classes)
 
+    # assert that the sum of the grouped logits is 1 along the second dimension
+    assert torch.allclose(
+        grouped_logit_stack.sum(dim=1), torch.ones_like(grouped_logit_stack.sum(dim=1))
+    )
+
     print(grouped_logit_stack[0])
-    
+    print(grouped_logit_stack.sum(dim=1))
+
     import sys
+
     sys.exit()
 
     # print the shape of the grouped_logit_stack
