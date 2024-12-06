@@ -23,7 +23,7 @@ class TensorStackDatasetV4(Dataset):
         logit_stacks_dir,
         diff_data_path,
         split="train",
-        min_num_cells=100,
+        min_num_cells=3000,
         max_num_cells=3000,
         N=3000,
     ):
@@ -214,7 +214,7 @@ class TensorStackDataset(Dataset):
         feature_stacks_dir,
         diff_data_path,
         split="train",
-        min_num_cells=100,
+        min_num_cells=3000,
         max_num_cells=3000,
         N=3000,
     ):
