@@ -16,15 +16,29 @@ from tqdm import tqdm
 # each cells folder contains a bunch of subdirectories, each of which is a cell type and contains a bunch of images in .jpg format
 # get the list of all the cell image paths
 
-dump_dir = "/media/hdd3/neo/DiffTransformerV1DataMini"
+tmp_batched_results_dir = "/media/hdd3/neo/glv3_results_dir_batched"
+# find all the subdirectories in the tmp_batched_results_dir
+subdirs = [
+    os.path.join(tmp_batched_results_dir, d)
+    for d in os.listdir(tmp_batched_results_dir)
+    if os.path.isdir(os.path.join(tmp_batched_results_dir, d))
+]
+
+all_subsubdirs = []
+
+for subdir in subdirs:
+    subsubdirs = [
+        os.path.join(subdir, d)
+        for d in os.listdir(subdir)
+        if os.path.isdir(os.path.join(subdir, d))
+    ]
+    all_subsubdirs.extend(subsubdirs)
 
 cell_image_paths = []
 
-for wsi_folder in tqdm(os.listdir(dump_dir), desc="Gathering cell image paths"):
-    if not wsi_folder.startswith("ERROR") and os.path.isdir(
-        os.path.join(dump_dir, wsi_folder)
-    ):
-        cells_folder = os.path.join(dump_dir, wsi_folder, "cells")
+for wsi_folder in tqdm(os.listdir(all_subsubdirs), desc="Gathering cell image paths"):
+    if not "ERROR" in wsi_folder and os.path.isdir(wsi_folder):
+        cells_folder = os.path.join(wsi_folder, "cells")
         if os.path.isdir(cells_folder):
             for cell_type in os.listdir(cells_folder):
                 if os.path.isdir(os.path.join(cells_folder, cell_type)):
