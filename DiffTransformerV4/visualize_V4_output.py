@@ -63,7 +63,9 @@ data_module.setup()
 
 train_loader = data_module.train_dataloader()
 
-for batch_idx, batch in tqdm(enumerate(train_loader), desc="Visualizing Results", total=len(train_loader)):
+for batch_idx, batch in tqdm(
+    enumerate(train_loader), desc="Visualizing Results", total=len(train_loader)
+):
     feature_stack, logit_stack, NPM, y = batch
 
     model.eval()
@@ -75,7 +77,7 @@ for batch_idx, batch in tqdm(enumerate(train_loader), desc="Visualizing Results"
     NPM = NPM.to(model.device)
 
     y_hat = model(feature_stack, logit_stack, NPM)
-    y_hat_baseline = model.baseline_forward(logit_stack)
+    y_hat_baseline = model.baseline_forward(logit_stack, NPM)
 
     # the shape is [1, 9], reshape to [9] and turn to a np array
     y_hat = y_hat[0].detach().cpu().numpy()

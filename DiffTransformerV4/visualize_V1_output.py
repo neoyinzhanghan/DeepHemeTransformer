@@ -75,7 +75,7 @@ for batch_idx, batch in tqdm(
     NPM = NPM.to(model.device)
 
     y_hat = model(feature_stack)
-    y_hat_baseline = model.baseline_forward(logit_stack)
+    y_hat_baseline = model.baseline_forward(logit_stack, NPM)
 
     # the shape is [1, 9], reshape to [9] and turn to a np array
     y_hat = y_hat[0].detach().cpu().numpy()

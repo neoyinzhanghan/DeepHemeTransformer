@@ -66,8 +66,9 @@ class MultiHeadAttentionClassifier(nn.Module):
         self.class_token = nn.Parameter(torch.randn(1, 1, d_model))
         self.classifier = nn.Linear(d_model, num_classes)
 
-    def baseline_forward(self, logit_stack):
-        logit_stack_avg = logit_stack.mean(dim=1)
+    def baseline_forward(self, logit_stack, non_padding_mask):
+        logit_stack_sum = logit_stack.sum(dim=1)
+        logit_stack_avg = logit_stack_sum / non_padding_mask.sum(dim=1).unsqueeze(1)
 
         return logit_stack_avg
 
@@ -156,8 +157,8 @@ class MultiHeadAttentionClassifierPL(pl.LightningModule):
         logits = self.model(x)
         return F.softmax(logits, dim=1)
 
-    def baseline_forward(self, logit_stack):
-        logit_stack_avg = self.model.baseline_forward(logit_stack)
+    def baseline_forward(self, logit_stack, non_padding_mask):
+        logit_stack_avg = self.model.baseline_forward(logit_stack, non_padding_mask)
         return logit_stack_avg
 
     def training_step(self, batch, batch_idx):
