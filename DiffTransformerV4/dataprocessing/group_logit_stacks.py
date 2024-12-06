@@ -43,10 +43,9 @@ for ungrouped_logit_stack_file in tqdm(ungrouped_logit_stack_files):
         for index in index_map[key]:
             grouped_logit_stack[:, key] += ungrouped_logit_stack[:, index]
 
-    # make sure that the grouped logits sum to 1
-    grouped_logit_stack = grouped_logit_stack / grouped_logit_stack.sum(
-        dim=1, keepdim=True
-    )
+    # grouped_logit stack should have shape [num_cells, len(BMA_final_classes)]
+    # check if the grouped_logit_stack
+    assert grouped_logit_stack.shape[1] == len(BMA_final_classes)
 
     assert torch.allclose(
         grouped_logit_stack.sum(dim=1), torch.ones(grouped_logit_stack.shape[0])
