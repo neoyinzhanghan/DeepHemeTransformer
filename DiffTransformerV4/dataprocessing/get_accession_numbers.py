@@ -15,6 +15,7 @@ result_dirs = [
     result_dir
     for result_dir in result_dirs
     if os.path.isdir(os.path.join(good_results_dir, result_dir))
+    and result_dir not in ["feature_stacks", "logit_stacks", "ungrouped_logit_stacks"]
 ]
 
 metadata = {
