@@ -51,14 +51,7 @@ for ungrouped_logit_stack_file in tqdm(ungrouped_logit_stack_files):
     assert torch.allclose(
         grouped_logit_stack.sum(dim=1), torch.ones_like(grouped_logit_stack.sum(dim=1))
     )
-
-    print(grouped_logit_stack[0])
-    print(grouped_logit_stack.sum(dim=1))
-
-    import sys
-
-    sys.exit()
-
+    
     # print the shape of the grouped_logit_stack
     print(f"Shape of grouped_logit_stack: {grouped_logit_stack.shape}")
 
