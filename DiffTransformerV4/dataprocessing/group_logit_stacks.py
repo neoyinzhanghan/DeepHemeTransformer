@@ -43,6 +43,15 @@ for ungrouped_logit_stack_file in tqdm(ungrouped_logit_stack_files):
         for index in index_map[key]:
             grouped_logit_stack[:, key] += ungrouped_logit_stack[:, index]
 
+    # make sure that the grouped logits sum to 1
+    grouped_logit_stack = grouped_logit_stack / grouped_logit_stack.sum(
+        dim=1, keepdim=True
+    )
+
+    assert torch.allclose(
+        grouped_logit_stack.sum(dim=1), torch.ones(grouped_logit_stack.shape[0])
+    )
+
     # print the shape of the grouped_logit_stack
     print(f"Shape of grouped_logit_stack: {grouped_logit_stack.shape}")
 

@@ -86,19 +86,19 @@ for i, row in diff.iterrows():
 good_diff = diff[diff["total"] >= 0.9]
 removed_diff = diff[diff["total"] < 0.9]
 
-# # renormalize the values of the BMA_final_classes columns to sum to 1 by dividing by the total
-# for col in BMA_final_classes:
-#     good_diff.iloc[:, good_diff.columns.get_loc(col)] = (
-#         good_diff[col] / good_diff["total"]
-#     ) # TODO DEPRECATED WE WILL NO LONGER RENORMALIZE THE BMA_final_classes columns
+# renormalize the values of the BMA_final_classes columns to sum to 1 by dividing by the total
+for col in BMA_final_classes:
+    good_diff.iloc[:, good_diff.columns.get_loc(col)] = (
+        good_diff[col] / good_diff["total"]
+    )  # TODO DEPRECATED WE WILL NO LONGER RENORMALIZE THE BMA_final_classes columns
 
 # remove the total column
 good_diff = good_diff.drop("total", axis=1)
 
-# # verify that the sum of the BMA_final_classes columns is 1 within a tolerance of 1e-6
-# assert all(
-#     abs(good_diff[BMA_final_classes].sum(axis=1) - 1) < 1e-6
-# ), "The sum of the BMA_final_classes columns is not 1"
+# verify that the sum of the BMA_final_classes columns is 1 within a tolerance of 1e-6
+assert all(
+    abs(good_diff[BMA_final_classes].sum(axis=1) - 1) < 1e-6
+), "The sum of the BMA_final_classes columns is not 1"
 
 print(f"Number of rows removed: {len(removed_diff)}")
 print(f"Number of rows remaining: {len(good_diff)}")
