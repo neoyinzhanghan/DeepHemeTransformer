@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from DiffTransformerV4 import MultiHeadAttentionClassifierPL
 from dataset import TensorStackDataModuleV4
 from BMAassumptions import BMA_final_classes
+from tqdm import tqdm
 
 
 model_checkpoint_path = "/home/greg/Documents/neo/DeepHemeTransformer/DiffTransformerV4/lightning_logs_V4/multihead_attention_classifier/version_0/checkpoints/epoch=49-step=50.ckpt"
@@ -62,7 +63,7 @@ data_module.setup()
 
 train_loader = data_module.train_dataloader()
 
-for batch_idx, batch in enumerate(train_loader):
+for batch_idx, batch in tqdm(enumerate(train_loader), desc="Visualizing Results", total=len(train_loader)):
     feature_stack, logit_stack, NPM, y = batch
 
     model.eval()
@@ -88,7 +89,3 @@ for batch_idx, batch in enumerate(train_loader):
     save_path = f"{plot_save_dir}/example_{batch_idx}.png"
 
     make_barplot(y_hat, y_hat_baseline, y, save_path)
-
-    import sys
-
-    sys.exit()
