@@ -65,7 +65,11 @@ class TensorStackDatasetV4(Dataset):
         num_cells = np.random.randint(self.min_num_cells, self.max_num_cells)
 
         if feature_stack.shape[0] > num_cells:
-            idxs = np.random.choice(feature_stack.shape[0], num_cells, replace=False)
+            # idxs = np.random.choice(feature_stack.shape[0], num_cells, replace=False)
+
+            idx = np.arange(
+                feature_stack.shape[0], dtype=int
+            )  # TODO we are temporarily removing stochasticity in the dataloader
             feature_stack = feature_stack[idxs]
             logit_stack = logit_stack[idxs]
 
@@ -255,7 +259,9 @@ class TensorStackDataset(Dataset):
         if feature_stack.shape[0] > num_cells:
             # idxs = np.random.choice(feature_stack.shape[0], num_cells, replace=False)
 
-            idxs = np.arange(feature_stack.shape[0], dtype=int) # TODO we are temporarily removing stochasticity in the dataloader
+            idxs = np.arange(
+                feature_stack.shape[0], dtype=int
+            )  # TODO we are temporarily removing stochasticity in the dataloader
             feature_stack = feature_stack[idxs]
 
         # take the first num_cells samples without any shuffling or random sampling
