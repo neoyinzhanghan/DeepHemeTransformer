@@ -62,7 +62,9 @@ class TensorStackDatasetV4(Dataset):
 
         feature_stack = torch.load(feature_stack_path)  # this has shape [N, d]
 
-        num_cells = np.random.randint(self.min_num_cells, self.max_num_cells)
+        num_cells = 2999
+
+        # num_cells = np.random.randint(self.min_num_cells, self.max_num_cells)
 
         if feature_stack.shape[0] > num_cells:
             # idxs = np.random.choice(feature_stack.shape[0], num_cells, replace=False)
@@ -254,7 +256,9 @@ class TensorStackDataset(Dataset):
 
         feature_stack = torch.load(feature_stack_path)  # this has shape [N, d]
 
-        num_cells = np.random.randint(self.min_num_cells, self.max_num_cells)
+        # num_cells = np.random.randint(self.min_num_cells, self.max_num_cells)
+
+        num_cells = 2999
 
         if feature_stack.shape[0] > num_cells:
             # idxs = np.random.choice(feature_stack.shape[0], num_cells, replace=False)
