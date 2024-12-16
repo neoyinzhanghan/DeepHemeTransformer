@@ -346,7 +346,7 @@ def train_model(
     num_heads=1,
     num_classes=9,
     use_flash_attention=True,
-    log_dir="lightning_logs_V1",
+    log_dir="lightning_logs_V1-2",
     experiment_name="multihead_attention_classifier",
     message="No message",
 ):
