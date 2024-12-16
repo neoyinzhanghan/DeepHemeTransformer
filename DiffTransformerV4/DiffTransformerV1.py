@@ -381,7 +381,7 @@ if __name__ == "__main__":
     feature_stacks_dir = "/media/ssd1/neo/DiffTransformerV1DataMini/feature_stacks"
     logit_stacks_dir = "/media/ssd1/neo/DiffTransformerV1DataMini/logit_stacks"
     diff_data_path = (
-        "/media/ssd1/neo/DiffTransformerV1DataMini/subsampled_split_diff_data.csv"
+        "/media/ssd1/neo/DiffTransformerV1DataMini/split_diff_data.csv"
     )
 
     message = "Testing different learning rates for the simple transformer model using the full mini dataset with the random subsample data augmentation, using simple L2 loss and the AR_acc metric."
