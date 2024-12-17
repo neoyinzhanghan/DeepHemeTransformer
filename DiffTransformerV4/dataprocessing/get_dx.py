@@ -32,4 +32,9 @@ dx_df = pd.DataFrame(dx_df_dict)
 # only keeps the rows where the dx column is "Normal BMA" or "Plasma cell myeloma"
 dx_df = dx_df[(dx_df["dx"] == "Normal BMA") | (dx_df["dx"] == "Plasma cell myeloma")]
 
+print(f"The number of normal BMAs is {len(dx_df[dx_df['dx'] == 'Normal BMA'])}")
+print(
+    f"The number of plasma cell myelomas is {len(dx_df[dx_df['dx'] == 'Plasma cell myeloma'])}"
+)
+
 dx_df.to_csv("/media/hdd3/neo/dx_data_test.csv", index=False)
