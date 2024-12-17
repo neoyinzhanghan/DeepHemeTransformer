@@ -11,18 +11,21 @@ df = pd.read_csv(diff_data_csv_path)
 # get the accession_number column as a list of strings
 accession_numbers = df["accession_number"].tolist()
 
-have_dx = 0
-no_dx = 0
+dx_df_dict = {
+    "accession_number": [],
+    "dx": [],
+    "subdx": [],
+}
 
 for accession_number in tqdm(accession_numbers, desc="Looking for dxes"):
 
     try:
         dx, subdx = sst.get_dx(accession_number)
-        have_dx += 1
+        dx_df_dict["accession_number"].append(accession_number)
+        dx_df_dict["dx"].append(dx)
+        dx_df_dict["subdx"].append(subdx)
     except Exception as e:
-        dx = "None"
-        subdx = "None"
-        no_dx += 1
+        pass
 
-print(f"Have dx: {have_dx}")
-print(f"No dx: {no_dx}")
+dx_df = pd.DataFrame(dx_df_dict)
+dx_df.to_csv("/media/hdd3/neo/dx_data_test.csv", index=False)
