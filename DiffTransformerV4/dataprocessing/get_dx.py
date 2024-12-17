@@ -3,7 +3,7 @@ import pandas as pd
 from LLRunner.read.SST import sst
 from tqdm import tqdm
 
-diff_data_csv_path = "/media/hdd3/neo/DiffTransformerV1DataMini/diff_data.csv"
+diff_data_csv_path = "/media/hdd3/neo/DiffTransformerDataV13000/diff_data.csv"
 
 # open the csv file
 df = pd.read_csv(diff_data_csv_path)
