@@ -38,8 +38,8 @@ if __name__ == "__main__":
     logit_stacks_dir = "/media/hdd3/neo/DiffTransformerV1DataMini/logit_stacks"  # Replace with your directory
     diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"  # Replace with your CSV file
     dx_data_path = "/media/hdd3/neo/dx_data_test.csv"  # Replace with your CSV file
-    batch_size = 4
-    num_epochs = 10
+    batch_size = 16
+    num_epochs = 200
     num_gpus = [
         1
     ]  # The index of the gpu if in a list, otherwise the number to distribute among
