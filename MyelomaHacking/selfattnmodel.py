@@ -242,7 +242,7 @@ class MILSelfAttention(pl.LightningModule):
 
         # Pass the concatenated_all through the attention network
         # B x 2n x outsize, B x (2n+121+111) x outsize, B x (2n+121+111) x (2n+121+111), B x 2n x (121+111)
-        head_out, full_out, attn, head_attn = self.attention1(concatenated_all)
+        head_out, full_out, attn, head_attn = self.attention(concatenated_all)
         # print('Full_out: ', full_out.shape)   # B x (2n+121+111) x outsize
         # print('Head Out: ', head_out.shape)   # B x 2n x outsize
         # print('Attn: ', attn.shape)           # B x (2n+121+111) x (2n+121+111)
