@@ -432,3 +432,25 @@ if __name__ == "__main__":
         print(f"Non-padding mask shape: {non_padding_mask.shape}")
         print(f"Diff tensor shape: {diff_tensor.shape}")
         print(f"dx label: {label}")
+
+    # Instantiate the datamodule
+    datamodule = TensorStackDataModuleV4(
+        feature_stacks_dir,
+        logit_stacks_dir,
+        diff_data_path,
+        batch_size=32,
+        num_workers=4,
+    )
+
+    # Setup the datamodule
+    datamodule.setup()
+
+    # get the first batch of the train dataloader
+    for batch in datamodule.train_dataloader():
+        feature_stack, logit_stack, non_padding_mask, diff_tensor, label = batch
+        print(f"Feature stack shape: {feature_stack.shape}")
+        print(f"Logit stack shape: {logit_stack.shape}")
+        print(f"Non-padding mask shape: {non_padding_mask.shape}")
+        print(f"Diff tensor shape: {diff_tensor.shape}")
+        print(f"dx label: {label}")
+        break
