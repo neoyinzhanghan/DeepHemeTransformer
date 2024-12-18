@@ -25,7 +25,7 @@ class TensorStackDatasetV5(Dataset):
         diff_data_path,
         dx_data_path,
         split="train",
-        min_num_cells=2999,
+        min_num_cells=100,
         max_num_cells=3000,
         N=3000,
     ):
@@ -82,16 +82,12 @@ class TensorStackDatasetV5(Dataset):
 
         feature_stack = torch.load(feature_stack_path)  # this has shape [N, d]
 
-        num_cells = 2999
+        num_cells = np.random.randint(self.min_num_cells, self.max_num_cells)
 
         # num_cells = np.random.randint(self.min_num_cells, self.max_num_cells)
 
         if feature_stack.shape[0] > num_cells:
-            # idxs = np.random.choice(feature_stack.shape[0], num_cells, replace=False)
-
-            idx = np.arange(
-                feature_stack.shape[0], dtype=int
-            )  # TODO we are temporarily removing stochasticity in the dataloader
+            idxs = np.random.choice(feature_stack.shape[0], num_cells, replace=False)
             feature_stack = feature_stack[idxs]
             logit_stack = logit_stack[idxs]
 
