@@ -438,6 +438,7 @@ if __name__ == "__main__":
         feature_stacks_dir,
         logit_stacks_dir,
         diff_data_path,
+        dx_data_path,
         batch_size=32,
         num_workers=4,
     )
