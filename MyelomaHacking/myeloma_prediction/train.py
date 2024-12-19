@@ -3,21 +3,14 @@ import pytorch_lightning as pl
 from my_schedulers import MyCosineWarmupLR
 from pytorch_lightning.loggers import TensorBoardLogger
 from CDdataset import TensorStackDataModuleV5
-from torch import manual_seed as set_seed1
-from random import seed as set_seed2
-from numpy.random import seed as set_seed3
+# from torch import manual_seed as set_seed1
+# from random import seed as set_seed2
+# from numpy.random import seed as set_seed3
 from torch.backends.cudnn import deterministic
 from torch.optim.lr_scheduler import CosineAnnealingLR, SequentialLR, LinearLR, CyclicLR
 
 
 if __name__ == "__main__":
-
-    # Set a seed to make the training deterministic
-    seed = 1
-    set_seed1(seed)
-    set_seed2(seed)
-    set_seed3(seed)
-    deterministic = True
 
     project = "myeloma"
     base_lr = 1e-7
@@ -70,7 +63,7 @@ if __name__ == "__main__":
     model = model(num_classes, args, lr=max_lr, scheduler=scheduler, config=config)
 
     # Logger
-    logger = TensorBoardLogger("lightning_logs", name=f"{project}/{experiment}/{seed}")
+    logger = TensorBoardLogger("lightning_logs", name=f"{project}/{experiment}/{"no_seed"}")
     model_checkpoint_callback = pl.callbacks.ModelCheckpoint(
         filename="best",  # "{epoch:02d}",
         monitor="val_auroc",
