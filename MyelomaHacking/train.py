@@ -1,12 +1,14 @@
 import models
-import schedulers
 import pytorch_lightning as pl
+from my_schedulers import MyCosineWarmupLR
 from pytorch_lightning.loggers import TensorBoardLogger
 from CDdataset import TensorStackDataModuleV5
 from torch import manual_seed as set_seed1
 from random import seed as set_seed2
 from numpy.random import seed as set_seed3
 from torch.backends.cudnn import deterministic
+from torch.optim.lr_scheduler import CosineAnnealingLR, SequentialLR, LinearLR, CyclicLR
+
 
 if __name__ == "__main__":
 
@@ -18,17 +20,15 @@ if __name__ == "__main__":
     deterministic = True
 
     project = "myeloma"
-    lr = 1e-4
-    scheduler = schedulers.LinearLR
-    config = {"start_factor": 1, "end_factor": 0.5, "total_iters": 100}
+    base_lr = 1e-7
+    max_lr = 1e-4
     # scheduler = schedulers.MyCosineLR
     # config = {'max_lr':lr, 'base_lr':2e-4, 'T_max':50}
     # scheduler = schedulers.MyCyclicLR
     # config = {'max_lr':lr, 'base_lr':1e-6, 'step_size_up':20}
     # scheduler = schedulers.CyclicLR
     # config = {'base_lr':lr, 'max_lr':5.5e-4, 'mode':'triangular2', 'step_size_up':100, 'cycle_momentum':False}
-    num_classes, args, model = models.MODEL_DICT[project]
-    model = model(num_classes, args, lr=lr, scheduler=scheduler, config=config)
+
     # args = (init_mil_embed, mil_head, attn_head_size, agg_method)
     # model = models.MILSelfAttentionTwo(num_classes, args, lr=lr, scheduler=scheduler, config=config)
 
@@ -54,7 +54,20 @@ if __name__ == "__main__":
         num_workers=num_workers,
     )
 
+    # define a cosine annealing decay scheduler
+    scheduler = MyCosineWarmupLR
+
+    config = {
+        "max_lr": max_lr,
+        "base_lr": base_lr,
+        "warmup_epochs": 10,
+        "T_max": num_epochs,
+    }
+
     data_module.setup()
+
+    num_classes, args, model = models.MODEL_DICT[project]
+    model = model(num_classes, args, lr=max_lr, scheduler=scheduler, config=config)
 
     # Logger
     logger = TensorBoardLogger("lightning_logs", name=f"{project}/{experiment}/{seed}")

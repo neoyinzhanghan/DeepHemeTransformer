@@ -33,6 +33,7 @@ class Classifier(pl.LightningModule):
 
         self.lr = lr
         self.scheduler = scheduler
+
         self.config = config
 
     def forward(self, x):
