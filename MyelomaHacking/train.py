@@ -65,13 +65,13 @@ if __name__ == "__main__":
         save_last=True,
         save_top_k=1,  # -1 don't delete old checkpoints
     )
-    early_stopping_callback = pl.callbacks.EarlyStopping(
-        monitor="val_loss", patience=25, mode="min"
-    )
+    # early_stopping_callback = pl.callbacks.EarlyStopping(
+    #     monitor="val_loss", patience=25, mode="min"
+    # )
 
     # Trainer configuration for distributed training
     trainer = pl.Trainer(
-        callbacks=[model_checkpoint_callback, early_stopping_callback],
+        callbacks=[model_checkpoint_callback],  # early_stopping_callback],
         max_epochs=num_epochs,
         logger=logger,
         devices=num_gpus,
