@@ -20,6 +20,12 @@ pipeline_diff_path = "/media/hdd3/neo/DiffTransformerV1DataMini/pipeline_diff.cs
 diff_data = pd.read_csv(diff_data_path)
 pipeline_diff = pd.read_csv(pipeline_diff_path)
 
+# print the number of rows in the differential data
+print(f"Number of rows in differential data: {len(diff_data)}")
+
+# print the number of rows in the pipeline_diff data
+print(f"Number of rows in pipeline_diff data: {len(pipeline_diff)}")
+
 # iterate over the rows of the pipeline_diff dataframe
 
 loss_list = []
