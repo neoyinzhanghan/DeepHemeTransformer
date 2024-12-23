@@ -17,6 +17,12 @@ tr_l2_loss_fn = MyTRL2Loss()
 diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
 pipeline_diff_path = "/media/hdd3/neo/DiffTransformerV1DataMini/pipeline_diff.csv"
 
+# open the diff_data_path as a very long string, like a txt file
+diff_data_txt = open(diff_data_path, "r").read()
+
+# print whether or not "accession_number" is in the diff_data_txt as a string
+print(f"accession_number in diff_data_txt: {'accession_number' in diff_data_txt}")
+
 diff_data = pd.read_csv(diff_data_path)
 pipeline_diff = pd.read_csv(pipeline_diff_path)
 
@@ -62,6 +68,8 @@ for index, row in pipeline_diff.iterrows():
 
     if len(diff_row) == 0:
         print(f"result_dir_name: {result_dir_name} not found in diff_data")
+        # print whether or not "result_dir_name" is in the diff_data_txt as a string
+        print(f"result_dir_name in diff_data_txt: {'result_dir_name' in diff_data_txt}")
         continue
     # assert len(diff_row) == 1, f"There should be exactly one row in diff_data with the same result_dir_name. num rows: {len(diff_row)}"
 
