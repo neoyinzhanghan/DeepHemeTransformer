@@ -67,9 +67,9 @@ for index, row in pipeline_diff.iterrows():
     diff_row = diff_data[diff_data["result_dir_name"] == result_dir_name]
 
     if len(diff_row) == 0:
-        print(f"result_dir_name: {result_dir_name} not found in diff_data")
-        # print whether or not "result_dir_name" is in the diff_data_txt as a string
-        print(f"result_dir_name in diff_data_txt: {result_dir_name in diff_data_txt}")
+        # print(f"result_dir_name: {result_dir_name} not found in diff_data")
+        # # print whether or not "result_dir_name" is in the diff_data_txt as a string
+        # print(f"result_dir_name in diff_data_txt: {result_dir_name in diff_data_txt}")
         continue
     # assert len(diff_row) == 1, f"There should be exactly one row in diff_data with the same result_dir_name. num rows: {len(diff_row)}"
 
