@@ -123,7 +123,7 @@ for index, row in pipeline_diff.iterrows():
         class_r_acc_dct[final_class] += class_r_acc
 
     tot_num += 1
-    print(f"tot_num: {tot_num}")
+    # print(f"tot_num: {tot_num}")
 
 ar_acc_avg = ar_acc_sum / tot_num
 a_acc_avg = a_acc_sum / tot_num
