@@ -17,11 +17,11 @@ tr_l2_loss_fn = MyTRL2Loss()
 diff_data_path = "/media/hdd3/neo/DiffTransformerV1DataMini/split_diff_data.csv"
 pipeline_diff_path = "/media/hdd3/neo/DiffTransformerV1DataMini/pipeline_diff.csv"
 
-# open the diff_data_path as a very long string, like a txt file
-diff_data_txt = open(diff_data_path, "r").read()
+# # open the diff_data_path as a very long string, like a txt file
+# diff_data_txt = open(diff_data_path, "r").read()
 
-# print whether or not "accession_number" is in the diff_data_txt as a string
-print(f"accession_number in diff_data_txt: {'accession_number' in diff_data_txt}")
+# # print whether or not "accession_number" is in the diff_data_txt as a string
+# print(f"accession_number in diff_data_txt: {'accession_number' in diff_data_txt}")
 
 diff_data = pd.read_csv(diff_data_path)
 pipeline_diff = pd.read_csv(pipeline_diff_path)
@@ -123,7 +123,6 @@ for index, row in pipeline_diff.iterrows():
         class_r_acc_dct[final_class] += class_r_acc
 
     tot_num += 1
-
     print(f"tot_num: {tot_num}")
 
 ar_acc_avg = ar_acc_sum / tot_num
