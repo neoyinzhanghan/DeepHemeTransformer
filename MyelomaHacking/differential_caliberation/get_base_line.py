@@ -109,6 +109,8 @@ for index, row in pipeline_diff.iterrows():
 
     tot_num += 1
 
+    print(f"tot_num: {tot_num}")
+
 ar_acc_avg = ar_acc_sum / tot_num
 a_acc_avg = a_acc_sum / tot_num
 r_acc_avg = r_acc_sum / tot_num
