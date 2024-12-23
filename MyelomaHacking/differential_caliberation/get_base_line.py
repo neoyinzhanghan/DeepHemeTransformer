@@ -57,11 +57,11 @@ for index, row in pipeline_diff.iterrows():
     # get the result_dir_name
     result_dir_name = row["result_dir_name"]
 
-    print(f"result_dir_name: {result_dir_name}, with type: {type(result_dir_name)}")
-    # print the type of the diff_data["result_dir_name"]
-    print(f"diff_data['result_dir_name'] type: {type(diff_data['result_dir_name'])}")
-    # print the type of the first element in the diff_data["result_dir_name"]
-    print(f"diff_data['result_dir_name'][0] type: {type(diff_data['result_dir_name'][0])}")
+    # print(f"result_dir_name: {result_dir_name}, with type: {type(result_dir_name)}")
+    # # print the type of the diff_data["result_dir_name"]
+    # print(f"diff_data['result_dir_name'] type: {type(diff_data['result_dir_name'])}")
+    # # print the type of the first element in the diff_data["result_dir_name"]
+    # print(f"diff_data['result_dir_name'][0] type: {type(diff_data['result_dir_name'][0])}")
 
     # get the row in diff_data that has the same result_dir_name
     diff_row = diff_data[diff_data["result_dir_name"] == result_dir_name]
