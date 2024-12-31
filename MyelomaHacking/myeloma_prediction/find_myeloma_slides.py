@@ -1,8 +1,9 @@
+import os
 from LLRunner.read.SST import sst
 
 slide_source_dir = "/pesgisipth/NDPI"
 
 # find all the NDPI files in the slide_source_dir that start with H
-slides = sst.find_files(slide_source_dir, "H*.ndpi")
+slides = [f for f in os.listdir(slide_source_dir) if f.startswith("H") and f.endswith(".NDPI")]
 
 print(f"Number of slides found: {len(slides)}")
