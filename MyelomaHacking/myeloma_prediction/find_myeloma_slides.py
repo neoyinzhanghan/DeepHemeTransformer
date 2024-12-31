@@ -1,4 +1,4 @@
-from LLRunner.SST import sst
+from LLRunner.read.SST import sst
 
 slide_source_dir = "/pesgisipth/NDPI"
 
