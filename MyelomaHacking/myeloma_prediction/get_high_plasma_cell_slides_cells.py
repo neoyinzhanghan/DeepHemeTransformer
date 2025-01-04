@@ -49,7 +49,7 @@ for idx, row in tqdm(pipeline_run_history.iterrows(), total=len(pipeline_run_his
     accession_number = wsi_name.split(";")[0]
     result_dir = row["result_dir"].replace("hdd3", "hdd4")
     if accession_number in high_plasma_cell_slides["specnum_formatted"].values:
-        diff_data_row = high_plasma_cell_slides[high_plasma_cell_slides["accession_number"] == accession_number]
+        diff_data_row = high_plasma_cell_slides[high_plasma_cell_slides["specnum_formatted"] == accession_number]
 
         df_dict["accession_number"].append(accession_number)
         df_dict["wsi_name"].append(wsi_name)
