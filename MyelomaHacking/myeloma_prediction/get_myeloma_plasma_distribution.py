@@ -10,8 +10,17 @@ accession_numbers = df["Accession Number"].tolist()
 
 print(f"Founds {len(accession_numbers)} accession numbers")
 
+myeloma_accession_numbers = []
+for accession_number in accession_numbers:
+    dx, subdx = sst.get_dx(accession_number)
+
+    if dx == "Plasma cell myeloma":
+        myeloma_accession_numbers.append(accession_number)
+
+print(f"Found {len(myeloma_accession_numbers)} myeloma accession numbers")
+
 print("Extracting Path df")
-path_df = get_path_data(accession_numbers)
+path_df = get_path_data(myeloma_accession_numbers)
 print("Extracting Diff df")
 diff_df = get_diff(path_df)
 
