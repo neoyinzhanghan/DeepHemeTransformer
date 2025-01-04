@@ -12,7 +12,10 @@ print(f"Founds {len(accession_numbers)} accession numbers")
 
 myeloma_accession_numbers = []
 for accession_number in accession_numbers:
-    dx, subdx = sst.get_dx(accession_number)
+    try:
+        dx, subdx = sst.get_dx(accession_number)
+    except Exception as e:
+        continue
 
     if dx == "Plasma cell myeloma":
         myeloma_accession_numbers.append(accession_number)
