@@ -12,7 +12,7 @@ diff_data = pd.read_csv(diff_data_path)
 diff_data.fillna(0, inplace=True)
 
 # find the rows where the column plasma cells is >= 75
-high_plasma_cell_slides = diff_data[diff_data["plasma cells"] >= 75]
+high_plasma_cell_slides = diff_data[diff_data["plasma cells"] >= 70]
 
 # print the number of rows where the column plasma cells is >= 75
 print(f"Total number of rows: {len(diff_data)}")
