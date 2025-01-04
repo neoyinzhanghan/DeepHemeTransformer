@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+from tqdm import tqdm
 
 result_dir_path = "/media/hdd4/neo/results_dir"
 pipeline_run_history_path = "/media/hdd4/neo/results_dir/pipeline_run_history.csv"
@@ -21,3 +22,52 @@ print(f"Number of rows where plasma cells >= {threshold}: {len(high_plasma_cell_
 
 # save the high_plasma_cell_slides to a csv file at /media/hdd3/neo/high_plasma_cell_slides.csv
 high_plasma_cell_slides.to_csv("/media/hdd3/neo/high_plasma_cell_slides.csv", index=False)
+
+# open the pipeline run history csv file
+pipeline_run_history = pd.read_csv(pipeline_run_history_path)
+
+df_dict = {
+    "accession_number": [],
+    "wsi_name": [],
+    "part_description": [],
+    "result_dir": [],
+    "blasts": [],
+    "blast-equivalents": [],
+    "promyelocytes": [],
+    "myelocytes": [],
+    "metamyelocytes": [],
+    "neutrophils/bands": [],
+    "monocytes": [],
+    "eosinophils": [],
+    "erythroid precursors": [],
+    "lymphocytes": [],
+    "plasma cells": [],
+}
+
+for idx, row in tqdm(pipeline_run_history.iterrows(), total=len(pipeline_run_history), desc="Processing Slides"):
+    wsi_name = row["wsi_name"]
+    accession_number = wsi_name.split(";")[0]
+    result_dir = row["result_dir"].replace("hdd3", "hdd4")
+    if accession_number in high_plasma_cell_slides["accession_number"].values:
+        diff_data_row = high_plasma_cell_slides[high_plasma_cell_slides["accession_number"] == accession_number]
+
+        df_dict["accession_number"].append(accession_number)
+        df_dict["wsi_name"].append(wsi_name)
+        df_dict["part_description"].append(diff_data_row["part_description"].values[0])
+        df_dict["result_dir"].append(result_dir)
+        df_dict["blasts"].append(diff_data_row["blasts"].values[0])
+        df_dict["blast-equivalents"].append(diff_data_row["blast-equivalents"].values[0])
+        df_dict["promyelocytes"].append(diff_data_row["promyelocytes"].values[0])
+        df_dict["myelocytes"].append(diff_data_row["myelocytes"].values[0])
+        df_dict["metamyelocytes"].append(diff_data_row["metamyelocytes"].values[0])
+        df_dict["neutrophils/bands"].append(diff_data_row["neutrophils/bands"].values[0])
+        df_dict["monocytes"].append(diff_data_row["monocytes"].values[0])
+        df_dict["eosinophils"].append(diff_data_row["eosinophils"].values[0])
+        df_dict["erythroid precursors"].append(diff_data_row["erythroid precursors"].values[0])
+        df_dict["lymphocytes"].append(diff_data_row["lymphocytes"].values[0])
+        df_dict["plasma cells"].append(diff_data_row["plasma cells"].values[0])
+
+high_plasma_cell_slides_data = pd.DataFrame(df_dict)
+
+# save the high_plasma_cell_slides_data to a csv file at /media/hdd3/neo/high_plasma_cell_slides_diff_data.csv
+high_plasma_cell_slides_data.to_csv("/media/hdd3/neo/high_plasma_cell_slides_diff_data.csv", index=False)
