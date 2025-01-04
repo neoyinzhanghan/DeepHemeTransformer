@@ -6,7 +6,7 @@ sst.load_dataframe()
 df = sst.df
 
 # get the accession_number column of df as a list of strings
-accession_numbers = df["accession_number"].tolist()
+accession_numbers = df["Accession Number"].tolist()
 
 print(f"Founds {len(accession_numbers)} accession numbers")
 
