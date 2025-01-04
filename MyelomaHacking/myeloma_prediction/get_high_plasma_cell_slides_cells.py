@@ -11,7 +11,7 @@ diff_data = pd.read_csv(diff_data_path)
 # replace na values with 0
 diff_data.fillna(0, inplace=True)
 
-threshold = 65
+threshold = 50
 # find the rows where the column plasma cells is >= 75
 high_plasma_cell_slides = diff_data[diff_data["plasma cells"] >= threshold]
 
