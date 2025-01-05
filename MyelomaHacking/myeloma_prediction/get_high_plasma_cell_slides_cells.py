@@ -48,7 +48,7 @@ for idx, row in tqdm(pipeline_run_history.iterrows(), total=len(pipeline_run_his
     wsi_name = row["wsi_name"]
     accession_number = wsi_name.split(";")[0]
     result_dir = row["result_dir"].replace("hdd3", "hdd4")
-    if accession_number in high_plasma_cell_slides["specnum_formatted"].values:
+    if accession_number in high_plasma_cell_slides["specnum_formatted"].values and "BMA-diff" in result_dir:
         diff_data_row = high_plasma_cell_slides[high_plasma_cell_slides["specnum_formatted"] == accession_number]
 
         df_dict["accession_number"].append(accession_number)
@@ -68,6 +68,8 @@ for idx, row in tqdm(pipeline_run_history.iterrows(), total=len(pipeline_run_his
         df_dict["plasma cells"].append(diff_data_row["plasma cells"].values[0])
 
 high_plasma_cell_slides_data = pd.DataFrame(df_dict)
+
+print(f"Found {len(high_plasma_cell_slides_data)} slides with high plasma cells")
 
 # save the high_plasma_cell_slides_data to a csv file at /media/hdd3/neo/high_plasma_cell_slides_diff_data.csv
 high_plasma_cell_slides_data.to_csv("/media/hdd3/neo/high_plasma_cell_slides_diff_data.csv", index=False)
