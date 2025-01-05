@@ -23,13 +23,21 @@ for result_dir in tqdm(result_dirs, desc="Processing Slides"):
     # recursively find the paths of all the jpg files in the cells_dir
     cells_files = []
     for root, dirs, files in os.walk(cells_dir):
+        # Get the relative path from cells_dir
+        rel_path = os.path.relpath(root, cells_dir)
+        
         for file in files:
             if file.endswith(".jpg"):
                 source_path = os.path.join(root, file)
+                
+                # Create the same subfolder structure in target_dir
+                target_subdir = os.path.join(target_dir, rel_path) if rel_path != '.' else target_dir
+                os.makedirs(target_subdir, exist_ok=True)
+                
                 # Create new filename with result_dir_name suffix
                 filename_base, ext = os.path.splitext(file)
                 new_filename = f"{filename_base}_{result_dir_name}{ext}"
-                target_path = os.path.join(target_dir, new_filename)
+                target_path = os.path.join(target_subdir, new_filename)
                 
                 # Copy the file with the new name
                 shutil.copy2(source_path, target_path)
