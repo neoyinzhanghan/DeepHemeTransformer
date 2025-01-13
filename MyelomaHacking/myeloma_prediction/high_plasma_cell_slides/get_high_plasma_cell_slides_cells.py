@@ -111,5 +111,5 @@ print(f"Found {len(high_plasma_cell_slides_data)} slides with high plasma cells"
 
 # save the high_plasma_cell_slides_data to a csv file at /media/hdd3/neo/high_plasma_cell_slides_diff_data.csv
 high_plasma_cell_slides_data.to_csv(
-    "/media/hdd3/neo/high_plasma_cell_slides_diff_data.csv", index=False
+    "/media/hdd2/neo/high_plasma_cell_slides_diff_data.csv", index=False
 )
