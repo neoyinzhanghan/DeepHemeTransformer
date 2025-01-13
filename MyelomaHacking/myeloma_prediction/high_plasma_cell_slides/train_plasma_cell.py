@@ -178,16 +178,18 @@ grouped_label_to_index = {
 class Myresnext50(pl.LightningModule):
     def __init__(self, num_classes=11, config=default_config):
         super(Myresnext50, self).__init__()
-        self.pretrained = models.resnext50_32x4d(pretrained=True)
+        # Initialize with pretrained weights but don't load fc layer
+        self.pretrained = models.resnext50_32x4d(pretrained=False)
+        state_dict = models.resnext50_32x4d(pretrained=True).state_dict()
+        
+        # Remove fc layer weights from state dict
+        state_dict = {k: v for k, v in state_dict.items() if 'fc' not in k}
+        
+        # Load the modified state dict
+        self.pretrained.load_state_dict(state_dict, strict=False)
+        
+        # Replace fc layer with new one for our num_classes
         self.pretrained.fc = nn.Linear(self.pretrained.fc.in_features, num_classes)
-        # self.my_new_layers = nn.Sequential(
-        #     nn.Linear(
-        #         1000, 100
-        #     ),  # Assuming the output of your pre-trained model is 1000
-        #     nn.ReLU(),
-        #     nn.Linear(100, num_classes),
-        # )
-        # self.num_classes = num_classes
 
         task = "multiclass"
 
