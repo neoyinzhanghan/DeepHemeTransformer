@@ -24,7 +24,7 @@ print(
 
 # save the high_plasma_cell_slides to a csv file at /media/hdd3/neo/high_plasma_cell_slides.csv
 high_plasma_cell_slides.to_csv(
-    "/media/hdd3/neo/high_plasma_cell_slides.csv", index=False
+    "/media/hdd2/neo/high_plasma_cell_slides.csv", index=False
 )
 
 # open the pipeline run history csv file
@@ -53,7 +53,9 @@ result_dir_name_dtype = pipeline_run_history["result_dir_name"].dtype
 print(f"Data type of result_dir_name column: {result_dir_name_dtype}")
 
 # make sure the result_dir_name column is a string
-pipeline_run_history["result_dir_name"] = pipeline_run_history["result_dir_name"].astype(str)
+pipeline_run_history["result_dir_name"] = pipeline_run_history[
+    "result_dir_name"
+].astype(str)
 
 # only keep the rows in pipeline_run_history where the result_dir_name is not empty and not start with "ERROR"
 pipeline_run_history = pipeline_run_history[
@@ -64,10 +66,6 @@ pipeline_run_history = pipeline_run_history[
 # print the number of rows in pipeline_run_history
 print(f"Number of rows in pipeline_run_history: {len(pipeline_run_history)}")
 
-import sys
-
-sys.exit()
-
 for idx, row in tqdm(
     pipeline_run_history.iterrows(),
     total=len(pipeline_run_history),
@@ -75,11 +73,12 @@ for idx, row in tqdm(
 ):
     wsi_name = row["wsi_name"]
     accession_number = wsi_name.split(";")[0]
-    result_dir = row["result_dir"].replace("hdd3", "hdd4")
-    if (
-        accession_number in high_plasma_cell_slides["specnum_formatted"].values
-        and "BMA-diff" in result_dir
-    ):
+
+    result_dir_name = row["result_dir_name"]
+    result_dir_path = os.path.join(
+        "/media/hdd2/neo/HighPlasmaCellLLBMAResults", result_dir_name
+    )
+    if accession_number in high_plasma_cell_slides["specnum_formatted"].values:
         diff_data_row = high_plasma_cell_slides[
             high_plasma_cell_slides["specnum_formatted"] == accession_number
         ]
@@ -87,7 +86,7 @@ for idx, row in tqdm(
         df_dict["accession_number"].append(accession_number)
         df_dict["wsi_name"].append(wsi_name)
         df_dict["part_description"].append(diff_data_row["part_description"].values[0])
-        df_dict["result_dir"].append(result_dir)
+        df_dict["result_dir"].append(result_dir_path)
         df_dict["blasts"].append(diff_data_row["blasts"].values[0])
         df_dict["blast-equivalents"].append(
             diff_data_row["blast-equivalents"].values[0]
