@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from tqdm import tqdm
 from LLBMA.resources.BMAassumptions import cellnames
-from train_plasma_cell import load_model, predict_image
+from train_plasma_cell import model_create, predict_image
 
 original_cells_dir = "/media/hdd2/neo/high_plasma_cell_slides_cells"
 new_cells_dir = "/media/hdd2/neo/high_plasma_cell_slides_cells_relabeled"
@@ -48,7 +48,7 @@ cell_metadata_dict = {
 }
 
 
-model = load_model(
+model = model_create(
     "/home/greg/Documents/neo/DeepHemeRetrain/lightning_logs/1/version_0/checkpoints/epoch=499-step=21000.ckpt"
 )
 
