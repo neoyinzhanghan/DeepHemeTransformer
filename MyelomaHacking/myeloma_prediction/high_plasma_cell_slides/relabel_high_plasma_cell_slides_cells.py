@@ -49,7 +49,8 @@ cell_metadata_dict = {
 
 
 model = model_create(
-    "/home/greg/Documents/neo/DeepHemeRetrain/lightning_logs/1/version_0/checkpoints/epoch=499-step=21000.ckpt"
+    "/home/greg/Documents/neo/DeepHemeRetrain/lightning_logs/1/version_0/checkpoints/epoch=499-step=21000.ckpt",
+    num_classes=11,
 )
 
 # get the list of subdirectories in the original_cells_dir
