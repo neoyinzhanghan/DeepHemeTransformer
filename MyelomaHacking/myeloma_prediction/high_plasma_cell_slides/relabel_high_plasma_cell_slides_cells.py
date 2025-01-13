@@ -108,7 +108,7 @@ for result_dir in tqdm(result_dirs, desc="Processing Slides"):
         cell_metadata_dict["new_label"].append(predicted_class)
         shutil.copy(
             cell_file,
-            os.path.join(new_cells_dir, grouped_label, os.path.basename(cell_file)),
+            os.path.join(new_cells_dir, predicted_class, os.path.basename(cell_file)),
         )
 
 # save the cell_metadata_dict to a csv file
