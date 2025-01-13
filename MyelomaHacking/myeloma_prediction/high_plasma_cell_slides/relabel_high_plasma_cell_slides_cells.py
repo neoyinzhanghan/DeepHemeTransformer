@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import shutil
 from tqdm import tqdm
 from LLBMA.resources.BMAassumptions import cellnames
 from train_plasma_cell import model_create, predict_image
@@ -22,6 +23,24 @@ differential_group_dict = {
     "plasma cells": ["L4"],
 }
 
+differential_group_mapping = {
+    "M1": "blasts and blast-equivalents",
+    "M2": "promyelocytes",
+    "M3": "myelocytes",
+    "M4": "metamyelocytes",
+    "M5": "neutrophils/bands",
+    "M6": "neutrophils/bands",
+    "MO2": "monocytes",
+    "E1": "eosinophils",
+    "E4": "eosinophils",
+    "ER1": "erythroid precursors",
+    "ER2": "erythroid precursors",
+    "ER3": "erythroid precursors",
+    "ER4": "erythroid precursors",
+    "L2": "lymphocytes",
+    "L4": "plasma cells",
+}
+
 # grouped_label_to_index
 grouped_label_to_index = {
     "blasts and blast-equivalents": 0,
@@ -39,6 +58,9 @@ grouped_label_to_index = {
 
 # grouped_labels
 grouped_labels = list(grouped_label_to_index.keys())
+
+for grouped_label in grouped_labels:
+    os.makedirs(os.path.join(new_cells_dir, grouped_label), exist_ok=True)
 
 cell_metadata_dict = {
     "cell_result_dir": [],
@@ -76,8 +98,18 @@ for result_dir in tqdm(result_dirs, desc="Processing Slides"):
 
         if original_label not in cellnames:
             continue
-        cell_metadata_dict["original_label"].append(original_label)
+
+        if original_label not in differential_group_mapping.keys():
+            grouped_label = "skippocytes"
+        else:
+            grouped_label = differential_group_mapping[original_label]
+
+        cell_metadata_dict["original_label"].append(grouped_label)
         cell_metadata_dict["new_label"].append(predicted_class)
+        shutil.copy(
+            cell_file,
+            os.path.join(new_cells_dir, grouped_label, os.path.basename(cell_file)),
+        )
 
 # save the cell_metadata_dict to a csv file
 cell_metadata_df = pd.DataFrame(cell_metadata_dict)
