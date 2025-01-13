@@ -3,3 +3,4 @@
 2. You start by getting the cells directory and the diff data csv file.
     a. before you pool the cells, you need to get the diff data csv file.
     b. you call pool high plasma cell slides cells to get the cells directory.
+    c. Then you relabel the cells.
