@@ -90,7 +90,7 @@ for result_dir in tqdm(result_dirs, desc="Processing Slides"):
 
     for cell_file in tqdm(cells_files, desc="Processing Cells"):
         predicted_class, probabilities = predict_image(model, cell_file)
-        new_label = grouped_label_to_index[predicted_class]
+        new_label = predicted_class
         cell_metadata_dict["cell_result_dir"].append(result_dir)
         cell_metadata_dict["cell_path"].append(cell_file)
         # the original label is the immediate parent directory name
