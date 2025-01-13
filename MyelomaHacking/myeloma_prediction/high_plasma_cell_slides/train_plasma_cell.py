@@ -176,7 +176,7 @@ grouped_label_to_index = {
 
 # Model Module
 class Myresnext50(pl.LightningModule):
-    def __init__(self, num_classes=23, config=default_config):
+    def __init__(self, num_classes=11, config=default_config):
         super(Myresnext50, self).__init__()
         self.pretrained = models.resnext50_32x4d(pretrained=True)
         self.pretrained.fc = nn.Linear(self.pretrained.fc.in_features, num_classes)
@@ -369,7 +369,7 @@ def train_model(
     trainer.test(model, data_module.test_dataloader())
 
 
-def model_create(path, num_classes=23):
+def model_create(path, num_classes=11):
     """
     Create a model instance from a given checkpoint.
 
