@@ -180,14 +180,6 @@ class Myresnext50(pl.LightningModule):
         super(Myresnext50, self).__init__()
         self.pretrained = models.resnext50_32x4d(pretrained=True)
         self.pretrained.fc = nn.Linear(self.pretrained.fc.in_features, num_classes)
-        # self.my_new_layers = nn.Sequential(
-        #     nn.Linear(
-        #         1000, 100
-        #     ),  # Assuming the output of your pre-trained model is 1000
-        #     nn.ReLU(),
-        #     nn.Linear(100, num_classes),
-        # )
-        # self.num_classes = num_classes
 
         task = "multiclass"
 

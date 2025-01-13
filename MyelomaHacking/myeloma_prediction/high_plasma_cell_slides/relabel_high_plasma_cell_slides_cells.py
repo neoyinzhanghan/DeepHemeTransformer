@@ -49,7 +49,7 @@ cell_metadata_dict = {
 
 
 model = model_create(
-    "/home/greg/Documents/neo/DeepHemeRetrain/lightning_logs/1/version_0/checkpoints/epoch=499-step=21000.ckpt",
+    "/home/greg/Documents/neo/DeepHemeRetrain/scripts/50_epochs_train_2/1/version_0/checkpoints/epoch=49-step=4650.ckpt",
     num_classes=11,
 )
 
