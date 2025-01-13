@@ -107,6 +107,15 @@ for idx, row in tqdm(
 
 high_plasma_cell_slides_data = pd.DataFrame(df_dict)
 
+# sum the blasts and blast-equivalents columns together into a new column called "blasts and blast-equivalents"
+high_plasma_cell_slides_data["blasts and blast-equivalents"] = (
+    high_plasma_cell_slides_data["blasts"]
+    + high_plasma_cell_slides_data["blast-equivalents"]
+)
+
+# now remove the blasts and blast-equivalents columns
+high_plasma_cell_slides_data.drop(columns=["blasts", "blast-equivalents"], inplace=True)
+
 print(f"Found {len(high_plasma_cell_slides_data)} slides with high plasma cells")
 
 # save the high_plasma_cell_slides_data to a csv file at /media/hdd3/neo/high_plasma_cell_slides_diff_data.csv
