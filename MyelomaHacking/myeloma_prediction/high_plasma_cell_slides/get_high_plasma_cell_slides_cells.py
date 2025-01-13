@@ -48,6 +48,10 @@ df_dict = {
     "plasma cells": [],
 }
 
+# get the data type of the result_dir_name column
+result_dir_name_dtype = pipeline_run_history["result_dir_name"].dtype
+print(f"Data type of result_dir_name column: {result_dir_name_dtype}")
+
 # only keep the rows in pipeline_run_history where the result_dir_name is not empty and not start with "ERROR"
 pipeline_run_history = pipeline_run_history[
     (pipeline_run_history["result_dir_name"] != "")
