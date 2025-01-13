@@ -1,0 +1,5 @@
+1. MyelomaHacking/myeloma_prediction/high_plasma_cell_slides/get_high_plasma_cell_slides_cells.py
+    This is where you get the diff data csv file but of course you need to get from the DB first.
+2. You start by getting the cells directory and the diff data csv file.
+    a. before you pool the cells, you need to get the diff data csv file.
+    b. you call pool high plasma cell slides cells to get the cells directory.
