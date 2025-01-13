@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from tqdm import tqdm
+from LLBMA.resources.BMAassumptions import cellnames
 from train_plasma_cell import load_model, predict_image
 
 original_cells_dir = "/media/hdd2/neo/high_plasma_cell_slides_cells"
@@ -69,8 +70,13 @@ for result_dir in tqdm(result_dirs, desc="Processing Slides"):
         new_label = grouped_label_to_index[predicted_class]
         cell_metadata_dict["cell_result_dir"].append(result_dir)
         cell_metadata_dict["cell_path"].append(cell_file)
-        cell_metadata_dict["original_label"].append(predicted_class)
-        cell_metadata_dict["new_label"].append(new_label)
+        # the original label is the immediate parent directory name
+        original_label = os.path.basename(os.path.dirname(cell_file))
+
+        if original_label not in cellnames:
+            continue
+        cell_metadata_dict["original_label"].append(original_label)
+        cell_metadata_dict["new_label"].append(predicted_class)
 
 # save the cell_metadata_dict to a csv file
 cell_metadata_df = pd.DataFrame(cell_metadata_dict)
