@@ -466,28 +466,11 @@ def predict_image(model, image_path):
         10: "skippocytes",
     }
 
-    # Prepare image transforms
-    transform = transforms.Compose([transforms.Resize((96, 96)), transforms.ToTensor()])
+    pil_image = Image.open(image_path)
+    probabilities = model_predict(model, pil_image)
 
-    # Load and preprocess image
-    image = Image.open(image_path)
-    if image.mode != "RGB":
-        image = image.convert("RGB")
-    image = transform(image)
-
-    # Add batch dimension and move to CUDA immediately
-    image = image.unsqueeze(0).cuda()
-
-    # Make prediction
-    with torch.no_grad():
-        output = model(image)
-        probabilities = F.softmax(output, dim=1)[0]
-
-    # Move predictions to CPU for converting to Python types
-    probabilities = probabilities.cpu()
-
-    # Get predicted class and probabilities
-    predicted_class = label_mapping[int(torch.argmax(probabilities))]
+    argmax_index = int(np.argmax(probabilities))
+    predicted_class = label_mapping[argmax_index]
     probs_dict = {label_mapping[i]: float(prob) for i, prob in enumerate(probabilities)}
 
     return predicted_class, probs_dict
