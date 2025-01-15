@@ -6,7 +6,7 @@ from LLBMA.resources.BMAassumptions import cellnames
 from train_plasma_cell import model_create, predict_image
 
 original_cells_dir = "/media/hdd2/neo/high_plasma_cell_slides_cells"
-new_cells_dir = "/media/hdd2/neo/high_plasma_cell_slides_cells_relabeled"
+new_cells_dir = "/media/hdd2/neo/high_plasma_cell_slides_cells_relabeled_uniform"
 
 os.makedirs(new_cells_dir, exist_ok=True)
 
@@ -71,7 +71,7 @@ cell_metadata_dict = {
 
 
 model = model_create(
-    "/home/greg/Documents/neo/DeepHemeRetrain/scripts/50_epochs_train_2/1/version_0/checkpoints/epoch=49-step=4650.ckpt",
+    "/home/greg/Documents/neo/DeepHemeRetrain/scripts/50_epochs_train_plasma_cell_uniform/1/version_0/checkpoints/epoch=49-step=4650.ckpt",
     num_classes=11,
 )
 
